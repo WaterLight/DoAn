@@ -29,7 +29,7 @@ public class PhieuXuatKho extends BaseObject{
 	private NhanVien nguoiXuat;
 	@Column(name = "ngay_xuat")
 	private Date ngayXuat;
-	@OneToMany(mappedBy = "asset", cascade=CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval=true)
+	@OneToMany(mappedBy = "phieu", cascade=CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval=true)
 	private Set<SanPhamPhieuXuat> sanPhamPhieuXuat;
 	public Kho getKho() {
 		return kho;
