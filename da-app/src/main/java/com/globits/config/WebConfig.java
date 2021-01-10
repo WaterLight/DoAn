@@ -19,7 +19,7 @@ import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 @Configuration
 @EnableWebMvc
 @ComponentScan(
-basePackages = { "com.globits.core.sys.rest","com.globits.calendar.rest","com.globits.cms.rest","com.globits.core.rest", "com.globits.security.rest", "com.globits.core.exceptionhandler" })
+basePackages = { "com.globits.core.sys.rest","com.globits.da.rest","com.globits.cms.rest","com.globits.core.rest", "com.globits.security.rest", "com.globits.core.exceptionhandler" })
 public class WebConfig implements WebMvcConfigurer
 {
 
