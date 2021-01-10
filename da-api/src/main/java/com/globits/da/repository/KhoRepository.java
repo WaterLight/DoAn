@@ -12,8 +12,8 @@ import com.globits.da.domain.Kho;
 import com.globits.da.dto.KhoDto;
 @Repository
 public interface KhoRepository extends JpaRepository<Kho, UUID>{
-	@Query("select count(entity.id) from Kho entity where entity.code =?1 and (entity.id <> ?2 or ?2 is null) ")
+	@Query("select count(entity.id) from Kho entity where entity.maKho =?1 and (entity.id <> ?2 or ?2 is null) ")
 	Long checkCode(String code, UUID id);
-	@Query("select new com.globits.da.dto.KhoDto(ed) from Certificate ed")
+	@Query("select new com.globits.da.dto.KhoDto(ed) from Kho ed")
 	Page<KhoDto> getListPage( Pageable pageable);
 }

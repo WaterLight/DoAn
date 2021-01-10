@@ -81,4 +81,21 @@ public class SanPhamDto extends BaseObjectDto{
 			this.donViTinh = new DonViTinhDto(e.getDonViTinh());
 		}
 	}
+	public SanPhamDto(SanPham e,Boolean simple) {
+		this.setId(e.getId());
+		this.maSP = e.getMaSP();
+		this.giaBanHienThoi = e.getGiaBanHienThoi();
+		this.ngayCapNhat = e.getNgayCapNhat();
+		this.ngayTao = e.getNgayTao();
+		this.tenSP = e.getTenSP();
+		if(e.getNguoiTao() != null) {
+			this.nguoiTao = new NhanVienDto(e.getNguoiTao());
+		}
+		if(e.getNguoiCapNhat() != null) {
+			this.nguoiCapNhat = new NhanVienDto(e.getNguoiCapNhat());
+		}
+		if(e.getDonViTinh() != null) {
+			this.donViTinh = new DonViTinhDto(e.getDonViTinh());
+		}
+	}
 }

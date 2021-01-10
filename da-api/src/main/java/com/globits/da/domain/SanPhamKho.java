@@ -16,6 +16,8 @@ public class SanPhamKho extends BaseObject{
 	@ManyToOne
 	@JoinColumn(name="san_pham_id")
 	private SanPham sanPham;
+	@JoinColumn(name="so_luong")
+	private Float soLuong;
 	public Kho getKho() {
 		return kho;
 	}
@@ -27,6 +29,12 @@ public class SanPhamKho extends BaseObject{
 	}
 	public void setSanPham(SanPham sanPham) {
 		this.sanPham = sanPham;
+	}
+	public Float getSoLuong() {
+		return soLuong;
+	}
+	public void setSoLuong(Float soLuong) {
+		this.soLuong = soLuong;
 	}
 	
 }

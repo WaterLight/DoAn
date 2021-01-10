@@ -35,4 +35,12 @@ public class KhoDto extends BaseObjectDto {
 			this.maKho = entity.getMaKho();
 		}
 	}
+	public KhoDto(Kho entity,Boolean simple) {
+		if(entity != null) {
+			this.setId(entity.getId());
+			this.diaChi= entity.getDiaChi();
+			this.tenKho = entity.getTenKho();
+			this.maKho = entity.getMaKho();
+		}
+	}
 }

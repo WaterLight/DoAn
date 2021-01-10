@@ -16,13 +16,10 @@ public class SanPhamPhieuNhap extends BaseObject{
 	@ManyToOne
 	@JoinColumn(name="kho_id")
 	private Kho kho;
-	@ManyToOne
-	@JoinColumn(name="phieu_id")
-	private PhieuXuatKho phieu;
 	@Column(name = "so_luong")
-	private float so_luong;
+	private Float soLuong;
 	@Column(name = "gia")
-	private float gia;
+	private Double gia;
 	@ManyToOne
 	@JoinColumn(name="phieu_nhap_kho_id")
 	private PhieuNhapKho phieuNhapKho;
@@ -45,23 +42,17 @@ public class SanPhamPhieuNhap extends BaseObject{
 	public void setKho(Kho kho) {
 		this.kho = kho;
 	}
-	public float getSo_luong() {
-		return so_luong;
+	public Float getSoLuong() {
+		return soLuong;
 	}
-	public void setSo_luong(float so_luong) {
-		this.so_luong = so_luong;
+	public void setSoLuong(Float soLuong) {
+		this.soLuong = soLuong;
 	}
-	public float getGia() {
+	public Double getGia() {
 		return gia;
 	}
-	public void setGia(float gia) {
+	public void setGia(Double gia) {
 		this.gia = gia;
-	}
-	public PhieuXuatKho getPhieu() {
-		return phieu;
-	}
-	public void setPhieu(PhieuXuatKho phieu) {
-		this.phieu = phieu;
 	}
 	
 }
