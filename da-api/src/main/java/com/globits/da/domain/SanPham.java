@@ -17,7 +17,7 @@ public class SanPham extends BaseObject{
 	@Column(name = "ma_san_pham")
 	private String maSP;
 	@Column(name = "gia_ban_hien_Thoi")
-	private float giaBanHienThoi;
+	private Double giaBanHienThoi;
 	@Column(name = "ngay_cap_nhat")
 	private Date ngayCapNhat;
 	@Column(name = "ngay_tao")
@@ -44,10 +44,10 @@ public class SanPham extends BaseObject{
 	public void setMaSP(String maSP) {
 		this.maSP = maSP;
 	}
-	public float getGiaBanHienThoi() {
+	public Double getGiaBanHienThoi() {
 		return giaBanHienThoi;
 	}
-	public void setGiaBanHienThoi(float giaBanHienThoi) {
+	public void setGiaBanHienThoi(Double giaBanHienThoi) {
 		this.giaBanHienThoi = giaBanHienThoi;
 	}
 	public Date getNgayCapNhat() {

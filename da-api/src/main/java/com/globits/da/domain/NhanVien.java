@@ -10,19 +10,19 @@ import com.globits.core.domain.Person;
 public class NhanVien extends Person{
 	@Column(name = "ma_nv")
 	private String maNV;
-	@Column(name = "email")
-	private String email;
+	@Column(name = "type")
+	private String type;
 	public String getMaNV() {
 		return maNV;
 	}
 	public void setMaNV(String maNV) {
 		this.maNV = maNV;
 	}
-	public String getEmail() {
-		return email;
+	public String getType() {
+		return type;
 	}
-	public void setEmail(String email) {
-		this.email = email;
+	public void setType(String type) {
+		this.type = type;
 	}
 	
 }
