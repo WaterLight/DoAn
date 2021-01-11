@@ -14,11 +14,10 @@ import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 import Draggable from "react-draggable";
 import NotificationPopup from "../Component/NotificationPopup/NotificationPopup";
 import {
-    saveItem,
-  addItem,
-  updateItem,
+  addNewUrbanArea,
+  updateUrbanArea,
   checkCode,
-} from "./AgencyService";
+} from "./NhanVienService";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -39,11 +38,11 @@ function PaperComponent(props) {
   );
 }
 
-class AgencyDialog extends Component {
+class UrbanAreaDialog extends Component {
   state = {
     id: "",
-    name: "",
-    code: "",
+    maNV: "",
+    type: "",
     description: "",
     type: "",
     shouldOpenNotificationPopup: false,
@@ -67,24 +66,25 @@ class AgencyDialog extends Component {
 
   handleFormSubmit = () => {
     let { id } = this.state;
-    let { code } = this.state;
+    let { maNV } = this.state;
     var { t } = this.props;
-    checkCode(id, code).then((result) => {
+    checkCode(id, maNV).then((result) => {
       //Nếu trả về true là code đã được sử dụng
       if (result.data) {
         toast.warning(t("general.dupli_code"));
+        
         // alert("Code đã được sử dụng");
       } else {
         //Nếu trả về false là code chưa sử dụng có thể dùng
         if (id) {
-            saveItem({
+          updateUrbanArea({
             ...this.state,
           }).then(() => {
             toast.success(t("general.updateSuccess"));
             this.props.handleOKEditClose();
           });
         } else {
-            saveItem({
+          addNewUrbanArea({
             ...this.state,
           }).then(() => {
             toast.success(t("general.addSuccess"));
@@ -98,14 +98,14 @@ class AgencyDialog extends Component {
   componentWillMount() {
     //getUserById(this.props.uid).then(data => this.setState({ ...data.data }));
     let { open, handleClose, item } = this.props;
-    this.setState({...item});
+    this.setState(item);
   }
 
   render() {
     let {
       id,
-      name,
-      code,
+      maNV,
+      type,
       description,
       shouldOpenNotificationPopup,
     } = this.state;
@@ -117,6 +117,7 @@ class AgencyDialog extends Component {
         maxWidth="sm"
         fullWidth
       >
+       
         <DialogTitle
           style={{ cursor: "move", paddingBottom: "0px" }}
           id="draggable-dialog-title"
@@ -127,23 +128,6 @@ class AgencyDialog extends Component {
         <ValidatorForm ref="form" onSubmit={this.handleFormSubmit}>
           <DialogContent>
             <Grid className="" container spacing={2}>
-              <Grid item sm={12} xs={12}>
-                <TextValidator
-                  className="w-100 "
-                  label={
-                    <span>
-                      <span style={{ color: "red" }}>*</span>
-                      {t("general.name")}
-                    </span>
-                  }
-                  onChange={this.handleChange}
-                  type="text"
-                  name="name"
-                  value={name}
-                  validators={["required"]}
-                  errorMessages={[t("general.required")]}
-                />
-              </Grid>
 
               <Grid item sm={12} xs={12}>
                 <TextValidator
@@ -156,8 +140,25 @@ class AgencyDialog extends Component {
                   }
                   onChange={this.handleChange}
                   type="text"
-                  name="code"
-                  value={code}
+                  name="maNV"
+                  value={maNV}
+                  validators={["required"]}
+                  errorMessages={[t("general.required")]}
+                />
+              </Grid>
+              <Grid item sm={12} xs={12}>
+                <TextValidator
+                  className="w-100 "
+                  label={
+                    <span>
+                      <span style={{ color: "red" }}>*</span>
+                      {t("general.typeStaff")}
+                    </span>
+                  }
+                  onChange={this.handleChange}
+                  type="text"
+                  name="type"
+                  value={type}
                   validators={["required"]}
                   errorMessages={[t("general.required")]}
                 />
@@ -190,4 +191,4 @@ class AgencyDialog extends Component {
   }
 }
 
-export default AgencyDialog;
+export default UrbanAreaDialog;

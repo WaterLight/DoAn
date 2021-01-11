@@ -14,10 +14,10 @@ import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 import Draggable from "react-draggable";
 import NotificationPopup from "../Component/NotificationPopup/NotificationPopup";
 import {
-  addNewUrbanArea,
-  updateUrbanArea,
-  checkCode,
-} from "./UrbanAreaService";
+  addNewSource,
+  updateSource,
+  checkCode,updateKho
+} from "./KhoService";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -38,12 +38,12 @@ function PaperComponent(props) {
   );
 }
 
-class UrbanAreaDialog extends Component {
+class RealEstateSourceDialog extends Component {
   state = {
     id: "",
-    name: "",
-    code: "",
-    description: "",
+    tenKho: "",
+    maKho: "",
+    diaChi: "",
     type: "",
     shouldOpenNotificationPopup: false,
     Notification: "",
@@ -66,25 +66,24 @@ class UrbanAreaDialog extends Component {
 
   handleFormSubmit = () => {
     let { id } = this.state;
-    let { code } = this.state;
+    let { maKho } = this.state;
     var { t } = this.props;
-    checkCode(id, code).then((result) => {
+    checkCode(id, maKho).then((result) => {
       //Nếu trả về true là code đã được sử dụng
       if (result.data) {
         toast.warning(t("general.dupli_code"));
-        
         // alert("Code đã được sử dụng");
       } else {
         //Nếu trả về false là code chưa sử dụng có thể dùng
         if (id) {
-          updateUrbanArea({
+          updateSource({
             ...this.state,
           }).then(() => {
             toast.success(t("general.updateSuccess"));
             this.props.handleOKEditClose();
           });
         } else {
-          addNewUrbanArea({
+          addNewSource({
             ...this.state,
           }).then(() => {
             toast.success(t("general.addSuccess"));
@@ -104,9 +103,9 @@ class UrbanAreaDialog extends Component {
   render() {
     let {
       id,
-      name,
-      code,
-      description,
+      tenKho,
+      maKho,
+      diaChi,
       shouldOpenNotificationPopup,
     } = this.state;
     let { open, handleClose, handleOKEditClose, t, i18n } = this.props;
@@ -117,7 +116,7 @@ class UrbanAreaDialog extends Component {
         maxWidth="sm"
         fullWidth
       >
-       
+        
         <DialogTitle
           style={{ cursor: "move", paddingBottom: "0px" }}
           id="draggable-dialog-title"
@@ -139,8 +138,8 @@ class UrbanAreaDialog extends Component {
                   }
                   onChange={this.handleChange}
                   type="text"
-                  name="name"
-                  value={name}
+                  name="tenKho"
+                  value={tenKho}
                   validators={["required"]}
                   errorMessages={[t("general.required")]}
                 />
@@ -157,8 +156,8 @@ class UrbanAreaDialog extends Component {
                   }
                   onChange={this.handleChange}
                   type="text"
-                  name="code"
-                  value={code}
+                  name="maKho"
+                  value={maKho}
                   validators={["required"]}
                   errorMessages={[t("general.required")]}
                 />
@@ -169,13 +168,13 @@ class UrbanAreaDialog extends Component {
                   label={
                     <span>
                       <span style={{ color: "red" }}>*</span>
-                      {t("general.description")}
+                      {t("RealEstateOwner.fullAddress")}
                     </span>
                   }
                   onChange={this.handleChange}
                   type="text"
-                  name="description"
-                  value={description}
+                  name="diaChi"
+                  value={diaChi}
                   validators={["required"]}
                   errorMessages={[t("general.required")]}
                 />
@@ -208,4 +207,4 @@ class UrbanAreaDialog extends Component {
   }
 }
 
-export default UrbanAreaDialog;
+export default RealEstateSourceDialog;

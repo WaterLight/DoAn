@@ -2,16 +2,16 @@ import { EgretLoadable } from "egret";
 import ConstantList from "../../appConfig";
 import { useTranslation, withTranslation, Trans } from 'react-i18next';
 const UrbanAreaTable = EgretLoadable({
-  loader: () => import("./UrbanAreaTable")
+  loader: () => import("./NhanVienTable")
 });
 const ViewComponent = withTranslation()(UrbanAreaTable);
 
-const urbanAreaRoutes = [
+const NhanVienRoutes = [
   {
-    path:  ConstantList.ROOT_PATH+"directory/urban-area",
+    path:  ConstantList.ROOT_PATH+"directory/nhanvien",
     exact: true,
     component: ViewComponent
   }
 ];
 
-export default urbanAreaRoutes;
+export default NhanVienRoutes;

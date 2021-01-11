@@ -1,7 +1,7 @@
 import axios from "axios";
 import ConstantList from "../../appConfig";
 
-const API_PATH = ConstantList.API_ENPOINT + "/api/agent/";
+const API_PATH = ConstantList.API_ENPOINT + "/api/sanpham/";
 
 export const searchByPage = (searchObject) => {
   return axios.post(API_PATH +  "searchByPage", searchObject);
@@ -17,6 +17,9 @@ export const handleDeleteList = listAlert => {
 
 export const saveItem = item => {
   return axios.post(API_PATH, item);
+};
+export const updateItem = item => {
+  return axios.put(API_PATH +item.id, item);
 };
 
 export const getItemById = id => {

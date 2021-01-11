@@ -13,15 +13,17 @@ import ConstantList from "./appConfig";
 import MenuRoutes from "./views/Menus/MenuRoutes";
 import pageLayoutRoutes from "./views/page-layouts/PageLayoutRoutees";
 import apartmentRouters from "./views/Apartment/ApartmentRouters";
-import realEstateSourceRoutes from "./views/RealEstateSource/RealEstateSourceRoutes";
-import urbanAreaRoutes from "./views/UrbanArea/UrbanAreaRoutes";
+import khoRoutes from "./views/Kho/KhoRoutes";
+import NhanVienRoutes from "./views/NhanVien/NhanVienRoutes";
 import projectRoutes from "./views/Project/ProjectRoutes";
 import BuildingRoutes from "./views/Building/BuildingRoutes";
 import RealEstateOwnerTypeRoutes from "./views/RealEstateOwnerType/RealEstateOwnerTypeRoutes";
 import RealStateTypeRoutes from "./views/RealStateType/RealStateTypeRoutes";
-import AgencyRoutes from "./views/Agency/AgencyRoutes";
+import DonViTinhRoutes from "./views/DonViTinh/DonViTinhRoutes";
 import RequirementTypeRoutes from "./views/RequirementType/RequirementTypeRoutes";
-import AgentRoutes from "./views/Agent/AgentRoutes";
+import SanPhamRoutes from "./views/SanPham/SanPhamRoutes";
+import PhieuNhapKhoRoutes from "./views/PhieuNhapKho/PhieuNhapKhoRoutes";
+
 const redirectRoute = [
   {
     path: ConstantList.ROOT_PATH,
@@ -39,8 +41,8 @@ const errorRoute = [
 const routes = [
   ...BuildingRoutes,
   ...projectRoutes,
-  ...urbanAreaRoutes,
-  ...realEstateSourceRoutes,
+  ...NhanVienRoutes,
+  ...khoRoutes,
   ...apartmentRouters,
   ...homeRoutes,
   ...sessionRoutes,
@@ -54,9 +56,10 @@ const routes = [
   ...MenuRoutes,
   ...RealEstateOwnerTypeRoutes,
   ...RealStateTypeRoutes,
-  ...AgencyRoutes,
+  ...DonViTinhRoutes,
   ...RequirementTypeRoutes,
-  ...AgentRoutes,
+  ...SanPhamRoutes,
+  ...PhieuNhapKhoRoutes,
   ...errorRoute,
  
 ];

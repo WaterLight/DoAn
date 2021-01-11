@@ -27,15 +27,16 @@ import Tooltip from "@material-ui/core/Tooltip";
 import { Link } from "react-router-dom";
 import NotificationPopup from "../Component/NotificationPopup/NotificationPopup";
 import { isThisSecond } from "date-fns/esm";
-import UrbanAreaDialog from "./UrbanAreaDialog";
+import RealEstateSourceDialog from "./KhoDialog";
 import {
-  getAllUrbanArea,
-  getUrbanAreaById,
-  deleteUrbanArea,
+  getAllSource,
+  getSourceById,
+  deleteSource,
   searchByPage,
-} from "./UrbanAreaService";
+} from "./KhoService";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
 toast.configure({
   autoClose: 2000,
   draggable: false,
@@ -95,7 +96,7 @@ function MaterialButton(props) {
   );
 }
 
-class UrbanAreaTable extends React.Component {
+class RealEstateSourceTable extends React.Component {
   state = {
     keyword: "",
     rowsPerPage: 10,
@@ -162,8 +163,11 @@ class UrbanAreaTable extends React.Component {
   checkData = () => {
     let {t} = this.props
     if (!this.data || this.data.length === 0) {
-      toast.warning(t("general.noti_check_data"));
-      
+      toast.warning(t("general.noti_check_data"))
+      // this.setState({
+      //   shouldOpenNotificationPopup: true,
+      //   Notification: "general.noti_check_data",
+      // });
     } else if (this.data.length === this.state.itemList.length) {
       this.setState({ shouldOpenConfirmationDeleteAllDialog: true });
     } else {
@@ -217,7 +221,7 @@ class UrbanAreaTable extends React.Component {
   };
 
   handleEditMaintainRequestStatus = (item) => {
-    getUrbanAreaById(item.id).then((result) => {
+    getSourceById(item.id).then((result) => {
       this.setState({
         item: result.data,
         shouldOpenEditorDialog: true,
@@ -227,6 +231,8 @@ class UrbanAreaTable extends React.Component {
 
   handleConfirmationResponse = () => {
     var { t } = this.props;
+    console.log(this.state.id);
+    console.log(this.state.itemList[this.state.itemList.length - 1].id);
     if (
       this.state.itemList.length % this.state.rowsPerPage === 1 &&
       this.state.itemList.length > 1 &&
@@ -237,14 +243,14 @@ class UrbanAreaTable extends React.Component {
         page: page,
       });
     }
-    deleteUrbanArea(this.state.id)
+    deleteSource(this.state.id)
       .then((res) => {
         toast.success(t("general.deleteSuccess"));
         this.handleDialogClose();
         this.updatePageData();
       })
       .catch(() => {
-        toast.warning(t("urbanArea.warning-delete"));
+        toast.warning(t("source.warning-delete"));
       });
   };
 
@@ -306,18 +312,20 @@ class UrbanAreaTable extends React.Component {
     let listAlert = [];
     var { t } = this.props;
     for (var i = 0; i < list.length; i++) {
+      // deleteItem(list[i].id)
       try {
-        await deleteUrbanArea(list[i].id);
+        await deleteSource(list[i].id);
       } catch (error) {
         listAlert.push(list[i].name);
       }
     }
+    // toast.success(t("general.deleteSuccess"));
     this.handleDialogClose();
     if (listAlert.length === list.length) {
-      toast.warning(t("urbanArea.use_all"));
+      toast.warning(t("source.use_all"));
       // alert("Các trạng thái đều đã sử dụng");
     } else if (listAlert.length > 0) {
-      toast.warning(t("urbanArea.deleted_unused"));
+      toast.warning(t("source.deleted_unused"));
       // alert("Đã xoá các trạng thái chưa sử dụng");
     }
   }
@@ -349,7 +357,7 @@ class UrbanAreaTable extends React.Component {
       shouldOpenConfirmationDeleteAllDialog,
       shouldOpenNotificationPopup,
     } = this.state;
-    let TitlePage = t("title.urbanArea");
+    let TitlePage = t("title.source");
 
     let columns = [
       {
@@ -369,7 +377,7 @@ class UrbanAreaTable extends React.Component {
             onSelect={(rowData, method) => {
               console.log(rowData.id);
               if (method === 0) {
-                getUrbanAreaById(rowData.id)
+                getSourceById(rowData.id)
                   .then(({ data }) => {
                     console.log(data);
                     if (data === null) {
@@ -393,13 +401,13 @@ class UrbanAreaTable extends React.Component {
         ),
       },
       {
-        title: t("general.name") + " " + t("title.urbanArea") , field: "name", align: "left",width: "150",
+        title: t("general.name") , field: "tenKho", align: "left",width: "150",
       },
       { 
-        title: t("general.code"), field: "code", width: "150" 
+        title: t("general.code"), field: "maKho", width: "150" 
       },
       { 
-        title: t("general.description"), field: "description", width: "150" 
+        title: t("RealEstateOwner.fullAddress"), field: "diaChi", width: "150" 
       },
     ];
 
@@ -416,7 +424,7 @@ class UrbanAreaTable extends React.Component {
             routeSegments={[
               {
                 name: t("Dashboard.category"),
-                path: "/list/maintain_request_status",
+                path: "/directory/source",
               },
               { name: TitlePage },
             ]}
@@ -505,7 +513,7 @@ class UrbanAreaTable extends React.Component {
           <Grid item xs={12}>
             <div>
               {shouldOpenEditorDialog && (
-                <UrbanAreaDialog
+                <RealEstateSourceDialog
                   t={t}
                   i18n={i18n}
                   handleClose={this.handleDialogClose}
@@ -603,4 +611,4 @@ class UrbanAreaTable extends React.Component {
   }
 }
 
-export default UrbanAreaTable;
+export default RealEstateSourceTable;

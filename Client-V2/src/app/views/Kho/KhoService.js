@@ -1,24 +1,24 @@
 import axios from "axios";
 import ConstantList from "../../appConfig";
-const API_PATH = ConstantList.API_ENPOINT + "/api/urban-area";
+const API_PATH = ConstantList.API_ENPOINT + "/api/kho";
 
-export const getAllUrbanArea = (pageIndex, pageSize) => {
-    return axios.get(API_PATH+`/${pageIndex}/${pageSize}`);
-  };
 
-export const addNewUrbanArea = User => {
+export const addNewSource = User => {
       return axios.post(API_PATH , User);
     };
 
-export const deleteUrbanArea= id => {
+export const deleteSource= id => {
   return axios.delete(API_PATH +"/"+id);
 };
 
-export const updateUrbanArea = asset => {
-  return axios.post(API_PATH , asset);
+export const updateSource = asset => {
+  return axios.put(API_PATH + "/"+asset.id , asset);
+};
+export const updateKho = asset => {
+  return axios.put(API_PATH + "/"+asset.id, asset);
 };
 
-export const getUrbanAreaById = id => {
+export const getSourceById = id => {
   return axios.get(API_PATH + "/" + id);
 };
 

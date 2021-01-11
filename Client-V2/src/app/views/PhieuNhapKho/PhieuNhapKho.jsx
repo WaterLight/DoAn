@@ -27,16 +27,15 @@ import Tooltip from "@material-ui/core/Tooltip";
 import { Link } from "react-router-dom";
 import NotificationPopup from "../Component/NotificationPopup/NotificationPopup";
 import { isThisSecond } from "date-fns/esm";
-import RealEstateSourceDialog from "./RealEstateSourceDialog";
+import PhieuNhapKhoDialog from "./PhieuNhapKhoDialog";
 import {
-  getAllSource,
-  getSourceById,
-  deleteSource,
+  getAllUrbanArea,
+  getItemById,
+  deleteItem,
   searchByPage,
-} from "./RealEstateSourceService";
+} from "./PhieuNhapKhoService";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
 toast.configure({
   autoClose: 2000,
   draggable: false,
@@ -96,7 +95,7 @@ function MaterialButton(props) {
   );
 }
 
-class RealEstateSourceTable extends React.Component {
+class PhieuNhapKho extends React.Component {
   state = {
     keyword: "",
     rowsPerPage: 10,
@@ -163,11 +162,8 @@ class RealEstateSourceTable extends React.Component {
   checkData = () => {
     let {t} = this.props
     if (!this.data || this.data.length === 0) {
-      toast.warning(t("general.noti_check_data"))
-      // this.setState({
-      //   shouldOpenNotificationPopup: true,
-      //   Notification: "general.noti_check_data",
-      // });
+      toast.warning(t("general.noti_check_data"));
+      
     } else if (this.data.length === this.state.itemList.length) {
       this.setState({ shouldOpenConfirmationDeleteAllDialog: true });
     } else {
@@ -221,7 +217,7 @@ class RealEstateSourceTable extends React.Component {
   };
 
   handleEditMaintainRequestStatus = (item) => {
-    getSourceById(item.id).then((result) => {
+    getItemById(item.id).then((result) => {
       this.setState({
         item: result.data,
         shouldOpenEditorDialog: true,
@@ -231,8 +227,6 @@ class RealEstateSourceTable extends React.Component {
 
   handleConfirmationResponse = () => {
     var { t } = this.props;
-    console.log(this.state.id);
-    console.log(this.state.itemList[this.state.itemList.length - 1].id);
     if (
       this.state.itemList.length % this.state.rowsPerPage === 1 &&
       this.state.itemList.length > 1 &&
@@ -243,14 +237,14 @@ class RealEstateSourceTable extends React.Component {
         page: page,
       });
     }
-    deleteSource(this.state.id)
+    deleteItem(this.state.id)
       .then((res) => {
         toast.success(t("general.deleteSuccess"));
         this.handleDialogClose();
         this.updatePageData();
       })
       .catch(() => {
-        toast.warning(t("source.warning-delete"));
+        toast.warning(t("urbanArea.warning-delete"));
       });
   };
 
@@ -312,20 +306,18 @@ class RealEstateSourceTable extends React.Component {
     let listAlert = [];
     var { t } = this.props;
     for (var i = 0; i < list.length; i++) {
-      // deleteItem(list[i].id)
       try {
-        await deleteSource(list[i].id);
+        await deleteItem(list[i].id);
       } catch (error) {
         listAlert.push(list[i].name);
       }
     }
-    // toast.success(t("general.deleteSuccess"));
     this.handleDialogClose();
     if (listAlert.length === list.length) {
-      toast.warning(t("source.use_all"));
+      toast.warning(t("urbanArea.use_all"));
       // alert("Các trạng thái đều đã sử dụng");
     } else if (listAlert.length > 0) {
-      toast.warning(t("source.deleted_unused"));
+      toast.warning(t("urbanArea.deleted_unused"));
       // alert("Đã xoá các trạng thái chưa sử dụng");
     }
   }
@@ -357,7 +349,7 @@ class RealEstateSourceTable extends React.Component {
       shouldOpenConfirmationDeleteAllDialog,
       shouldOpenNotificationPopup,
     } = this.state;
-    let TitlePage = t("title.source");
+    let TitlePage = t("Phiếu Nhập Kho");
 
     let columns = [
       {
@@ -377,7 +369,7 @@ class RealEstateSourceTable extends React.Component {
             onSelect={(rowData, method) => {
               console.log(rowData.id);
               if (method === 0) {
-                getSourceById(rowData.id)
+                getItemById(rowData.id)
                   .then(({ data }) => {
                     console.log(data);
                     if (data === null) {
@@ -400,14 +392,18 @@ class RealEstateSourceTable extends React.Component {
           />
         ),
       },
-      {
-        title: t("general.name") + " " + t("title.source") , field: "name", align: "left",width: "150",
+      
+      { 
+        title: t("general.code"), field: "ma", width: "150" 
       },
       { 
-        title: t("general.code"), field: "code", width: "150" 
+        title: t("general.name"), field: "ten", width: "150" 
       },
       { 
-        title: t("general.description"), field: "description", width: "150" 
+        title: t("Kho"), field: "kho.tenKho", width: "150" 
+      },
+      { 
+        title: t("Người nhập"), field: "nguoiNhap.displayName", width: "150" 
       },
     ];
 
@@ -424,7 +420,7 @@ class RealEstateSourceTable extends React.Component {
             routeSegments={[
               {
                 name: t("Dashboard.category"),
-                path: "/directory/source",
+                path: "/list/maintain_request_status",
               },
               { name: TitlePage },
             ]}
@@ -513,7 +509,7 @@ class RealEstateSourceTable extends React.Component {
           <Grid item xs={12}>
             <div>
               {shouldOpenEditorDialog && (
-                <RealEstateSourceDialog
+                <PhieuNhapKhoDialog
                   t={t}
                   i18n={i18n}
                   handleClose={this.handleDialogClose}
@@ -611,4 +607,4 @@ class RealEstateSourceTable extends React.Component {
   }
 }
 
-export default RealEstateSourceTable;
+export default PhieuNhapKho;

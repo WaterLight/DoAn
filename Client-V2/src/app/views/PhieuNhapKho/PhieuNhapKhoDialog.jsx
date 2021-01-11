@@ -13,14 +13,14 @@ import {
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 import Draggable from "react-draggable";
 import NotificationPopup from "../Component/NotificationPopup/NotificationPopup";
-import SelectUserPopup from "./SelectUserPopup";
-import SelectAgencyPopup from "./SelectAgencyPopup";
+import ChonKho from "./ChonKhoNhap";
+import ChonNhanVien from "./ChonNhanVien";
 import {
     saveItem,
   addItem,
   updateItem,
   checkCode,
-} from "./AgentService";
+} from "./PhieuNhapKhoService";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -41,7 +41,7 @@ function PaperComponent(props) {
   );
 }
 
-class AgentDialog extends Component {
+class PhieuNhapKhoDialog extends Component {
   state = {
     id: "",
     name: "",
@@ -50,16 +50,16 @@ class AgentDialog extends Component {
     type: "",
     shouldOpenNotificationPopup: false,
     Notification: "",
-    shouldOpenSelectUserPopup: false,
-    SelectAgencyPopup: false,
+    shouldOpenChonKho: false,
+    ChonNhanVien: false,
     agency:null,
     user:null,
   };
 
   handleDialogClose = () => {
     this.setState({ shouldOpenNotificationPopup: false,
-                    shouldOpenSelectUserPopup:false,
-                    shouldOpenSelectAgencyPopup: false,
+                    shouldOpenChonKho:false,
+                    shouldOpenChonNhanVien: false,
                  });
   };
 
@@ -76,9 +76,9 @@ class AgentDialog extends Component {
 
   handleFormSubmit = () => {
     let { id } = this.state;
-    let { code } = this.state;
+    let { ma } = this.state;
     var { t } = this.props;
-    checkCode(id, code).then((result) => {
+    checkCode(id, ma).then((result) => {
       //Nếu trả về true là code đã được sử dụng
       if (result.data) {
         toast.warning(t("general.dupli_code"));
@@ -86,7 +86,7 @@ class AgentDialog extends Component {
       } else {
         //Nếu trả về false là code chưa sử dụng có thể dùng
         if (id) {
-            saveItem({
+          updateItem({
             ...this.state,
           }).then(() => {
             toast.success(t("general.updateSuccess"));
@@ -110,19 +110,20 @@ class AgentDialog extends Component {
     this.setState({...item});
   }
   handleSelectUser =(item)=>{
-      this.setState({user:item ? item : null,shouldOpenSelectUserPopup: false, })
+      this.setState({kho:item ? item : null,shouldOpenChonKho: false, })
   }
   handleSelectAgency =(item) =>{
-    this.setState({agency:item ? item : null,shouldOpenSelectAgencyPopup: false, })
+    this.setState({nguoiNhap:item ? item : null,shouldOpenChonNhanVien: false, })
   }
   render() {
     let {
       id,
-      name,
-      code,
+      ma,
+      ten,
       description,
       shouldOpenNotificationPopup,
     } = this.state;
+    
     let { open, handleClose, handleOKEditClose, t, i18n } = this.props;
     return (
       <Dialog
@@ -152,8 +153,8 @@ class AgentDialog extends Component {
                   }
                   onChange={this.handleChange}
                   type="text"
-                  name="name"
-                  value={name}
+                  name="ten"
+                  value={ten}
                   validators={["required"]}
                   errorMessages={[t("general.required")]}
                 />
@@ -170,8 +171,8 @@ class AgentDialog extends Component {
                   }
                   onChange={this.handleChange}
                   type="text"
-                  name="code"
-                  value={code}
+                  name="ma"
+                  value={ma}
                   validators={["required"]}
                   errorMessages={[t("general.required")]}
                 />
@@ -184,7 +185,7 @@ class AgentDialog extends Component {
                   variant="contained"
                   color="primary"
                   onClick={()=>{
-                      this.setState({shouldOpenSelectAgencyPopup:true})
+                      this.setState({shouldOpenChonNhanVien:true})
                   }}
                 >
                   {t("general.select")}
@@ -198,23 +199,23 @@ class AgentDialog extends Component {
                   label={
                     <span>
                       <span style={{ color: "red" }}></span>
-                      {t("directory.agency")}
+                      {t("Người nhập")}
                     </span>
                   }
                   // className="w-80"
                   style ={{width: "80%"}}
                   value={
-                    this.state.agency != null ? this.state.agency.name : ""
+                    this.state.nguoiNhap != null ? this.state.nguoiNhap.displayName : ""
                   }
                 />
 
-                {this.state.shouldOpenSelectAgencyPopup && (
-                  <SelectAgencyPopup
-                    open={this.state.shouldOpenSelectAgencyPopup}
+                {this.state.shouldOpenChonNhanVien && (
+                  <ChonNhanVien
+                    open={this.state.shouldOpenChonNhanVien}
                     handleSelect={this.handleSelectAgency}
                     selectedItem={
-                      this.state.agency != null
-                        ? this.state.agency
+                      this.state.nguoiNhap != null
+                        ? this.state.nguoiNhap
                         : {}
                     }
                     handleClose={this.handleDialogClose}
@@ -231,7 +232,7 @@ class AgentDialog extends Component {
                   variant="contained"
                   color="primary"
                   onClick={()=>{
-                      this.setState({shouldOpenSelectUserPopup:true})
+                      this.setState({shouldOpenChonKho:true})
                   }}
                 >
                   {t("general.select")}
@@ -245,23 +246,23 @@ class AgentDialog extends Component {
                   label={
                     <span>
                       <span style={{ color: "red" }}></span>
-                      {t("user.title")}
+                      {t("Kho")}
                     </span>
                   }
                   // className="w-80"
                   style ={{width: "80%"}}
                   value={
-                    this.state.user != null ? this.state.user.displayName : ""
+                    this.state.kho != null ? this.state.kho.tenKho : ""
                   }
                 />
 
-                {this.state.shouldOpenSelectUserPopup && (
-                  <SelectUserPopup
-                    open={this.state.shouldOpenSelectUserPopup}
+                {this.state.shouldOpenChonKho && (
+                  <ChonKho
+                    open={this.state.shouldOpenChonKho}
                     handleSelect={this.handleSelectUser}
                     selectedItem={
-                      this.state.user != null 
-                        ? this.state.user
+                      this.state.kho != null 
+                        ? this.state.kho
                         : {}
                     }
                     handleClose={this.handleDialogClose}
@@ -298,4 +299,4 @@ class AgentDialog extends Component {
   }
 }
 
-export default AgentDialog;
+export default PhieuNhapKhoDialog;

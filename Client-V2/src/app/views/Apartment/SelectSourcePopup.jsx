@@ -13,7 +13,7 @@ import Paper from '@material-ui/core/Paper';
 import { Link } from "react-router-dom";
 import SearchIcon from '@material-ui/icons/Search';
 
-import {searchByPage} from '../RealEstateSource/RealEstateSourceService'
+import {searchByPage} from '../Kho/KhoService'
 
 function PaperComponent(props) {
   return (

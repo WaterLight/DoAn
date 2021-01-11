@@ -2,15 +2,15 @@ import { EgretLoadable } from "egret";
 import ConstantList from "../../appConfig";
 import { useTranslation, withTranslation, Trans } from 'react-i18next';
 const Agency = EgretLoadable({
-  loader: () => import("./Agency")
+  loader: () => import("./DonViTinh")
 });
 const ViewComponent = withTranslation()(Agency);
-const AgencyRoutes = [
+const DonViTinhRoutes = [
   {
-    path: ConstantList.ROOT_PATH + "directory/agency",
+    path: ConstantList.ROOT_PATH + "directory/donvitinh",
     exact: true,
     component: ViewComponent
   }
 ];
 
-export default AgencyRoutes;
+export default DonViTinhRoutes;

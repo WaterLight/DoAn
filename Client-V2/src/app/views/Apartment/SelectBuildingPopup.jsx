@@ -12,7 +12,7 @@ import Paper from '@material-ui/core/Paper';
 // import {searchByPage} from "./ApartmentService";
 import { Link } from "react-router-dom";
 import SearchIcon from '@material-ui/icons/Search';
-import {searchByPage as getUrbanArea} from "../UrbanArea/UrbanAreaService";
+import {searchByPage as getUrbanArea} from "../NhanVien/NhanVienService";
 import {searchByPage as getProject} from "../Project/ProjectService";
 import {searchByPage} from '../Building/BuildingService'
 import AsynchronousAutocomplete from "../utilities/AsynchronousAutocomplete";

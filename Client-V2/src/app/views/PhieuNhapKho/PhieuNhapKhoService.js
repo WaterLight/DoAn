@@ -1,11 +1,7 @@
 import axios from "axios";
 import ConstantList from "../../appConfig";
 
-const API_PATH = ConstantList.API_ENPOINT + "/api/agency/";
-
-export const getAllByRoot = () => {
-  return axios.get(API_PATH + "/1/10");
-};
+const API_PATH = ConstantList.API_ENPOINT + "/api/phieuxuatkho/";
 
 export const searchByPage = (searchObject) => {
   return axios.post(API_PATH +  "searchByPage", searchObject);
@@ -22,6 +18,9 @@ export const handleDeleteList = listAlert => {
 export const saveItem = item => {
   return axios.post(API_PATH, item);
 };
+export const updateItem = item => {
+  return axios.put(API_PATH +item.id, item);
+};
 
 export const getItemById = id => {
   return axios.get(API_PATH + id);
@@ -31,20 +30,4 @@ export const checkCode = (id, code) => {
   const config = { params: {id: id, code: code } };
   return axios.get(API_PATH + "checkCode", config);
 };
-
-
-
-// export const searchByPage = (searchObject) => {
-//   var url = API_PATH + "/searchByPage";
-//   return axios.post(url, searchObject);
-// };
-
-
-
-
-
-
-
-
-
 

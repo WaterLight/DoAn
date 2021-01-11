@@ -13,11 +13,14 @@ import {
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 import Draggable from "react-draggable";
 import NotificationPopup from "../Component/NotificationPopup/NotificationPopup";
+import SelectUserPopup from "./SelectUserPopup";
+import SelectAgencyPopup from "./SelectAgencyPopup";
 import {
-  addNewSource,
-  updateSource,
+    saveItem,
+  addItem,
+  updateItem,
   checkCode,
-} from "./RealEstateSourceService";
+} from "./SanPhamService";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -38,7 +41,7 @@ function PaperComponent(props) {
   );
 }
 
-class RealEstateSourceDialog extends Component {
+class AgentDialog extends Component {
   state = {
     id: "",
     name: "",
@@ -47,10 +50,17 @@ class RealEstateSourceDialog extends Component {
     type: "",
     shouldOpenNotificationPopup: false,
     Notification: "",
+    shouldOpenSelectUserPopup: false,
+    SelectAgencyPopup: false,
+    agency:null,
+    user:null,
   };
 
   handleDialogClose = () => {
-    this.setState({ shouldOpenNotificationPopup: false });
+    this.setState({ shouldOpenNotificationPopup: false,
+                    shouldOpenSelectUserPopup:false,
+                    shouldOpenSelectAgencyPopup: false,
+                 });
   };
 
   handleChange = (event, source) => {
@@ -66,9 +76,9 @@ class RealEstateSourceDialog extends Component {
 
   handleFormSubmit = () => {
     let { id } = this.state;
-    let { code } = this.state;
+    let { maSP } = this.state;
     var { t } = this.props;
-    checkCode(id, code).then((result) => {
+    checkCode(id, maSP).then((result) => {
       //Nếu trả về true là code đã được sử dụng
       if (result.data) {
         toast.warning(t("general.dupli_code"));
@@ -76,14 +86,14 @@ class RealEstateSourceDialog extends Component {
       } else {
         //Nếu trả về false là code chưa sử dụng có thể dùng
         if (id) {
-          updateSource({
+          updateItem({
             ...this.state,
           }).then(() => {
             toast.success(t("general.updateSuccess"));
             this.props.handleOKEditClose();
           });
         } else {
-          addNewSource({
+            saveItem({
             ...this.state,
           }).then(() => {
             toast.success(t("general.addSuccess"));
@@ -97,14 +107,19 @@ class RealEstateSourceDialog extends Component {
   componentWillMount() {
     //getUserById(this.props.uid).then(data => this.setState({ ...data.data }));
     let { open, handleClose, item } = this.props;
-    this.setState(item);
+    this.setState({...item});
   }
-
+  handleSelectUser =(item)=>{
+      this.setState({user:item ? item : null,shouldOpenSelectUserPopup: false, })
+  }
+  handleSelectAgency =(item) =>{
+    this.setState({agency:item ? item : null,shouldOpenSelectAgencyPopup: false, })
+  }
   render() {
     let {
       id,
-      name,
-      code,
+      maSP,
+      tenSP,
       description,
       shouldOpenNotificationPopup,
     } = this.state;
@@ -116,7 +131,6 @@ class RealEstateSourceDialog extends Component {
         maxWidth="sm"
         fullWidth
       >
-        
         <DialogTitle
           style={{ cursor: "move", paddingBottom: "0px" }}
           id="draggable-dialog-title"
@@ -138,8 +152,8 @@ class RealEstateSourceDialog extends Component {
                   }
                   onChange={this.handleChange}
                   type="text"
-                  name="name"
-                  value={name}
+                  name="tenSP"
+                  value={tenSP}
                   validators={["required"]}
                   errorMessages={[t("general.required")]}
                 />
@@ -156,28 +170,105 @@ class RealEstateSourceDialog extends Component {
                   }
                   onChange={this.handleChange}
                   type="text"
-                  name="code"
-                  value={code}
+                  name="maSP"
+                  value={maSP}
                   validators={["required"]}
                   errorMessages={[t("general.required")]}
                 />
               </Grid>
               <Grid item sm={12} xs={12}>
+                <Button
+                  size="small"
+                  style={{ float: "right" }}
+                  className=" mt-16"
+                  variant="contained"
+                  color="primary"
+                  onClick={()=>{
+                      this.setState({shouldOpenSelectAgencyPopup:true})
+                  }}
+                >
+                  {t("general.select")}
+                </Button>
                 <TextValidator
-                  className="w-100 "
+                  size="small"
+                  InputLabelProps={{ shrink: true }}
+                  InputProps={{
+                    readOnly: true,
+                  }}
                   label={
                     <span>
-                      <span style={{ color: "red" }}>*</span>
-                      {t("general.description")}
+                      <span style={{ color: "red" }}></span>
+                      {t("directory.agency")}
                     </span>
                   }
-                  onChange={this.handleChange}
-                  type="text"
-                  name="description"
-                  value={description}
-                  validators={["required"]}
-                  errorMessages={[t("general.required")]}
+                  // className="w-80"
+                  style ={{width: "80%"}}
+                  value={
+                    this.state.agency != null ? this.state.agency.name : ""
+                  }
                 />
+
+                {this.state.shouldOpenSelectAgencyPopup && (
+                  <SelectAgencyPopup
+                    open={this.state.shouldOpenSelectAgencyPopup}
+                    handleSelect={this.handleSelectAgency}
+                    selectedItem={
+                      this.state.agency != null
+                        ? this.state.agency
+                        : {}
+                    }
+                    handleClose={this.handleDialogClose}
+                    t={t}
+                    i18n={i18n}
+                  />
+                )}
+              </Grid>
+              <Grid item sm={12} xs={12}>
+                <Button
+                  size="small"
+                  style={{ float: "right" }}
+                  className=" mt-16"
+                  variant="contained"
+                  color="primary"
+                  onClick={()=>{
+                      this.setState({shouldOpenSelectUserPopup:true})
+                  }}
+                >
+                  {t("general.select")}
+                </Button>
+                <TextValidator
+                  size="small"
+                  InputLabelProps={{ shrink: true }}
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  label={
+                    <span>
+                      <span style={{ color: "red" }}></span>
+                      {t("user.title")}
+                    </span>
+                  }
+                  // className="w-80"
+                  style ={{width: "80%"}}
+                  value={
+                    this.state.user != null ? this.state.user.displayName : ""
+                  }
+                />
+
+                {this.state.shouldOpenSelectUserPopup && (
+                  <SelectUserPopup
+                    open={this.state.shouldOpenSelectUserPopup}
+                    handleSelect={this.handleSelectUser}
+                    selectedItem={
+                      this.state.user != null 
+                        ? this.state.user
+                        : {}
+                    }
+                    handleClose={this.handleDialogClose}
+                    t={t}
+                    i18n={i18n}
+                  />
+                )}
               </Grid>
             </Grid>
           </DialogContent>
@@ -207,4 +298,4 @@ class RealEstateSourceDialog extends Component {
   }
 }
 
-export default RealEstateSourceDialog;
+export default AgentDialog;

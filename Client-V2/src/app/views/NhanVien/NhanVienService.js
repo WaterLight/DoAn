@@ -1,24 +1,24 @@
 import axios from "axios";
 import ConstantList from "../../appConfig";
-const API_PATH = ConstantList.API_ENPOINT + "/api/source";
+const API_PATH = ConstantList.API_ENPOINT + "/api/nhanvien";
 
-export const getAllSource = (pageIndex, pageSize) => {
+export const getAllUrbanArea = (pageIndex, pageSize) => {
     return axios.get(API_PATH+`/${pageIndex}/${pageSize}`);
   };
 
-export const addNewSource = User => {
+export const addNewUrbanArea = User => {
       return axios.post(API_PATH , User);
     };
 
-export const deleteSource= id => {
+export const deleteUrbanArea= id => {
   return axios.delete(API_PATH +"/"+id);
 };
 
-export const updateSource = asset => {
-  return axios.post(API_PATH , asset);
+export const updateUrbanArea = asset => {
+  return axios.put(API_PATH +"/" +asset.id, asset);
 };
 
-export const getSourceById = id => {
+export const getUrbanAreaById = id => {
   return axios.get(API_PATH + "/" + id);
 };
 

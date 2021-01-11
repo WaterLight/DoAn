@@ -12,7 +12,7 @@ import Paper from '@material-ui/core/Paper';
 import {searchByPage} from "./ProjectService";
 import { Link } from "react-router-dom";
 import SearchIcon from '@material-ui/icons/Search';
-import {searchByPage as getListUrban} from '../UrbanArea/UrbanAreaService'
+import {searchByPage as getListUrban} from '../NhanVien/NhanVienService'
 function PaperComponent(props) {
   return (
     <Draggable handle="#draggable-dialog-title" cancel={'[class*="MuiDialogContent-root"]'}>

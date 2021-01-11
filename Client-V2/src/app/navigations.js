@@ -12,72 +12,84 @@ export const navigations = [
     path: "",
     isVisible:true,
     children: [
+      // {
+      //   name: "directory.real_state",
+      //   path: ConstantList.ROOT_PATH+"directory/apartment",
+      //   iconText: "S",
+      //   isVisible:true,
+      // },
+      // {
+      //   name: "Dashboard.AdministrativeUnit",
+      //   path: ConstantList.ROOT_PATH+"dashboard/AdministrativeUnits",
+      //   iconText: "S",
+      //   isVisible:true,
+      // },
       {
-        name: "directory.real_state",
-        path: ConstantList.ROOT_PATH+"directory/apartment",
+        name: "Danh Sách Sản Phẩm",
+        path: ConstantList.ROOT_PATH+"directory/sanpham",
         iconText: "S",
         isVisible:true,
       },
       {
-        name: "Dashboard.AdministrativeUnit",
-        path: ConstantList.ROOT_PATH+"dashboard/AdministrativeUnits",
+        name: "Đơn Vi Tính",
+        path: ConstantList.ROOT_PATH+"directory/donvitinh",
         iconText: "S",
         isVisible:true,
       },
       {
-        name: "directory.agency",
-        path: ConstantList.ROOT_PATH+"directory/agency",
+        name: "Kho",
+        path: ConstantList.ROOT_PATH+"directory/kho",
         iconText: "S",
         isVisible:true,
       },
       {
-        name: "directory.agent",
-        path: ConstantList.ROOT_PATH+"directory/agent",
+        name: "Nhân Viên",
+        path: ConstantList.ROOT_PATH+"directory/nhanvien",
         iconText: "S",
         isVisible:true,
       },
       {
-        name: "directory.source",
-        path: ConstantList.ROOT_PATH+"directory/source",
+        name: "Phiếu Nhập Kho",
+        path: ConstantList.ROOT_PATH+"directory/phieunhapkho",
         iconText: "S",
         isVisible:true,
       },
       {
-        name: "directory.urbanArea",
-        path: ConstantList.ROOT_PATH+"directory/urban-area",
+        name: "Phiếu Xuất Kho",
+        path: ConstantList.ROOT_PATH+"directory/phieuxuatkho",
         iconText: "S",
         isVisible:true,
       },
-      {
-        name: "directory.project",
-        path: ConstantList.ROOT_PATH+"directory/project",
-        iconText: "S",
-        isVisible:true,
-      },
-      {
-        name: "directory.building",
-        path: ConstantList.ROOT_PATH+"directory/building",
-        iconText: "S",
-        isVisible:true,
-      },
-      {
-        name: "directory.stateType",
-        path: ConstantList.ROOT_PATH+"directory/statetype",
-        iconText: "S",
-        isVisible:true,
-      },
-      {
-        name: "directory.RequirementType",
-        path: ConstantList.ROOT_PATH+"directory/requirementType",
-        iconText: "S",
-        isVisible:true,
-      },
-      {
-        name: "directory.ownertype",
-        path: ConstantList.ROOT_PATH+"directory/ownertype",
-        iconText: "S",
-        isVisible:true,
-      }
+      // {
+      //   name: "directory.project",
+      //   path: ConstantList.ROOT_PATH+"directory/project",
+      //   iconText: "S",
+      //   isVisible:true,
+      // },
+      // {
+      //   name: "directory.building",
+      //   path: ConstantList.ROOT_PATH+"directory/building",
+      //   iconText: "S",
+      //   isVisible:true,
+      // },
+      // {
+      //   name: "directory.stateType",
+      //   path: ConstantList.ROOT_PATH+"directory/statetype",
+      //   iconText: "S",
+      //   isVisible:true,
+      // },
+      // {
+      //   name: "directory.RequirementType",
+      //   path: ConstantList.ROOT_PATH+"directory/requirementType",
+      //   iconText: "S",
+      //   isVisible:true,
+      // },
+      // {
+      //   name: "directory.ownertype",
+      //   path: ConstantList.ROOT_PATH+"directory/ownertype",
+      //   iconText: "S",
+      //   isVisible:true,
+      // }
 
       
     ]

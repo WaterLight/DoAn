@@ -9,10 +9,11 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Draggable from 'react-draggable';
 import Paper from '@material-ui/core/Paper';
+// import {searchByPage} from "./ApartmentService";
 import { Link } from "react-router-dom";
 import SearchIcon from '@material-ui/icons/Search';
-import Autocomplete from "@material-ui/lab/Autocomplete";
-import {searchByPage} from '../Agency/AgencyService'
+
+import {searchByPage} from '../NhanVien/NhanVienService'
 
 function PaperComponent(props) {
   return (
@@ -21,7 +22,7 @@ function PaperComponent(props) {
     </Draggable>
   );
 }
-class SelectAgencyPopup extends React.Component {
+class ChonNhanVien extends React.Component {
   constructor(props) {
     super(props);
     this.handleChange = this.handleChange.bind(this);
@@ -138,14 +139,10 @@ class SelectAgencyPopup extends React.Component {
   onClickRow = (selectedRow) => {
     document.querySelector(`#radio${selectedRow.id}`).click();
   }
-  selectAdministrative =(event,item)=>{
-    this.setState({administrative:item},()=>{
-      this.search()
-    })
-  }
+
   render() {
     const { t, i18n, handleClose, handleSelect, selectedItem, open } = this.props;
-    let { keyword, shouldOpenProductDialog, itemList,administrativeList,administrative } = this.state;
+    let { keyword, shouldOpenProductDialog, itemList } = this.state;
     let columns = [
       {
         title: t("general.select"),
@@ -155,17 +152,16 @@ class SelectAgencyPopup extends React.Component {
         render: rowData => <Radio id={`radio${rowData.id}`} name="radSelected" value={rowData.id} checked={this.state.selectedValue === rowData.id} onClick={(event) => this.handleClick(event, rowData)}
         />
       },
-      { title: t("general.code"), field: "code", align: "left", width: "150" },
-      { title: t("general.name"), field: "name", width: "150" },
+      { title: t("general.code"), field: "maNV", align: "left", width: "150" },
+      { title: t("general.name"), field: "tenNV", width: "150" },
     ];
     return (
       <Dialog onClose={handleClose} open={open} PaperComponent={PaperComponent} maxWidth={'md'} fullWidth>
         <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
-          <span className="mb-20">{t("directory.agency")}</span>
+          <span className="mb-20">{t("title.source")}</span>
         </DialogTitle>
         <DialogContent>
-          <Grid item container xs={12}>
-          <Grid item  md={6} sm={12} xs={12}>
+          <Grid item xs={12}>
             <Input
               label={t('general.enterSearch')}
               type="text"
@@ -190,25 +186,16 @@ class SelectAgencyPopup extends React.Component {
                 </InputAdornment>
               }
             />
-            </Grid>
-        {/* <Grid item  md={6} sm={12} xs={12}>
-          <Autocomplete
-              size="small"
-              id="combo-box"
-              options={administrativeList}
-              className="flex-end w-80 mb-10"
-              getOptionLabel={option => option.name}
-              onChange={this.selectAdministrative}
-              value={administrative ? administrative :null}
-              renderInput={params => (
-                <TextField
-                  {...params}
-                  label={t("AdministrativeUnit.title")}
-                  variant="outlined"
-                />
-              )}
-            />
-           </Grid> */}
+              {/* { itemList.length !== 0 ? '' :
+                <Button className="mb-16 mr-16 align-bottom"
+                  variant="contained"
+                  color="primary"
+                  // onClick={() => this.handleOpenProductDialog()} 
+                  onClick={() => this.handleAddItem()}
+                  >
+                  {t('Product.add')}
+                </Button>
+              } */}
           </Grid>
           <Grid item xs={12}>
 
@@ -217,10 +204,10 @@ class SelectAgencyPopup extends React.Component {
               columns={columns}
               onRowClick={((evt, selectedRow) => this.onClickRow(selectedRow))}
 
-              parentChildData={(row, rows) => {
-                var list = rows.find(a => a.id === row.parentId);
-                return list;
-              }}
+            //   parentChildData={(row, rows) => {
+            //     var list = rows.find(a => a.id === row.parentId);
+            //     return list;
+            //   }}
               options={{
                 toolbar: false,
                 selection: false,
@@ -277,4 +264,4 @@ class SelectAgencyPopup extends React.Component {
     )
   }
 }
-export default SelectAgencyPopup;
+export default ChonNhanVien;

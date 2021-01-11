@@ -22,7 +22,7 @@ import DashboardWelcomeCard from "../cards/DashboardWelcomeCard";
 import AreaChart from "../charts/echarts/AreaChart";
 import {searchByPage,getDashboardAnalytics} from "./DashboardService";
 import Autocomplete from "@material-ui/lab/Autocomplete";
-import {searchByPage as getUrbanArea} from "../UrbanArea/UrbanAreaService";
+import {searchByPage as getUrbanArea} from "../NhanVien/NhanVienService";
 import {searchByPage as getBuilding} from "../Building/BuildingService";
 import {searchByPage as getProject} from "../Project/ProjectService";
 import {searchByRealEstateOwner as searchByRealEstateOwner} from "../Apartment/ApartmentService";

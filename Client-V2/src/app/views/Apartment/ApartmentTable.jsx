@@ -56,7 +56,7 @@ import NotificationPopup from "../Component/NotificationPopup/NotificationPopup"
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
-import {searchByPage as getUrbanArea} from "../UrbanArea/UrbanAreaService";
+import {searchByPage as getUrbanArea} from "../NhanVien/NhanVienService";
 import {searchByPage as getBuilding} from "../Building/BuildingService";
 import {searchByPage as getProject} from "../Project/ProjectService";
 import {searchByPage as getRequirementType} from "../RequirementType/RequirementTypeService";

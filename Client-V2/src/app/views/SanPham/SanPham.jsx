@@ -35,10 +35,10 @@ import {
     getItemById,
     getAllItem,
     deleteCheckItem,
-  } from "./AgencyService";
+  } from "./SanPhamService";
   
   
-  import AgencyDialog from "./AgencyDialog";
+  import AgentDialog from "./SanPhamDialog";
   import { Breadcrumb, ConfirmationDialog } from "egret";
   import { Helmet } from "react-helmet";
   import { withStyles } from "@material-ui/core/styles";
@@ -96,7 +96,7 @@ import {
       </div>
     );
   }
-  class Agency extends React.Component {
+  class Agent extends React.Component {
     state = {
       rowsPerPage: 5,
       page: 0,
@@ -227,7 +227,7 @@ import {
         this.updatePageData();
         this.handleDialogClose();
       }).catch(() => {
-        toast.warning(t("agency.warning-delete"));
+        toast.warning(t("RequirementType.warning-delete"));
       });
     };
     handleEditItem = (item) => {
@@ -257,10 +257,10 @@ import {
       }
       this.handleDialogClose();
       if (listAlert.length === list.length) {
-        toast.warning(t("agency.use_all"));
+        toast.warning(t("RequirementType.use_all"));
         // alert("Các trạng thái đều đã sử dụng");
       } else if (listAlert.length > 0) {
-        toast.warning(t("agency.deleted_unused"));
+        toast.warning(t("RequirementType.deleted_unused"));
         // alert("Đã xoá các trạng thái chưa sử dụng");
       }
     }
@@ -280,7 +280,7 @@ import {
       console.log(this.state)
       const { t, i18n } = this.props;
       let { keyword, shouldOpenNotificationPopup } = this.state;
-      let TitlePage = t("directory.agency");
+      let TitlePage = t("Sản Phẩm");
   
       let columns = [
         {
@@ -317,8 +317,10 @@ import {
             />
           ),
         },
-        { title: t("general.name") + " " + t("directory.agency"), field: "name", width: "150" },
-        { title: t("general.code"), field: "code", align: "left", width: "150" },    
+        { title: t("general.name") , field: "tenSP", width: "150" },
+        { title: t("general.code"), field: "maSP", align: "left", width: "150" },
+        // { title: t("directory.agency"), field: "agency.name", align: "left", width: "150" },
+        // { title: t("user.title"), field: "user.displayName", align: "left", width: "150" },    
       ];
       console.log(this.state.itemList);
       return (
@@ -393,7 +395,7 @@ import {
             <Grid item xs={12}>
               <div>
                 {this.state.shouldOpenEditorDialog && (
-                  <AgencyDialog
+                  <AgentDialog
                     t={t}
                     i18n={i18n}
                     handleClose={this.handleDialogClose}
@@ -505,5 +507,5 @@ import {
       );
     }
   }
-  export default Agency;
+  export default Agent;
   
