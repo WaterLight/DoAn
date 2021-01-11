@@ -58,6 +58,7 @@ public class ApplicationStartupListener implements ApplicationListener<ContextRe
 		
 		try {
 			createRoles();
+			createAdminUser();
 		} catch (XMLStreamException e) {
 			e.printStackTrace();
 		}

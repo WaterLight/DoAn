@@ -7,7 +7,7 @@ export const navigations = [
     isVisible:true,
   },
   {
-    name: "Dashboard.directory",
+    name: "Danh mục",
     icon: "dashboard",
     path: "",
     isVisible:true,
@@ -25,18 +25,15 @@ export const navigations = [
       //   isVisible:true,
       // },
       {
-        name: "Danh Sách Sản Phẩm",
-        path: ConstantList.ROOT_PATH+"directory/sanpham",
-        iconText: "S",
+		name: "Danh Sách Sản Phẩm",
+        path: ConstantList.ROOT_PATH+"directory/sanpham",        iconText: "S",
         isVisible:true,
       },
       {
-        name: "Đơn Vi Tính",
-        path: ConstantList.ROOT_PATH+"directory/donvitinh",
-        iconText: "S",
+ 		name: "Đơn Vi Tính",
+        path: ConstantList.ROOT_PATH+"directory/donvitinh",        iconText: "S",
         isVisible:true,
-      },
-      {
+{
         name: "Kho",
         path: ConstantList.ROOT_PATH+"directory/kho",
         iconText: "S",
@@ -89,10 +86,7 @@ export const navigations = [
       //   path: ConstantList.ROOT_PATH+"directory/ownertype",
       //   iconText: "S",
       //   isVisible:true,
-      // }
-
-      
-    ]
+      // }    ]
   }  
   ,{
     name: "Dashboard.manage",

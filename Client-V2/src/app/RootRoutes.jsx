@@ -3,12 +3,10 @@ import { Redirect } from "react-router-dom";
 import homeRoutes from "./views/home/HomeRoutes";
 import sessionRoutes from "./views/sessions/SessionRoutes";
 import dashboardRoutes from "./views/dashboard/DashboardRoutes";
-import administrativeUnitRoutes from "./views/AdministrativeUnit/AdministrativeUnitRoutes";
-import fiscalYearRoutes from "./views/FiscalYear/FiscalYearRoutes";
-import otherRoutes from "./views/others/OtherRoutes";
 import UserRoutes from "./views/User/UserRoutes";
-import departmentRoutes from "./views/Department/DepartmentRoutes";
 import roleRoutes from "./views/Role/RoleRoutes";
+import DonViTinhRoutes from "./views/DonViTinh/DonViTinhRoutes";
+import KhoRoutes from "./views/Kho/KhoRoutes";
 import ConstantList from "./appConfig";
 import MenuRoutes from "./views/Menus/MenuRoutes";
 import pageLayoutRoutes from "./views/page-layouts/PageLayoutRoutees";
@@ -22,9 +20,7 @@ import RealStateTypeRoutes from "./views/RealStateType/RealStateTypeRoutes";
 import DonViTinhRoutes from "./views/DonViTinh/DonViTinhRoutes";
 import RequirementTypeRoutes from "./views/RequirementType/RequirementTypeRoutes";
 import SanPhamRoutes from "./views/SanPham/SanPhamRoutes";
-import PhieuNhapKhoRoutes from "./views/PhieuNhapKho/PhieuNhapKhoRoutes";
-
-const redirectRoute = [
+import PhieuNhapKhoRoutes from "./views/PhieuNhapKho/PhieuNhapKhoRoutes";const redirectRoute = [
   {
     path: ConstantList.ROOT_PATH,
     exact: true,
@@ -39,20 +35,25 @@ const errorRoute = [
 ];
 
 const routes = [
+<<<<<<< .mine
   ...BuildingRoutes,
   ...projectRoutes,
   ...NhanVienRoutes,
   ...khoRoutes,
   ...apartmentRouters,
+=======
+  ...DonViTinhRoutes,
+  ...KhoRoutes,
+
+
+
+>>>>>>> .theirs
   ...homeRoutes,
   ...sessionRoutes,
   ...dashboardRoutes,
-  ...administrativeUnitRoutes,
-  ...fiscalYearRoutes,
-  ...departmentRoutes,
-  ...pageLayoutRoutes,
   ...UserRoutes,
   ...roleRoutes,
+<<<<<<< .mine
   ...MenuRoutes,
   ...RealEstateOwnerTypeRoutes,
   ...RealStateTypeRoutes,
@@ -60,8 +61,16 @@ const routes = [
   ...RequirementTypeRoutes,
   ...SanPhamRoutes,
   ...PhieuNhapKhoRoutes,
+=======
+
+
+
+
+
+
+
+>>>>>>> .theirs
   ...errorRoute,
- 
 ];
 
 export default routes;

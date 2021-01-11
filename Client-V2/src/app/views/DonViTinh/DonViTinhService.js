@@ -27,14 +27,3 @@ export const checkCode = (id, code) => {
   const config = { params: {id: id, code: code } };
   return axios.get(API_PATH + "checkCode", config);
 };
-
-
-
-
-
-
-
-
-
-
-
