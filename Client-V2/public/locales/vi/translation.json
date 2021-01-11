@@ -1,5 +1,5 @@
 ﻿{
-  "web_site": "Phần mềm quản lý Bất Động Sản",
+  "web_site": "Hệ thống quản lý bán giày thể thao",
   "title": {
     "source": "Nguồn Hàng",
     "urbanArea": "Khu Đô Thị ",
@@ -437,5 +437,44 @@
   "status":"Lọc theo trạng thái",
   "price":"Lọc theo giá",
   "furniture":"Lọc theo đồ nội thất"
+},
+"StockKeepingUnit": {
+  "name": "Tên đơn vị tính",
+  "code": "Mã đơn vị tính",
+  "coefficient": "Trọng số",
+  "title": "Đơn vị tính",
+  "filter": "Tìm theo tên, mã đơn vị tính",
+  "noti": {
+    "use": "Đơn vị tính đang sử dụng, không thể xóa",
+    "use_all": "Đơn vị tính đều đã sử dụng",
+    "deleted_unused": "Đã xoá đơn vị tính chưa sử dụng",
+    "dupli_code": "Mã đã được sử dụng",
+    "addSuccess": "Tạo mới thành công một đơn vị tính",
+    "addFail": "Có lỗi xảy ra khi thêm mới đơn vị tính",
+    "updateSuccess": "Cập nhật thành công thông tin đơn vị tính",
+    "deleteSuccess": "Xoá thành công",
+    "deleteFail": "Xoá thất bại, đơn vị tính đã được sử dụng"
+  }
+}, "Store": {
+  "title": "Kho",
+  "name": "Tên kho",
+  "code": "Mã kho",
+  "address": "Địa điểm",
+  "filter": "Tìm theo tên, mã hoặc địa điểm kho",
+  "inventory_receiving_voucher": "Nhập kho",
+  "inventory_delivery_voucher": "Xuất kho",
+  "report": "Báo cáo nhập xuất tồn",
+  "select_title": "Chọn kho",
+  "noti": {
+    "use": "Kho đang sử dụng, không thể xóa",
+    "use_all": "Kho đều đã sử dụng",
+    "deleted_unused": "Đã xoá kho chưa sử dụng",
+    "dupli_code": "Mã đã được sử dụng",
+    "addSuccess": "Thêm mới kho thành công",
+    "addFail": "Có lỗi xảy ra khi thêm mới kho",
+    "updateFail": "Có lỗi xảy ra khi cập nhật thông tin kho",
+    "updateSuccess": "Cập nhật thông tin kho thành công",
+    "deleteSuccess": "Xoá thành công"
+  }
 }
 }
