@@ -224,7 +224,8 @@
     "updateSuccess":"Cập nhật thành công",
     "dupli_code":"Mã đã được sử dụng",
     "deleteSuccess":"Xóa thành công",
-    "status":"Trạng thái"
+    "status":"Trạng thái",
+    "typeStaff":"Loại nhân viên"
   },
   "toastr": {
     "error": "Có lỗi xảy ra, vui lòng thử lại."
