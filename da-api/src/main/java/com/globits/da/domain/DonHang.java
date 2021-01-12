@@ -1,11 +1,15 @@
 package com.globits.da.domain;
 
 import java.util.Date;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.globits.core.domain.BaseObject;
@@ -33,6 +37,8 @@ public class DonHang extends BaseObject{
 	private NhanVien nguoiBan;
 	@Column(name = "ghi_chu")
 	private String ghiChu;
+	@OneToMany(mappedBy = "sanPham", cascade=CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval=true)
+	private Set<SanPhamDonHang> sanPhamDonHang;
 	public String getTen() {
 		return ten;
 	}
@@ -92,6 +98,12 @@ public class DonHang extends BaseObject{
 	}
 	public void setGhiChu(String ghiChu) {
 		this.ghiChu = ghiChu;
+	}
+	public Set<SanPhamDonHang> getSanPhamDonHang() {
+		return sanPhamDonHang;
+	}
+	public void setSanPhamDonHang(Set<SanPhamDonHang> sanPhamDonHang) {
+		this.sanPhamDonHang = sanPhamDonHang;
 	}
 	
 
