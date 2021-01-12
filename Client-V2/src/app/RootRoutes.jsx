@@ -5,7 +5,6 @@ import sessionRoutes from "./views/sessions/SessionRoutes";
 import dashboardRoutes from "./views/dashboard/DashboardRoutes";
 import UserRoutes from "./views/User/UserRoutes";
 import roleRoutes from "./views/Role/RoleRoutes";
-import DonViTinhRoutes from "./views/DonViTinh/DonViTinhRoutes";
 import KhoRoutes from "./views/Kho/KhoRoutes";
 import ConstantList from "./appConfig";
 import MenuRoutes from "./views/Menus/MenuRoutes";
@@ -35,25 +34,16 @@ const errorRoute = [
 ];
 
 const routes = [
-<<<<<<< .mine
   ...BuildingRoutes,
   ...projectRoutes,
   ...NhanVienRoutes,
   ...khoRoutes,
   ...apartmentRouters,
-=======
-  ...DonViTinhRoutes,
-  ...KhoRoutes,
-
-
-
->>>>>>> .theirs
   ...homeRoutes,
   ...sessionRoutes,
   ...dashboardRoutes,
   ...UserRoutes,
   ...roleRoutes,
-<<<<<<< .mine
   ...MenuRoutes,
   ...RealEstateOwnerTypeRoutes,
   ...RealStateTypeRoutes,
@@ -61,15 +51,6 @@ const routes = [
   ...RequirementTypeRoutes,
   ...SanPhamRoutes,
   ...PhieuNhapKhoRoutes,
-=======
-
-
-
-
-
-
-
->>>>>>> .theirs
   ...errorRoute,
 ];
 
