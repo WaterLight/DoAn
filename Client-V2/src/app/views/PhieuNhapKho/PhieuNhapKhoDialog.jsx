@@ -8,6 +8,9 @@ import {
   Paper,
   DialogTitle,
   DialogContent,
+  Icon,
+  IconButton,
+
 } from "@material-ui/core";
 // import Paper from '@material-ui/core/Paper'
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
@@ -21,9 +24,18 @@ import {
   updateItem,
   checkCode,
 } from "./PhieuNhapKhoService";
+import MaterialTable, {
+  MTableToolbar,
+  Chip,
+  MTableBody,
+  MTableHeader,
+} from "material-table";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import MultipleProduct from "./MultipleProduct";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
+import Tooltip from "@material-ui/core/Tooltip";
+import { useTranslation, withTranslation, Trans } from "react-i18next";
 toast.configure({
   autoClose: 2000,
   draggable: false,
@@ -40,7 +52,51 @@ function PaperComponent(props) {
     </Draggable>
   );
 }
+const LightTooltip = withStyles((theme) => ({
+  tooltip: {
+    backgroundColor: theme.palette.common.white,
+    color: "rgba(0, 0, 0, 0.87)",
+    boxShadow: theme.shadows[1],
+    fontSize: 11,
+    position: "absolute",
+    top: "-10px",
+    left: "-25px",
+    width: "80px",
+  },
+}))(Tooltip);
 
+function MaterialButton(props) {
+  const { t, i18n } = useTranslation();
+  const item = props.item;
+  return (
+    <div className="none_wrap">
+      <LightTooltip
+        title={t("general.editIcon")}
+        placement="right-end"
+        enterDelay={300}
+        leaveDelay={200}
+      >
+        <IconButton size="small" onClick={() => props.onSelect(item, 0)}>
+          <Icon fontSize="small" color="primary">
+            edit
+          </Icon>
+        </IconButton>
+      </LightTooltip>
+      <LightTooltip
+        title={t("general.deleteIcon")}
+        placement="right-end"
+        enterDelay={300}
+        leaveDelay={200}
+      >
+        <IconButton size="small" onClick={() => props.onSelect(item, 1)}>
+          <Icon fontSize="small" color="error">
+            delete
+          </Icon>
+        </IconButton>
+      </LightTooltip>
+    </div>
+  );
+}
 class PhieuNhapKhoDialog extends Component {
   state = {
     id: "",
@@ -54,15 +110,21 @@ class PhieuNhapKhoDialog extends Component {
     ChonNhanVien: false,
     agency:null,
     user:null,
+    shouldOpenMultipleDialog : false,
   };
 
   handleDialogClose = () => {
     this.setState({ shouldOpenNotificationPopup: false,
                     shouldOpenChonKho:false,
                     shouldOpenChonNhanVien: false,
+                    shouldOpenMultipleDialog : false,
                  });
   };
-
+  handleDialogCancel = () => {
+    this.setState({
+      shouldOpenMultipleDialog : false,
+    });
+  };
   handleChange = (event, source) => {
     event.persist();
     if (source === "switch") {
@@ -115,21 +177,117 @@ class PhieuNhapKhoDialog extends Component {
   handleSelectAgency =(item) =>{
     this.setState({nguoiNhap:item ? item : null,shouldOpenChonNhanVien: false, })
   }
+  handleChangeSL  =(item,e) =>{
+    console.log(item)
+    let {sanPhamPhieuNhap} = this.state
+    if(sanPhamPhieuNhap == null ){
+      sanPhamPhieuNhap =[] 
+      let p = {}
+      p.sanPham = item;
+      p.soluong = e.target.value
+      sanPhamPhieuNhap.push(p)
+    }
+    if(sanPhamPhieuNhap != null && sanPhamPhieuNhap.length > 0){
+      
+    }
+
+    // this.setState({nguoiNhap:item ? item : null,shouldOpenChonNhanVien: false, })
+  }
+  handleSelectSP = (item) => {
+    let data = item.map((row) => ({ ...row, tableData: { checked: false } }));
+    this.setState({ sanPhamPhieuNhap: data });
+    this.handleDialogCancel();
+  };
   render() {
     let {
       id,
       ma,
       ten,
       description,
-      shouldOpenNotificationPopup,
+      sanPhamPhieuNhap,
     } = this.state;
     
     let { open, handleClose, handleOKEditClose, t, i18n } = this.props;
+
+    let columns = [
+      {
+        title: t("general.action"),
+        field: "custom",
+        align: "left",
+        width: "90px",
+        headerStyle: {
+          padding: "0px",
+        },
+        cellStyle: {
+          padding: "0px",
+        },
+        render: (rowData) => (
+          <MaterialButton
+            item={rowData}
+            onSelect={(rowData, method) => {
+              if (method === 0) {
+                this.setState({shouldOpenLabTestPropertyEditDialog: true, item: rowData});
+              } else if (method === 1) {
+                sanPhamPhieuNhap.map((pro, index) => {
+                  if (pro.sanPham.maSP === rowData.sanPham.maSP) {
+                    sanPhamPhieuNhap.splice(index, 1);
+                  }
+                });
+                this.setState({ sanPhamPhieuNhap: sanPhamPhieuNhap });
+              } else {
+                alert("Call Selected Here:" + rowData.id);
+              }
+            }}
+          />
+        ),
+      },
+      {
+        title: t("Tên sản phẩm"),
+        field: "sanPham.tenSP",
+        width: "300",
+      },
+      {
+        title: t("Mã sản phẩm"),
+        field: "sanPham.maSP",
+        width: "300",
+      },
+      {
+        title: t("Số lượng"),
+        field: "code",
+        align: "left",
+        render: (row) => 
+              <TextValidator
+                  className="w-100 "
+                  onChange={(e) =>this.handleChangeSL(row,encodeURI)}
+                  type="number"
+                  value={row.soLuong}
+                  validators={["required"]}
+                  errorMessages={[t("general.required")]}
+                />
+        
+      },
+      {
+        title: t("Giá"),
+        field: "code",
+        align: "left",
+        render: (row) => 
+              <TextValidator
+                  className="w-100 "
+                  onChange={this.handleChangeGia}
+                  type="number"
+                  value={row.gia}
+                  validators={["required"]}
+                  errorMessages={[t("general.required")]}
+                />
+        
+      },
+      
+    ];
     return (
       <Dialog
         open={open}
         PaperComponent={PaperComponent}
-        maxWidth="sm"
+        maxWidth="md"
         fullWidth
       >
         <DialogTitle
@@ -141,7 +299,7 @@ class PhieuNhapKhoDialog extends Component {
 
         <ValidatorForm ref="form" onSubmit={this.handleFormSubmit}>
           <DialogContent>
-            <Grid className="" container spacing={2}>
+            <Grid className="" container spacing={2} >
               <Grid item sm={12} xs={12}>
                 <TextValidator
                   className="w-100 "
@@ -270,6 +428,57 @@ class PhieuNhapKhoDialog extends Component {
                     i18n={i18n}
                   />
                 )}
+                <Button
+                    className=" mt-10 mb-10"
+                    variant="contained"
+                    color="primary"
+                    onClick={() =>
+                      this.setState({
+                        shouldOpenMultipleDialog: true,
+                        item: {},
+                      })
+                    }
+                  ></Button>
+                {this.state.shouldOpenMultipleDialog && (
+                <MultipleProduct
+                  open={this.state.shouldOpenMultipleDialog}
+                  selected={this.state.sanPhamPhieuNhap}
+                  handleSelect={this.handleSelectSP}
+                  handleClose={this.handleDialogCancel}
+                  t={t}
+                  i18n={i18n}
+                />
+              )}
+                <Grid item sm={12} xs="12" className = "mt-10">
+                  <MaterialTable
+                    data={this.state.sanPhamPhieuNhap ? this.state.sanPhamPhieuNhap : []}
+                    columns={columns}
+                    options={{
+                      selection: false,
+                      actionsColumnIndex: 0,
+                      paging: false,
+                      search: false,
+                      rowStyle: (rowData) => ({
+                        backgroundColor:
+                          rowData.tableData.id % 2 === 1 ? "#EEE" : "#FFF",
+                      }),
+                      maxBodyHeight: "253px",
+                      minBodyHeight: "253px",
+                      headerStyle: {
+                        backgroundColor: "#358600",
+                        color: "#fff",
+                      },
+                      padding: "dense",
+                      toolbar: false,
+                    }}
+                    components={{
+                      Toolbar: (props) => <MTableToolbar {...props} />,
+                    }}
+                    onSelectionChange={(rows) => {
+                      this.data = rows;
+                    }}
+                  />
+                </Grid>
               </Grid>
             </Grid>
           </DialogContent>

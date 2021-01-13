@@ -79,12 +79,14 @@ import {
   
     handleCheckboxChange = rowData => {
       let selectedItemList = this.state.selectedItemList;
-      if (selectedItemList.some(selected => selected.id === rowData.id)) {
+      if (selectedItemList.some(selected => selected.sanPham.id === rowData.id)) {
         selectedItemList = selectedItemList.filter(
-          selected => selected.id !== rowData.id
+          selected => selected.sanPham.id !== rowData.id
         );
       } else {
-        selectedItemList.push(rowData);
+        let p = {}
+        p.sanPham = rowData;
+        selectedItemList.push(p);
       }
       this.setState({
         selectedItemList
@@ -93,8 +95,8 @@ import {
   
     componentDidMount() {
       let selectedItemList = []
-      if(this.props.selectedLabTestGroup != null){
-       selectedItemList = this.props.selectedLabTestGroup.slice();
+      if(this.props.sanPhamPhieuNhap != null){
+       selectedItemList = this.props.sanPhamPhieuNhap.slice();
       }
       this.setState({ selectedItemList:selectedItemList });
       this.updatePageData();
@@ -221,19 +223,19 @@ import {
       let { keyword } = this.state;
       let columns = [
         {
-          title: (
-            <Checkbox
-              checked={this.selectedAllCheck()}
-              onChange={this.handleSelectAll}
-            />
-          ),
+          // title: (
+          //   <Checkbox
+          //     checked={this.selectedAllCheck()}
+          //     onChange={this.handleSelectAll}
+          //   />
+          // ),
           field: "custom",
           align: "left",
           width: "150",
           render: rowData => (
             <Checkbox
               checked={this.state.selectedItemList.some(
-                selected => selected.id === rowData.id
+                selected => selected.sanPham.id === rowData.id
               )}
               onChange={() => this.handleCheckboxChange(rowData)}
             />
@@ -311,7 +313,7 @@ import {
                   backgroundColor: (rowData.tableData.id % 2 === 1) ? '#EEE' : '#FFF',
                   }), 
                   headerStyle: {
-                  
+                  backgroundColor: "#358600",
                   color:'#fff',
                   },
                   padding: 'dense',
