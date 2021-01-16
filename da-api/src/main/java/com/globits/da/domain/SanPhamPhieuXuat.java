@@ -17,7 +17,7 @@ public class SanPhamPhieuXuat extends BaseObject{
 	@JoinColumn(name="phieu_id")
 	private PhieuXuatKho phieu;
 	@Column(name = "soLuong")
-	private Float soLuong;
+	private Integer soLuong;
 	
 	public SanPham getSanPham() {
 		return sanPham;
@@ -31,10 +31,10 @@ public class SanPhamPhieuXuat extends BaseObject{
 	public void setPhieu(PhieuXuatKho phieu) {
 		this.phieu = phieu;
 	}
-	public Float getSoLuong() {
+	public Integer getSoLuong() {
 		return soLuong;
 	}
-	public void setSoLuong(Float soLuong) {
+	public void setSoLuong(Integer soLuong) {
 		this.soLuong = soLuong;
 	}
 	

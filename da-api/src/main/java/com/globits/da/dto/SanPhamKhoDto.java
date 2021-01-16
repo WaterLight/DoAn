@@ -1,13 +1,11 @@
 package com.globits.da.dto;
 
-import com.globits.da.domain.Kho;
-import com.globits.da.domain.SanPham;
 import com.globits.da.domain.SanPhamKho;
 
 public class SanPhamKhoDto extends BaseObjectDto{
 	private KhoDto kho;
 	private SanPhamDto sanPham;
-	private float soLuong;
+	private Integer soLuong;
 	public KhoDto getKho() {
 		return kho;
 	}
@@ -23,13 +21,25 @@ public class SanPhamKhoDto extends BaseObjectDto{
 	public float getSoLuong() {
 		return soLuong;
 	}
-	public void setSoLuong(float soLuong) {
+	public void setSoLuong(Integer soLuong) {
 		this.soLuong = soLuong;
 	}
 	public SanPhamKhoDto() {
 		super();
 	}
 	public SanPhamKhoDto(SanPhamKho p) {
+		if(p != null) {
+			this.setId(p.getId());
+			this.soLuong = p.getSoLuong();
+			if(p.getKho() != null) {
+				this.kho = new KhoDto(p.getKho(),false);
+			}
+			if(p.getSanPham() != null) {
+				this.sanPham = new SanPhamDto(p.getSanPham());
+			}
+		}
+	}
+	public SanPhamKhoDto(SanPhamKho p,Boolean simple) {
 		if(p != null) {
 			this.setId(p.getId());
 			this.soLuong = p.getSoLuong();

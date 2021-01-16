@@ -14,9 +14,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.globits.core.service.impl.GenericServiceImpl;
+import com.globits.da.domain.DonViTinh;
 import com.globits.da.domain.SanPham;
 import com.globits.da.dto.SanPhamDto;
 import com.globits.da.dto.search.SearchDto;
+import com.globits.da.repository.DonViTinhRepository;
 import com.globits.da.repository.SanPhamRepository;
 import com.globits.da.service.SanPhamService;
 
@@ -24,6 +26,8 @@ import com.globits.da.service.SanPhamService;
 public class SanPhamServiceImpl extends GenericServiceImpl<SanPham, UUID> implements SanPhamService{
 	@Autowired
 	SanPhamRepository repos;
+	@Autowired
+	DonViTinhRepository donViTinhRepository;
 	@Override
 	public Page<SanPhamDto> getPage(int pageSize, int pageIndex) {
 		Pageable pageable = PageRequest.of(pageIndex-1, pageSize);
@@ -45,8 +49,12 @@ public class SanPhamServiceImpl extends GenericServiceImpl<SanPham, UUID> implem
 			}
 			entity.setMaSP(dto.getMaSP());
 			entity.setTenSP(dto.getTenSP());
-			
-			
+			entity.setGiaBanHienThoi(dto.getGiaBanHienThoi());
+			entity.setBaiViet(dto.getBaiViet());
+			if(dto.getDonViTinh() != null) {
+				DonViTinh nv = donViTinhRepository.getOne(dto.getDonViTinh().getId());
+				entity.setDonViTinh(nv);
+			}
 			entity = repos.save(entity);
 			if (entity != null) {
 				return new SanPhamDto(entity);

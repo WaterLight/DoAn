@@ -18,7 +18,7 @@ public class SanPhamDonHang extends BaseObject{
 	@JoinColumn(name="don_hang_id")
 	private DonHang donHang;
 	@Column(name = "so_luong")
-	private Float soLuong;
+	private Integer soLuong;
 	@Column(name = "don_gia")
 	private Double donGia;
 	@Column(name = "thanh_tien")
@@ -40,10 +40,10 @@ public class SanPhamDonHang extends BaseObject{
 	public void setDonHang(DonHang donHang) {
 		this.donHang = donHang;
 	}
-	public Float getSoLuong() {
+	public Integer getSoLuong() {
 		return soLuong;
 	}
-	public void setSoLuong(Float soLuong) {
+	public void setSoLuong(Integer soLuong) {
 		this.soLuong = soLuong;
 	}
 	public Double getDonGia() {

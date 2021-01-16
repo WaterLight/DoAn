@@ -1,6 +1,5 @@
 package com.globits.da.domain;
 
-import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -22,23 +21,13 @@ public class SanPham extends BaseObject{
 	private String maSP;
 	@Column(name = "gia_ban_hien_Thoi")
 	private Double giaBanHienThoi;
-	@Column(name = "ngay_cap_nhat")
-	private Date ngayCapNhat;
-	@Column(name = "ngay_tao")
-	private Date ngayTao;
-	@ManyToOne
-	@JoinColumn(name="nguoi_tao")
-	private NhanVien nguoiTao;
-	@ManyToOne
-	@JoinColumn(name="nguoi_cap_nhat")
-	private NhanVien nguoiCapNhat;
-	
 	@ManyToOne
 	@JoinColumn(name="don_vi_tinh_id")
 	private DonViTinh donViTinh;
-	
-//	@OneToMany(mappedBy = "phieu", cascade=CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval=true)
-//	private Set<SanPhamPhieuXuat> sanPhamPhieuXuat;
+	@Column(name="bai_viet", columnDefinition = "LONGTEXT")
+	private String baiViet;
+	@OneToMany(mappedBy = "sanPham", cascade=CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval=true)
+	private Set<SanPhamKho> sanPhamKho;
 	public String getTenSP() {
 		return tenSP;
 	}
@@ -57,35 +46,23 @@ public class SanPham extends BaseObject{
 	public void setGiaBanHienThoi(Double giaBanHienThoi) {
 		this.giaBanHienThoi = giaBanHienThoi;
 	}
-	public Date getNgayCapNhat() {
-		return ngayCapNhat;
-	}
-	public void setNgayCapNhat(Date ngayCapNhat) {
-		this.ngayCapNhat = ngayCapNhat;
-	}
-	public Date getNgayTao() {
-		return ngayTao;
-	}
-	public void setNgayTao(Date ngayTao) {
-		this.ngayTao = ngayTao;
-	}
-	public NhanVien getNguoiTao() {
-		return nguoiTao;
-	}
-	public void setNguoiTao(NhanVien nguoiTao) {
-		this.nguoiTao = nguoiTao;
-	}
-	public NhanVien getNguoiCapNhat() {
-		return nguoiCapNhat;
-	}
-	public void setNguoiCapNhat(NhanVien nguoiCapNhat) {
-		this.nguoiCapNhat = nguoiCapNhat;
-	}
 	public DonViTinh getDonViTinh() {
 		return donViTinh;
 	}
 	public void setDonViTinh(DonViTinh donViTinh) {
 		this.donViTinh = donViTinh;
+	}
+	public String getBaiViet() {
+		return baiViet;
+	}
+	public void setBaiViet(String baiViet) {
+		this.baiViet = baiViet;
+	}
+	public Set<SanPhamKho> getSanPhamKho() {
+		return sanPhamKho;
+	}
+	public void setSanPhamKho(Set<SanPhamKho> sanPhamKho) {
+		this.sanPhamKho = sanPhamKho;
 	}
 
 	

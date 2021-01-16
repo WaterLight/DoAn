@@ -85,6 +85,7 @@ public class PhieuNhapKhoServiceImpl extends GenericServiceImpl< PhieuNhapKho, U
 				Set<SanPhamPhieuNhap> listSanPhamPhieuNhap = new HashSet<SanPhamPhieuNhap>();
 				for (SanPhamPhieuNhapKhoDto sanPhamPhieuNhaplDto : dto.getSanPhamPhieuNhap()) {
 					SanPhamPhieuNhap sanPhamPhieuNhap = null;
+					SanPhamKho sanPhamKho = null;
 					if (sanPhamPhieuNhaplDto.getId() != null) {
 						sanPhamPhieuNhap = sanPhamPhieuNhapRepository.getOne(sanPhamPhieuNhaplDto.getId());
 					}
@@ -99,14 +100,27 @@ public class PhieuNhapKhoServiceImpl extends GenericServiceImpl< PhieuNhapKho, U
 						if(kho != null && kho.getId() != null) {
 							List<SanPhamKho> listData = sanPhamKhoRepository.getListSanPhamKho(sanPhamPhieuNhaplDto.getSanPham().getId(),kho.getId());
 							if(listData != null && listData.size() > 0) {
-								SanPhamKho sanPhamKho = listData.get(0);
-								if(sanPhamKho.getSoLuong() != null) {
-									sanPhamKho.setSoLuong(sanPhamPhieuNhaplDto.getSoLuong() + sanPhamKho.getSoLuong());
-								}else {
-									sanPhamKho.setSoLuong(sanPhamPhieuNhaplDto.getSoLuong());
-								}
+								 sanPhamKho = listData.get(0);
+								 if(sanPhamKho != null) {
+									 if(sanPhamKho.getSoLuong() != null) {
+											sanPhamKho.setSoLuong(sanPhamPhieuNhaplDto.getSoLuong() + sanPhamKho.getSoLuong());
+										}else {
+											sanPhamKho.setSoLuong(sanPhamPhieuNhaplDto.getSoLuong());
+										} 
+								 }
+								
+							}
+							if(sanPhamKho == null) {
+								sanPhamKho = new SanPhamKho();
+								sanPhamKho.setSanPham(sanPhamRepository.getOne(sanPhamPhieuNhaplDto.getSanPham().getId()));
+								sanPhamKho.setKho(kho);
+								sanPhamKho.setSoLuong(sanPhamPhieuNhaplDto.getSoLuong());
 							}
 						}
+						
+					}
+					if(sanPhamKho !=null) {
+						sanPhamKho = sanPhamKhoRepository.save(sanPhamKho);
 					}
 					sanPhamPhieuNhap.setKho(kho);
 					sanPhamPhieuNhap.setSoLuong(sanPhamPhieuNhaplDto.getSoLuong());

@@ -5,7 +5,7 @@ import com.globits.da.domain.SanPhamPhieuNhap;
 public class SanPhamPhieuNhapKhoDto extends BaseObjectDto{
 	private SanPhamDto sanPham;
 	private KhoDto kho;
-	private Float soLuong;
+	private Integer soLuong;
 	private Double gia;
 	private PhieuNhapKhoDto phieuNhapKho;
 	public SanPhamDto getSanPham() {
@@ -20,10 +20,10 @@ public class SanPhamPhieuNhapKhoDto extends BaseObjectDto{
 	public void setKho(KhoDto kho) {
 		this.kho = kho;
 	}
-	public float getSoLuong() {
+	public Integer getSoLuong() {
 		return soLuong;
 	}
-	public void setSoLuong(Float soLuong) {
+	public void setSoLuong(Integer soLuong) {
 		this.soLuong = soLuong;
 	}
 	public Double getGia() {

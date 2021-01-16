@@ -17,7 +17,7 @@ public class SanPhamKho extends BaseObject{
 	@JoinColumn(name="san_pham_id")
 	private SanPham sanPham;
 	@JoinColumn(name="so_luong")
-	private Float soLuong;
+	private Integer soLuong;
 	public Kho getKho() {
 		return kho;
 	}
@@ -30,10 +30,10 @@ public class SanPhamKho extends BaseObject{
 	public void setSanPham(SanPham sanPham) {
 		this.sanPham = sanPham;
 	}
-	public Float getSoLuong() {
+	public Integer getSoLuong() {
 		return soLuong;
 	}
-	public void setSoLuong(Float soLuong) {
+	public void setSoLuong(Integer soLuong) {
 		this.soLuong = soLuong;
 	}
 	

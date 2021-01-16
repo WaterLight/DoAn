@@ -8,6 +8,7 @@ public class SearchDto {
 	private int pageSize;
 	private String keyword;
 	private Boolean voided;
+	private UUID khoId;
 	public UUID getId() {
 		return id;
 	}
@@ -37,6 +38,12 @@ public class SearchDto {
 	}
 	public void setVoided(Boolean voided) {
 		this.voided = voided;
+	}
+	public UUID getKhoId() {
+		return khoId;
+	}
+	public void setKhoId(UUID khoId) {
+		this.khoId = khoId;
 	}
 	
 	

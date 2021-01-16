@@ -1,8 +1,11 @@
 package com.globits.da.dto;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.globits.da.domain.SanPham;
+import com.globits.da.domain.SanPhamKho;
 
 public class SanPhamDto extends BaseObjectDto{
 	private String tenSP;
@@ -13,6 +16,9 @@ public class SanPhamDto extends BaseObjectDto{
 	private NhanVienDto nguoiTao;
 	private NhanVienDto nguoiCapNhat;
 	private DonViTinhDto donViTinh;
+	private String baiViet;
+	private Integer soLuongDangCo;
+	private Set<SanPhamKhoDto> sanPhamKho;
 	public String getTenSP() {
 		return tenSP;
 	}
@@ -61,6 +67,24 @@ public class SanPhamDto extends BaseObjectDto{
 	public void setDonViTinh(DonViTinhDto donViTinh) {
 		this.donViTinh = donViTinh;
 	}
+	public String getBaiViet() {
+		return baiViet;
+	}
+	public void setBaiViet(String baiViet) {
+		this.baiViet = baiViet;
+	}
+	public Set<SanPhamKhoDto> getSanPhamKho() {
+		return sanPhamKho;
+	}
+	public void setSanPhamKho(Set<SanPhamKhoDto> sanPhamKho) {
+		this.sanPhamKho = sanPhamKho;
+	}
+	public Integer getSoLuongDangCo() {
+		return soLuongDangCo;
+	}
+	public void setSoLuongDangCo(Integer soLuongDangCo) {
+		this.soLuongDangCo = soLuongDangCo;
+	}
 	public SanPhamDto() {
 		super();
 	}
@@ -68,34 +92,30 @@ public class SanPhamDto extends BaseObjectDto{
 		this.setId(e.getId());
 		this.maSP = e.getMaSP();
 		this.giaBanHienThoi = e.getGiaBanHienThoi();
-		this.ngayCapNhat = e.getNgayCapNhat();
-		this.ngayTao = e.getNgayTao();
 		this.tenSP = e.getTenSP();
-		if(e.getNguoiTao() != null) {
-			this.nguoiTao = new NhanVienDto(e.getNguoiTao());
-		}
-		if(e.getNguoiCapNhat() != null) {
-			this.nguoiCapNhat = new NhanVienDto(e.getNguoiCapNhat());
-		}
+		this.baiViet = e.getBaiViet();
 		if(e.getDonViTinh() != null) {
 			this.donViTinh = new DonViTinhDto(e.getDonViTinh());
+		}
+		if (e.getSanPhamKho()!= null) {
+			Integer count =  0;
+			this.sanPhamKho = new HashSet<SanPhamKhoDto>();
+			for (SanPhamKho sanPhamPhieuNhapDto : e.getSanPhamKho()) {
+				count = count + sanPhamPhieuNhapDto.getSoLuong();
+				this.sanPhamKho.add(new SanPhamKhoDto(sanPhamPhieuNhapDto,false));
+			}
+			this.soLuongDangCo = count;
 		}
 	}
 	public SanPhamDto(SanPham e,Boolean simple) {
 		this.setId(e.getId());
 		this.maSP = e.getMaSP();
 		this.giaBanHienThoi = e.getGiaBanHienThoi();
-		this.ngayCapNhat = e.getNgayCapNhat();
-		this.ngayTao = e.getNgayTao();
 		this.tenSP = e.getTenSP();
-		if(e.getNguoiTao() != null) {
-			this.nguoiTao = new NhanVienDto(e.getNguoiTao());
-		}
-		if(e.getNguoiCapNhat() != null) {
-			this.nguoiCapNhat = new NhanVienDto(e.getNguoiCapNhat());
-		}
+		this.baiViet = e.getBaiViet();
 		if(e.getDonViTinh() != null) {
 			this.donViTinh = new DonViTinhDto(e.getDonViTinh());
 		}
+		
 	}
 }
