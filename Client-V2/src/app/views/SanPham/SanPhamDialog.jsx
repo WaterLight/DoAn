@@ -23,7 +23,7 @@ import {
 } from "./SanPhamService";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import EditorForm from "./EditorForm";
 toast.configure({
   autoClose: 2000,
   draggable: false,
@@ -103,7 +103,9 @@ class AgentDialog extends Component {
       }
     });
   };
-
+  handleChangeContent = (content) => {
+    this.setState({ baiViet: content });
+  };
   componentWillMount() {
     //getUserById(this.props.uid).then(data => this.setState({ ...data.data }));
     let { open, handleClose, item } = this.props;
@@ -128,7 +130,7 @@ class AgentDialog extends Component {
       <Dialog
         open={open}
         PaperComponent={PaperComponent}
-        maxWidth="sm"
+        maxWidth="md"
         fullWidth
       >
         <DialogTitle
@@ -177,6 +179,23 @@ class AgentDialog extends Component {
                 />
               </Grid>
               <Grid item sm={12} xs={12}>
+                <TextValidator
+                  className="w-100 "
+                  label={
+                    <span>
+                      <span style={{ color: "red" }}>*</span>
+                      {t("Giá Bán")}
+                    </span>
+                  }
+                  onChange={this.handleChange}
+                  type="text"
+                  name="giaBanHienThoi"
+                  value={this.state.giaBanHienThoi}
+                  validators={["required"]}
+                  errorMessages={[t("general.required")]}
+                />
+              </Grid>
+              <Grid item sm={12} xs={12}>
                 <Button
                   size="small"
                   style={{ float: "right" }}
@@ -192,13 +211,13 @@ class AgentDialog extends Component {
                 <TextValidator
                   size="small"
                   InputLabelProps={{ shrink: true }}
-                  InputProps={{
-                    readOnly: true,
-                  }}
+                  // InputProps={{
+                  //   readOnly: true,
+                  // }}
                   label={
                     <span>
                       <span style={{ color: "red" }}></span>
-                      {t("directory.agency")}
+                      {t("Đơn vị tính")}
                     </span>
                   }
                   // className="w-80"
@@ -223,53 +242,13 @@ class AgentDialog extends Component {
                   />
                 )}
               </Grid>
+              
               <Grid item sm={12} xs={12}>
-                <Button
-                  size="small"
-                  style={{ float: "right" }}
-                  className=" mt-16"
-                  variant="contained"
-                  color="primary"
-                  onClick={()=>{
-                      this.setState({shouldOpenSelectUserPopup:true})
-                  }}
-                >
-                  {t("general.select")}
-                </Button>
-                <TextValidator
-                  size="small"
-                  InputLabelProps={{ shrink: true }}
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                  label={
-                    <span>
-                      <span style={{ color: "red" }}></span>
-                      {t("user.title")}
-                    </span>
-                  }
-                  // className="w-80"
-                  style ={{width: "80%"}}
-                  value={
-                    this.state.user != null ? this.state.user.displayName : ""
-                  }
-                />
-
-                {this.state.shouldOpenSelectUserPopup && (
-                  <SelectUserPopup
-                    open={this.state.shouldOpenSelectUserPopup}
-                    handleSelect={this.handleSelectUser}
-                    selectedItem={
-                      this.state.user != null 
-                        ? this.state.user
-                        : {}
-                    }
-                    handleClose={this.handleDialogClose}
-                    t={t}
-                    i18n={i18n}
+              <EditorForm
+                    content={this.state.baiViet ? this.state.baiViet : ""}
+                    handleChangeContent={this.handleChangeContent}
                   />
-                )}
-              </Grid>
+            </Grid>
             </Grid>
           </DialogContent>
           <DialogActions>

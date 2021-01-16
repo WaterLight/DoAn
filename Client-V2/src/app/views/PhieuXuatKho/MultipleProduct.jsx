@@ -360,7 +360,6 @@ import {
             >
               {t("general.cancel")}
             </Button>
-            
             <Button
               className="mr-16 align-bottom"
               variant="contained"

@@ -97,7 +97,7 @@ function MaterialButton(props) {
     </div>
   );
 }
-class PhieuNhapKhoDialog extends Component {
+class PhieuXuatKhoDialog extends Component {
   state = {
     id: "",
     name: "",
@@ -535,4 +535,4 @@ class PhieuNhapKhoDialog extends Component {
   }
 }
 
-export default PhieuNhapKhoDialog;
+export default PhieuXuatKhoDialog;
