@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.globits.core.service.impl.GenericServiceImpl;
@@ -17,7 +18,7 @@ import com.globits.da.dto.NhanVienDto;
 import com.globits.da.dto.SanPhamKhoDto;
 import com.globits.da.dto.search.SearchDto;
 import com.globits.da.service.SanPhamKhoService;
-
+@Service
 public class SanPhamKhoServiceImpl extends GenericServiceImpl<SanPhamKho, UUID> implements SanPhamKhoService{
 
 	@Override
@@ -45,7 +46,9 @@ public class SanPhamKhoServiceImpl extends GenericServiceImpl<SanPhamKho, UUID> 
 		if (dto.getKeyword() != null && StringUtils.hasText(dto.getKeyword())) {
 			whereClause += " AND ( entity.sanPham.tenSP LIKE :text entity.kho.tenKho LIKE :text )";
 		}
-
+		if(dto.getKhoId() != null ) {
+			whereClause += " AND ( entity.kho.id =: khoId ) " ;
+		}
 		
 		sql += whereClause + orderBy;
 		sqlCount += whereClause;
@@ -56,6 +59,11 @@ public class SanPhamKhoServiceImpl extends GenericServiceImpl<SanPhamKho, UUID> 
 		if (dto.getKeyword() != null && StringUtils.hasText(dto.getKeyword())) {
 			q.setParameter("text", '%' + dto.getKeyword() + '%');
 			qCount.setParameter("text", '%' + dto.getKeyword() + '%');
+		}
+		if(dto.getKhoId() != null ) {
+			whereClause += " AND ( entity.kho.id =: khoId ) " ;
+			q.setParameter("khoId", dto.getKhoId());
+			qCount.setParameter("khoId",dto.getKhoId());
 		}
 		int startPosition = pageIndex * pageSize;
 		q.setFirstResult(startPosition);

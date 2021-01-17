@@ -19,6 +19,7 @@ public class SanPhamDto extends BaseObjectDto{
 	private String baiViet;
 	private Integer soLuongDangCo;
 	private Set<SanPhamKhoDto> sanPhamKho;
+	private String imageUrl;//Đường dẫn đến File ảnh tiêu đề bài báo (nếu có)
 	public String getTenSP() {
 		return tenSP;
 	}
@@ -85,6 +86,12 @@ public class SanPhamDto extends BaseObjectDto{
 	public void setSoLuongDangCo(Integer soLuongDangCo) {
 		this.soLuongDangCo = soLuongDangCo;
 	}
+	public String getImageUrl() {
+		return imageUrl;
+	}
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
 	public SanPhamDto() {
 		super();
 	}
@@ -94,6 +101,7 @@ public class SanPhamDto extends BaseObjectDto{
 		this.giaBanHienThoi = e.getGiaBanHienThoi();
 		this.tenSP = e.getTenSP();
 		this.baiViet = e.getBaiViet();
+		this.imageUrl = e.getImageUrl();
 		if(e.getDonViTinh() != null) {
 			this.donViTinh = new DonViTinhDto(e.getDonViTinh());
 		}
@@ -113,6 +121,7 @@ public class SanPhamDto extends BaseObjectDto{
 		this.giaBanHienThoi = e.getGiaBanHienThoi();
 		this.tenSP = e.getTenSP();
 		this.baiViet = e.getBaiViet();
+		this.imageUrl = e.getImageUrl();
 		if(e.getDonViTinh() != null) {
 			this.donViTinh = new DonViTinhDto(e.getDonViTinh());
 		}

@@ -28,6 +28,8 @@ public class SanPham extends BaseObject{
 	private String baiViet;
 	@OneToMany(mappedBy = "sanPham", cascade=CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval=true)
 	private Set<SanPhamKho> sanPhamKho;
+	@Column(name="image_url")
+	private String imageUrl;//Đường dẫn đến File ảnh tiêu đề bài báo (nếu có)
 	public String getTenSP() {
 		return tenSP;
 	}
@@ -63,6 +65,12 @@ public class SanPham extends BaseObject{
 	}
 	public void setSanPhamKho(Set<SanPhamKho> sanPhamKho) {
 		this.sanPhamKho = sanPhamKho;
+	}
+	public String getImageUrl() {
+		return imageUrl;
+	}
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
 	}
 
 	
