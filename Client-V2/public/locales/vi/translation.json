@@ -225,7 +225,8 @@
     "dupli_code":"Mã đã được sử dụng",
     "deleteSuccess":"Xóa thành công",
     "status":"Trạng thái",
-    "typeStaff":"Loại nhân viên"
+    "typeStaff":"Loại nhân viên",
+    "noteAvatarImage": "Ghi chú ảnh đại diện"
   },
   "toastr": {
     "error": "Có lỗi xảy ra, vui lòng thử lại."
