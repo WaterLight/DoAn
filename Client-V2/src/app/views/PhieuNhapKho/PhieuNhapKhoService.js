@@ -2,11 +2,13 @@ import axios from "axios";
 import ConstantList from "../../appConfig";
 
 const API_PATH = ConstantList.API_ENPOINT + "/api/phieunhapkho/";
-
+const API_PATHKHO = ConstantList.API_ENPOINT + "/api/sanphamkho/";
 export const searchByPage = (searchObject) => {
   return axios.post(API_PATH +  "searchByPage", searchObject);
 };
-
+export const searchByPageK = (searchObject) => {
+  return axios.post(API_PATHKHO +  "searchByPage", searchObject);
+};
 export const deleteItem = id => {
   return axios.delete(API_PATH + id);
 };

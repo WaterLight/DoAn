@@ -31,3 +31,17 @@ export const checkCode = (id, code) => {
   return axios.get(API_PATH + "checkCode", config);
 };
 
+export const uploadImage = (formData) => {
+  //var url = ConstantList.API_ENPOINT + "/public/image";
+  var url = ConstantList.API_ENPOINT + "/api/dafile/image";
+  return axios.post(url, formData);
+
+  // const url =ConstantList.API_ENPOINT+"/api/file/upload";
+  // const config = {
+  //     headers: {
+  //         'Content-Type': 'multipart/form-data'
+  //       }
+  // }
+  // return  axios.post(url, formData,config)
+
+};

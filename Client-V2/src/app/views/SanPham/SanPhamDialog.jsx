@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import ConstantList from "../../appConfig";
 import {
   Dialog,
   Button,
@@ -8,6 +9,7 @@ import {
   Paper,
   DialogTitle,
   DialogContent,
+  Icon,Fab,Card
 } from "@material-ui/core";
 // import Paper from '@material-ui/core/Paper'
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
@@ -19,7 +21,7 @@ import {
     saveItem,
   addItem,
   updateItem,
-  checkCode,
+  checkCode,uploadImage
 } from "./SanPhamService";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -54,6 +56,10 @@ class AgentDialog extends Component {
     SelectAgencyPopup: false,
     agency:null,
     user:null,
+    shouldOpenFileBrowserDialog: false,
+    imageUrl: "",
+    noteAvatarImage: "",
+    files: [],
   };
 
   handleDialogClose = () => {
@@ -117,6 +123,78 @@ class AgentDialog extends Component {
   handleSelectAgency =(item) =>{
     this.setState({agency:item ? item : null,shouldOpenSelectAgencyPopup: false, })
   }
+  handleFileBrowserDialogClose = () => {
+    this.setState({ shouldOpenFileBrowserDialog: false });
+};
+
+handleFileSelect = (event) => {
+  event.preventDefault();
+  let files = event.target.files;
+  let file = files[0];
+  let list = [];
+  console.log(file);
+  if (
+      file.type !== "image/jpg" &&
+      file.type !== "image/jpeg" &&
+      file.type !== "image/png"
+  ) {
+      toast.error("File incorrect format!");
+  } else {
+      if (file.size >= 7097152) {
+          toast.error("File can't be larger than 7mb!");
+      } else {
+          for (const iterator of files) {
+              list.push({
+                  file: iterator,
+                  uploading: false,
+                  error: false,
+                  progress: 0,
+              });
+          }
+          this.setState(
+              {
+                  files: list,
+              },
+              () => {
+                  let file = this.state.files[0];
+                  console.log(file.file);
+                  //alert(file);
+                  const formData = new FormData();
+                  if (file) {
+                      formData.append("uploadfile", file.file);
+                      uploadImage(formData).then(({ data }) => {
+                          this.setState({ imageUrl: data.name });
+                      });
+                  }
+              }
+          );
+      }
+  }
+};
+uploadSingleFile = (index) => {
+  let allFiles = [...this.state.files];
+  let file = this.state.files[index];
+
+  allFiles[index] = { ...file, uploading: true, error: false };
+
+  this.setState({
+      files: [...allFiles],
+  });
+  const formData = new FormData();
+  formData.append("uploadfile", file.file);
+  if (file) {
+      uploadImage(formData).then(({ data }) => {
+          this.setState({ imageUrl: data.name });
+      });
+  }
+};
+getImageNameAndType = (name) => {
+  if (name) {
+      // debugger
+      return name.split(".")[0] + "/" + name.split(".")[1];
+  }
+  return "";
+};
   render() {
     let {
       id,
@@ -124,8 +202,14 @@ class AgentDialog extends Component {
       tenSP,
       description,
       shouldOpenNotificationPopup,
+      imageUrl,files,
+      noteAvatarImage
     } = this.state;
     let { open, handleClose, handleOKEditClose, t, i18n } = this.props;
+    let isEmpty = files.length === 0;
+        if (imageUrl) {
+            isEmpty = false;
+        }
     return (
       <Dialog
         open={open}
@@ -143,6 +227,83 @@ class AgentDialog extends Component {
         <ValidatorForm ref="form" onSubmit={this.handleFormSubmit}>
           <DialogContent>
             <Grid className="" container spacing={2}>
+                      <Grid
+                            item
+                            xs={12}
+                            sm={12}
+                            md={3}
+                            className={"container-create-category mt-16"}
+                        >
+                                <Grid item xs={12} sm={12} md={10}>
+                                    <div className="flex flex-wrap mb-16">
+                                        <label
+                                            htmlFor="upload-single-file"
+                                            className="w-100"
+                                        >
+                                            <Fab
+                                                className="capitalize"
+                                                color="secondary"
+                                                component="span"
+                                                variant="extended"
+                                                size="small"
+                                            >
+                                                <div className="flex flex-middle ">
+                                                    <Icon className="pr-8">
+                                                        cloud_upload
+                                                    </Icon>
+                                                    <span>
+                                                        Chọn ảnh đại diện
+                                                    </span>
+                                                </div>
+                                            </Fab>
+                                        </label>
+                                        <input
+                                            className="display-none"
+                                            onChange={this.handleFileSelect}
+                                            id="upload-single-file"
+                                            type="file"
+                                        />
+                                    </div>
+                                </Grid>
+                                <Grid
+                                    xs={12}
+                                    sm={12}
+                                    md={12}
+                                    className={"custom-image-article mb-16"}
+                                >
+                                    {!isEmpty && (
+                                        <span>
+                                            <Card className="" elevation={2}>
+                                                {/* {isEmpty && <p className="px-16 py-16">Que is empty</p>} */}
+                                                {/* var imageUrl = ConstantList.API_ENPOINT+"/public/file/downloadbyid/"+result.data.id; */}
+                                                <img
+                                                    className="custom-image"
+                                                    src={
+                                                        ConstantList.API_ENPOINT +
+                                                        "/public/getImage/" +
+                                                        this.getImageNameAndType(
+                                                            imageUrl
+                                                        )
+                                                    }
+                                                />
+                                            </Card>
+                                            <TextValidator
+                                                size="small"
+                                                className="w-100 mb-16 mt-16"
+                                                label={t(
+                                                    "general.noteAvatarImage"
+                                                )}
+                                                onChange={this.handleChange}
+                                                type="text"
+                                                name="noteAvatarImage"
+                                                value={noteAvatarImage}
+                                                variant="outlined"
+                                                size="small"
+                                            />
+                                        </span>
+                                    )}
+                                </Grid>
+                            </Grid>
               <Grid item sm={12} xs={12}>
                 <TextValidator
                   className="w-100 "
