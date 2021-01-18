@@ -19,7 +19,10 @@ import RealStateTypeRoutes from "./views/RealStateType/RealStateTypeRoutes";
 import DonViTinhRoutes from "./views/DonViTinh/DonViTinhRoutes";
 import RequirementTypeRoutes from "./views/RequirementType/RequirementTypeRoutes";
 import SanPhamRoutes from "./views/SanPham/SanPhamRoutes";
-import PhieuNhapKhoRoutes from "./views/PhieuNhapKho/PhieuNhapKhoRoutes";const redirectRoute = [
+import PhieuNhapKhoRoutes from "./views/PhieuNhapKho/PhieuNhapKhoRoutes";
+import PhieuXuatKhoRoutes from "./views/PhieuXuatKho/PhieuXuatKhoRoutes";
+
+const redirectRoute = [
   {
     path: ConstantList.ROOT_PATH,
     exact: true,
@@ -51,6 +54,7 @@ const routes = [
   ...RequirementTypeRoutes,
   ...SanPhamRoutes,
   ...PhieuNhapKhoRoutes,
+  ...PhieuXuatKhoRoutes,
   ...errorRoute,
 ];
 

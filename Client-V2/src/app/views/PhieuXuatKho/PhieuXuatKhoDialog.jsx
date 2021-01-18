@@ -23,7 +23,7 @@ import {
   addItem,
   updateItem,
   checkCode,
-} from "./PhieuNhapKhoService";
+} from "./PhieuXuatKhoService";
 import MaterialTable, {
   MTableToolbar,
   Chip,
@@ -175,53 +175,56 @@ class PhieuXuatKhoDialog extends Component {
       this.setState({kho:item ? item : null,shouldOpenChonKho: false, })
   }
   handleSelectAgency =(item) =>{
-    this.setState({nguoiNhap:item ? item : null,shouldOpenChonNhanVien: false, })
+    this.setState({nguoiXuat:item ? item : null,shouldOpenChonNhanVien: false, })
   }
   handleChangeSL  =(item,e) =>{
-    let {sanPhamPhieuNhap} = this.state
-    if(sanPhamPhieuNhap == null ){
-      sanPhamPhieuNhap =[] 
+    let {sanPhamPhieuXuat} = this.state
+    if(sanPhamPhieuXuat == null ){
+      sanPhamPhieuXuat =[] 
       let p = {}
-      p.sanPham = item;
+      p.sanPham = item.sanPham;
       p.soluong = e.target.value
-      sanPhamPhieuNhap.push(p)
+      sanPhamPhieuXuat.push(p)
     }
-    if(sanPhamPhieuNhap != null && sanPhamPhieuNhap.length > 0){
-      sanPhamPhieuNhap.forEach(el=>{
+    if(sanPhamPhieuXuat != null && sanPhamPhieuXuat.length > 0){
+      sanPhamPhieuXuat.forEach(el=>{
         if(el.sanPham.id == item.sanPham.id){
           // let p ={}
           el.soLuong =e.target.value
         }
       })
     }
-    this.setState({sanPhamPhieuNhap:sanPhamPhieuNhap})
+    this.setState({sanPhamPhieuXuat:sanPhamPhieuXuat},()=>{
+      console.log(this.state.sanPhamPhieuXuat)
+    })
   }
   //
   handleChangeGia  =(item,e) =>{
-    let {sanPhamPhieuNhap} = this.state
-    if(sanPhamPhieuNhap == null ){
-      sanPhamPhieuNhap =[] 
+    let {sanPhamPhieuXuat} = this.state
+    if(sanPhamPhieuXuat == null ){
+      sanPhamPhieuXuat =[] 
       let p = {}
-      p.sanPham = item;
+      p.sanPham = item.sanPham;
       p.gia = e.target.value
-      sanPhamPhieuNhap.push(p)
+      sanPhamPhieuXuat.push(p)
     }
-    if(sanPhamPhieuNhap != null && sanPhamPhieuNhap.length > 0){
-      sanPhamPhieuNhap.forEach(el=>{
+    if(sanPhamPhieuXuat != null && sanPhamPhieuXuat.length > 0){
+      sanPhamPhieuXuat.forEach(el=>{
         if(el.sanPham.id == item.sanPham.id){
           // let p ={}
           el.gia =e.target.value
         }
       })
     }
-    this.setState({sanPhamPhieuNhap:sanPhamPhieuNhap},()=>{
-      console.log(this.state.sanPhamPhieuNhap)
+    this.setState({sanPhamPhieuXuat:sanPhamPhieuXuat},()=>{
+      console.log(this.state.sanPhamPhieuXuat)
     })
   }
   handleSelectSP = (item) => {
+    console.log(item)
     let data = item.map((row) => ({ ...row, tableData: { checked: false } }));
-    this.setState({ sanPhamPhieuNhap: data },()=>{
-      console.log(this.state.sanPhamPhieuNhap)
+    this.setState({ sanPhamPhieuXuat: data },()=>{
+      console.log(this.state.sanPhamPhieuXuat)
     });
     this.handleDialogCancel();
   };
@@ -231,7 +234,7 @@ class PhieuXuatKhoDialog extends Component {
       ma,
       ten,
       description,
-      sanPhamPhieuNhap,
+      sanPhamPhieuXuat,
     } = this.state;
     
     let { open, handleClose, handleOKEditClose, t, i18n } = this.props;
@@ -255,12 +258,12 @@ class PhieuXuatKhoDialog extends Component {
               if (method === 0) {
                 this.setState({shouldOpenLabTestPropertyEditDialog: true, item: rowData});
               } else if (method === 1) {
-                sanPhamPhieuNhap.map((pro, index) => {
+                sanPhamPhieuXuat.map((pro, index) => {
                   if (pro.sanPham.maSP === rowData.sanPham.maSP) {
-                    sanPhamPhieuNhap.splice(index, 1);
+                    sanPhamPhieuXuat.splice(index, 1);
                   }
                 });
-                this.setState({ sanPhamPhieuNhap: sanPhamPhieuNhap });
+                this.setState({ sanPhamPhieuXuat: sanPhamPhieuXuat });
               } else {
                 alert("Call Selected Here:" + rowData.id);
               }
@@ -390,7 +393,7 @@ class PhieuXuatKhoDialog extends Component {
                   // className="w-80"
                   style ={{width: "80%"}}
                   value={
-                    this.state.nguoiNhap != null ? this.state.nguoiNhap.displayName : ""
+                    this.state.nguoiXuat != null ? this.state.nguoiXuat.displayName : ""
                   }
                 />
 
@@ -399,8 +402,8 @@ class PhieuXuatKhoDialog extends Component {
                     open={this.state.shouldOpenChonNhanVien}
                     handleSelect={this.handleSelectAgency}
                     selectedItem={
-                      this.state.nguoiNhap != null
-                        ? this.state.nguoiNhap
+                      this.state.nguoiXuat != null
+                        ? this.state.nguoiXuat
                         : {}
                     }
                     handleClose={this.handleDialogClose}
@@ -469,7 +472,7 @@ class PhieuXuatKhoDialog extends Component {
                 {this.state.shouldOpenMultipleDialog && (
                 <MultipleProduct
                   open={this.state.shouldOpenMultipleDialog}
-                  selected={this.state.sanPhamPhieuNhap}
+                  selected={this.state.sanPhamPhieuXuat}
                   handleSelect={this.handleSelectSP}
                   handleClose={this.handleDialogCancel}
                   t={t}
@@ -478,7 +481,7 @@ class PhieuXuatKhoDialog extends Component {
               )}
                 <Grid item sm={12} xs="12" className = "mt-10">
                   <MaterialTable
-                    data={this.state.sanPhamPhieuNhap ? this.state.sanPhamPhieuNhap : []}
+                    data={this.state.sanPhamPhieuXuat ? this.state.sanPhamPhieuXuat : []}
                     columns={columns}
                     options={{
                       selection: false,

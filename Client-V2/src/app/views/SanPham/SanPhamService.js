@@ -2,7 +2,7 @@ import axios from "axios";
 import ConstantList from "../../appConfig";
 
 const API_PATH = ConstantList.API_ENPOINT + "/api/sanpham/";
-
+const API_PATHKHO = ConstantList.API_ENPOINT + "/api/sanphamkho/";
 export const searchByPage = (searchObject) => {
   return axios.post(API_PATH +  "searchByPage", searchObject);
 };
@@ -44,4 +44,7 @@ export const uploadImage = (formData) => {
   // }
   // return  axios.post(url, formData,config)
 
+};
+export const searchByPageK = (searchObject) => {
+  return axios.post(API_PATHKHO +  "searchByPage", searchObject);
 };

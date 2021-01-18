@@ -27,13 +27,13 @@ import Tooltip from "@material-ui/core/Tooltip";
 import { Link } from "react-router-dom";
 import NotificationPopup from "../Component/NotificationPopup/NotificationPopup";
 import { isThisSecond } from "date-fns/esm";
-import PhieuNhapKhoDialog from "./PhieuNhapKhoDialog";
+import PhieuXuatKhoDialog from "./PhieuXuatKhoDialog";
 import {
   getAllUrbanArea,
   getItemById,
   deleteItem,
   searchByPage,
-} from "./PhieuNhapKhoService";
+} from "./PhieuXuatKhoService";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 toast.configure({
@@ -95,7 +95,7 @@ function MaterialButton(props) {
   );
 }
 
-class PhieuNhapKho extends React.Component {
+class PhieuXuatKho extends React.Component {
   state = {
     keyword: "",
     rowsPerPage: 10,
@@ -349,7 +349,7 @@ class PhieuNhapKho extends React.Component {
       shouldOpenConfirmationDeleteAllDialog,
       shouldOpenNotificationPopup,
     } = this.state;
-    let TitlePage = t("Phiếu Nhập Kho");
+    let TitlePage = t("Phiếu xuất Kho");
 
     let columns = [
       {
@@ -403,7 +403,7 @@ class PhieuNhapKho extends React.Component {
         title: t("Kho"), field: "kho.tenKho", width: "150" 
       },
       { 
-        title: t("Người nhập"), field: "nguoiNhap.displayName", width: "150" 
+        title: t("Người nhập"), field: "nguoiXuat.displayName", width: "150" 
       },
     ];
 
@@ -509,7 +509,7 @@ class PhieuNhapKho extends React.Component {
           <Grid item xs={12}>
             <div>
               {shouldOpenEditorDialog && (
-                <PhieuNhapKhoDialog
+                <PhieuXuatKhoDialog
                   t={t}
                   i18n={i18n}
                   handleClose={this.handleDialogClose}
@@ -607,4 +607,4 @@ class PhieuNhapKho extends React.Component {
   }
 }
 
-export default PhieuNhapKho;
+export default PhieuXuatKho;

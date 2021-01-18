@@ -24,7 +24,7 @@ import {
   } from "material-table";
   import { useTranslation, withTranslation, Trans } from "react-i18next";
   import {
-    searchByPage,
+    searchByPage,searchByPageK
   } from "../SanPham/SanPhamService";
   import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
   import DialogActions from "@material-ui/core/DialogActions";
@@ -78,14 +78,15 @@ import {
     };
   
     handleCheckboxChange = rowData => {
+      console.log(rowData)
       let selectedItemList = this.state.selectedItemList;
-      if (selectedItemList.some(selected => selected.sanPham.id === rowData.id)) {
+      if (selectedItemList.some(selected => selected.sanPham.id === rowData.sanPham.id)) {
         selectedItemList = selectedItemList.filter(
-          selected => selected.sanPham.id !== rowData.id
+          selected => selected.sanPham.id !== rowData.sanPham.id
         );
       } else {
         let p = {}
-        p.sanPham = rowData;
+        p.sanPham = rowData.sanPham;
         selectedItemList.push(p);
       }
       this.setState({
@@ -110,7 +111,7 @@ import {
       }
       searchObject.pageIndex = this.state.page + 1;
       searchObject.pageSize = this.state.rowsPerPage;
-      searchByPage(searchObject).then(({ data }) => {
+      searchByPageK(searchObject).then(({ data }) => {
         const selectedData = data.content.map(row =>
           this.state.selectedItemList.find(selected => selected.id === row.id)
             ? { ...row, tableData: { checked: true } }
@@ -137,7 +138,7 @@ import {
       }
       searchObject.pageIndex = this.state.page;
       searchObject.pageSize = this.state.rowsPerPage;
-      searchByPage(searchObject).then(({ data }) => {
+      searchByPageK(searchObject).then(({ data }) => {
         this.setState({
           itemList: [...data.content],
           totalElements: data.totalElements
@@ -145,32 +146,32 @@ import {
       });
     };
   
-    selectedAllItem = () => {
-      var searchObject = {};
-      let { keyword, } = this.state;
-      if (keyword != null) {
-        searchObject.text = keyword.trim();
-      }
-      searchObject.pageIndex = 1
-      searchObject.pageSize = 999999;
-      searchByPage(searchObject).then(({ data }) => {
-        let {selectedItemList} = this.state;
-        if (selectedItemList) {
-          selectedItemList = [];
-        }
-        if (data && data.content && data.content.length > 0) {
-          for (let index = 0; index < data.content.length; index++) {
-            const element = data.content[index];
+    // selectedAllItem = () => {
+    //   var searchObject = {};
+    //   let { keyword, } = this.state;
+    //   if (keyword != null) {
+    //     searchObject.text = keyword.trim();
+    //   }
+    //   searchObject.pageIndex = 1
+    //   searchObject.pageSize = 999999;
+    //   searchByPage(searchObject).then(({ data }) => {
+    //     let {selectedItemList} = this.state;
+    //     if (selectedItemList) {
+    //       selectedItemList = [];
+    //     }
+    //     if (data && data.content && data.content.length > 0) {
+    //       for (let index = 0; index < data.content.length; index++) {
+    //         const element = data.content[index];
   
-            const found = selectedItemList.find(item => item.id == element.id);
-            if (!found) {
-              selectedItemList.push(element);
-            }
-          }
-        }
-        this.props.handleSelect(selectedItemList);
-      });
-    }
+    //         const found = selectedItemList.find(item => item.id == element.id);
+    //         if (!found) {
+    //           selectedItemList.push(element);
+    //         }
+    //       }
+    //     }
+    //     this.props.handleSelect(selectedItemList);
+    //   });
+    // }
   
     handleKeyWordChange(event) {
       this.setState({ keyword: event.target.value });
@@ -235,15 +236,17 @@ import {
           render: rowData => (
             <Checkbox
               checked={this.state.selectedItemList.some(
-                selected => selected.sanPham.id === rowData.id
+                selected => selected.sanPham.id === rowData.sanPham.id
               )}
               onChange={() => this.handleCheckboxChange(rowData)}
             />
           )
         },
-        { title: t("general.name"), field: "tenSP", width: "150" },
-        { title: t("general.code"), field: "maSP", align: "left", width: "150" },
-        { title: t("Số lượng hiện có"), field: "soLuongDangCo", align: "left", width: "150" }
+        { title: t("general.name"), field: "sanPham.tenSP", width: "150" },
+        { title: t("general.code"), field: "sanPham.maSP", align: "left", width: "150" },
+        { title: t("Tên kho"), field: "kho.tenKho", align: "left", width: "150" },
+        { title: t("Số lượng trong kho"), field: "soLuong", align: "left", width: "150" },
+        { title: t("Số lượng hiện có"), field: "sanPham.soLuongDangCo", align: "left", width: "150" }
       ];
       return ( 
          <Dialog 

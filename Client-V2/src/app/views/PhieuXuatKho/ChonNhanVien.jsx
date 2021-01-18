@@ -72,7 +72,6 @@ class ChonNhanVien extends React.Component {
   }
 
   handleClick = (event, item) => {
-    //alert(item);
     if (item.id != null) {
       this.setState({ selectedValue: item.id, selectedItem: item });
     } else {
