@@ -44,7 +44,7 @@ public class RestPublicController {
 			path = env.getProperty("da.file.folder");
 		}
 	    File file = new File(path+filename+"."+type);
-	    if(file.exists()) {
+//	    if(file.exists()) {
 	        String contentType = "application/octet-stream";
 	        response.setContentType(contentType);
 	        OutputStream out = response.getOutputStream();
@@ -53,9 +53,9 @@ public class RestPublicController {
 	        IOUtils.copy(in, out);
 	        out.close();
 	        in.close();
-	    }else {
-	        throw new FileNotFoundException();
-	    }
+//	    }else {
+//	        throw new FileNotFoundException();
+//	    }
 	}
 	
 	@RequestMapping(path = "/image/{filename:.+}", method = RequestMethod.GET)

@@ -31,7 +31,7 @@ public class RestDAFileController {
 		FileDescriptionDto result = null;
 		String path = "";
 		if (env.getProperty("da.file.folder") != null) {
-			path = env.getProperty("cms.file.folder");
+			path = env.getProperty("da.file.folder");
 		}
 		try { 
 			String extension = uploadfile.getOriginalFilename().split("\\.(?=[^\\.]+$)")[1];

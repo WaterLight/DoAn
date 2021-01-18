@@ -102,6 +102,9 @@ public class PhieuXuatKhoServiceImpl extends GenericServiceImpl< PhieuXuatKho, U
 							List<SanPhamKho> listData = sanPhamKhoRepository.getListSanPhamKho(sanPhamPhieuXuatlDto.getSanPham().getId(),kho.getId());
 							if(listData != null && listData.size() > 0) {
 								SanPhamKho sanPhamKho = listData.get(0);
+								if(sanPhamKho == null) {
+									return null;
+								}
 								if(sanPhamKho.getSoLuong() >= sanPhamPhieuXuatlDto.getSoLuong()) {
 									sanPhamKho.setSoLuong(sanPhamKho.getSoLuong() - sanPhamPhieuXuatlDto.getSoLuong());
 								}
