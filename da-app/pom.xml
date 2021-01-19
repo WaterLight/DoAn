@@ -520,6 +520,6 @@
 			</plugin>
 
 		</plugins>
-		<finalName>globits-realestate-application</finalName>
+		<finalName>da-application</finalName>
 	</build>
 </project>
