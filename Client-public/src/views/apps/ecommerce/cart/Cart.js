@@ -44,7 +44,7 @@ class Checkout extends React.Component {
         content: (
           <div className="list-view product-checkout">
             <div className="checkout-items">
-              {JSON.parse(window.localStorage.getItem("saleOrder")) && JSON.parse(window.localStorage.getItem("saleOrder")).items.length >0 && JSON.parse(window.localStorage.getItem("saleOrder")).items.map((item, i) => (
+              {JSON.parse(window.localStorage.getItem("saleOrder")) != null && JSON.parse(window.localStorage.getItem("saleOrder")).items != null && JSON.parse(window.localStorage.getItem("saleOrder")).items.length >= 0 && JSON.parse(window.localStorage.getItem("saleOrder")).items.map((item, i) => (
                 <Card className="ecommerce-card" key={i}>
                   <div className="card-content">
                     <div className="item-img text-center">
@@ -52,13 +52,13 @@ class Checkout extends React.Component {
                     </div>
                     <CardBody>
                       <div className="item-name">
-                        <span>{item.tenSP}</span>
+                        <span>{item.tenSP} - <span>Giá: {item.giaBanHienThoi.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} đ</span> </span>
                         <p className="item-company">
-                          By <span className="company-name">{item.by}</span>
+                          {/* By <span className="company-name">{item.by}</span> */}
                         </p>
-                        <p className="stock-status-in">In Stock</p>
-                        <div className="item-quantity">
-                          <p className="quantity-title">Quantity</p>
+                        {/* <p className="stock-status-in">In Stock</p> */}
+                        <div className="item-quantity mt-60">
+                          <p className="quantity-title">Số lượng</p>
                           <NumericInput
                             min={0}
                             max={10}
@@ -75,8 +75,8 @@ class Checkout extends React.Component {
                       <div className="item-wrapper">
                         <div className="item-rating">
                           <Badge color="primary" className="badge-md mr-25">
-                            <span className="align-middle">4</span>{" "}
-                            <Star size={15} />
+                            {/* <span className="align-middle">4</span>{" "} */}
+                            {/* <Star size={15} /> */}
                           </Badge>
                         </div>
                         <div className="item-cost">
@@ -84,13 +84,13 @@ class Checkout extends React.Component {
                         </div>
                       </div>
                       <div className="wishlist">
-                        <X size={15} />
-                        <span className="align-middle ml-25">Remove</span>
+                        {/* <X size={15} /> */}
+                        <span className="align-middle ml-25" onClick={() => this.handleDeleteProductInCart(item)}>Xóa</span>
                       </div>
-                      <div className="cart">
-                        <Heart size={15} />
-                        <span className="align-middle ml-25">Wishlist</span>
-                      </div>
+                      {/* <div className="cart"> */}
+                      {/* <Heart size={15} /> */}
+                      {/* <span className="align-middle ml-25">Wishlist</span> */}
+                      {/* </div> */}
                     </div>
                   </div>
                 </Card>
@@ -99,7 +99,7 @@ class Checkout extends React.Component {
             <div className="checkout-options">
               <Card>
                 <CardBody>
-                  <p className="options-title">Options</p>
+                  {/* <p className="options-title">Options</p>
                   <div className="coupons">
                     <div className="coupons-title">
                       <p>Coupons</p>
@@ -108,19 +108,23 @@ class Checkout extends React.Component {
                       <p>Apply</p>
                     </div>
                   </div>
-                  <hr />
+                  <hr /> */}
                   <div className="price-details">
-                    <p>Price Details</p>
+                    <p>Khuyến Mãi - Thanh Toán</p>
                   </div>
                   <div className="detail">
-                    <div className="detail-title">Total MRP</div>
-                    <div className="detail-amt">$598</div>
+                    <div className="detail-title">Tổng tiền sản phẩm</div>
+                    <div className="detail-amt">
+                      {JSON.parse(window.localStorage.getItem("saleOrder")).totalAmount ? (
+                        <span>{JSON.parse(window.localStorage.getItem("saleOrder")).totalAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} đ</span>
+                      ) : ("")}
+                    </div>
                   </div>
                   <div className="detail">
-                    <div className="detail-title">Bag Discount</div>
-                    <div className="detail-amt discount-amt">-25$</div>
+                    <div className="detail-title">Khuyến mãi</div>
+                    <div className="detail-amt discount-amt">{JSON.parse(window.localStorage.getItem("saleOrder")).totalDiscont} %</div>
                   </div>
-                  <div className="detail">
+                  {/* <div className="detail">
                     <div className="detail-title">Estimated Tax</div>
                     <div className="detail-amt">$1.3</div>
                   </div>
@@ -132,10 +136,10 @@ class Checkout extends React.Component {
                     <div className="detail-title">Delivery Charges</div>
                     <div className="detail-amt discount-amt">Free</div>
                   </div>
-                  <hr />
+                  <hr /> */}
                   <div className="detail">
-                    <div className="detail-title detail-total">Total</div>
-                    <div className="detail-amt total-amt">$574</div>
+                    <div className="detail-title detail-total">Tổng tiền thanh toán</div>
+                    <div className="detail-amt total-amt">{JSON.parse(window.localStorage.getItem("saleOrder")).totalPrice} đ </div>
                   </div>
                   <Button.Ripple
                     type="submit"
@@ -143,7 +147,7 @@ class Checkout extends React.Component {
                     color="primary"
                     className="btn-block"
                     onClick={() => this.handleActiveStep(1)}>
-                    Place Order
+                    Đặt hàng
                   </Button.Ripple>
                 </CardBody>
               </Card>
@@ -397,7 +401,26 @@ class Checkout extends React.Component {
       }
     ]
   }
-
+  handleDeleteProductInCart = product => {
+    debugger
+    if (product && product.id) {
+      let order = JSON.parse(window.localStorage.getItem("saleOrder")).items;
+      if (order != null && order.length > 0) {
+        for (let i = 0; i < order.length; i++) {
+          if (order[i].id === product.id) {
+            var removeIndex = order.map(function (item) { return item.id; }).indexOf(product.id);
+            order.splice(removeIndex, 1);
+            window.localStorage.setItem("saleOrder", JSON.stringify(order));
+          }
+        }
+      }
+    }
+  }
+  formatPrice = value => {
+    if (value) {
+      return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+    }
+  }
   handleActiveStep = index => {
     this.setState({ activeStep: index })
   }
