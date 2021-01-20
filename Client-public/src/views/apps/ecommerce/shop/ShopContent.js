@@ -30,6 +30,7 @@ import "../../../../assets/scss/plugins/forms/react-select/_react-select.scss"
 import ConstantList from "../../../../configs/appConfig";
 import { toast, ToastContainer } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
+import imageDefault from "../../../../assets/img/pages/eCommerce/nike7.jfif"
 
 const sortOptions = [
   {
@@ -51,7 +52,7 @@ class ShopContent extends React.Component {
     inCart: [],
     inWishlist: [],
     view: "grid-view",
-    rowsPerPage: 5,
+    rowsPerPage: 100000,
     page: 0,
     data: [],
     totalElements: 0,
@@ -114,11 +115,20 @@ render() {
         <div className="card-content">
           <div className="item-img text-center">
             <Link to="/ecommerce/product-detail">
-              <img
+              {product.imageUrl? (
+                <img
                 className="img-fluid"
                 src={ConstantList.API_ENPOINT + "/public/getImage/" + product.imageUrl.split(".")[0] + "/" + product.imageUrl.split(".")[1]}
                 alt={product.tenSP}
               />
+              ):(
+                <img
+                className="img-fluid"
+                src={imageDefault}
+                alt="Empty Image"
+              />
+              )
+              }
             </Link>
           </div>
           <CardBody>

@@ -38,6 +38,7 @@ import "../../../../assets/scss/plugins/extensions/toastr.scss"
 class Checkout extends React.Component {
   state = {
     activeStep: 0,
+    user: null,
     steps: [
       {
         title: <ShoppingCart size={22} />,
@@ -422,6 +423,9 @@ class Checkout extends React.Component {
     }
   }
   handleActiveStep = index => {
+    if(this.state.user == null){
+      window.location.href = ConstantList.URL + "authentication/login";
+    }
     this.setState({ activeStep: index })
   }
 

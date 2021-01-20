@@ -53,13 +53,13 @@ class Login extends React.Component {
               <Col lg="6" md="12" className="p-0">
                 <Card className="rounded-0 mb-0 px-2">
                       <CardBody>
-                        <h4>Login</h4>
-                        <p>Welcome back, please login to your account.</p>
+                        <h4>Đăng nhập hệ thống</h4>
+                        <p>Chào mừng bạn, mời bạn đăng nhập để tạo đơn hàng</p>
                         <Form onSubmit={e => e.preventDefault()}>
                           <FormGroup className="form-label-group position-relative has-icon-left">
                             <Input
                               type="email"
-                              placeholder="Email"
+                              placeholder="Email/PhoneNumber"
                               value={this.state.email}
                               onChange={e => this.setState({ email: e.target.value })}
                             />
@@ -87,15 +87,15 @@ class Login extends React.Component {
                               label="Remember me"
                             />
                             <div className="float-right">
-                              Forgot Password?
+                              Quên mật khẩu?
                             </div>
                           </FormGroup>
                           <div className="d-flex justify-content-between">
                             <Button.Ripple color="primary" outline>
-                             Register                           
+                             Đăng ký                           
                             </Button.Ripple>
                             <Button.Ripple color="primary" type="submit" onClick={() => history.push(ConstantsList.ROOT_PATH+"/home")}>
-                                Login 
+                                Đăng nhập 
                             </Button.Ripple>
                           </div>
                         </Form>
