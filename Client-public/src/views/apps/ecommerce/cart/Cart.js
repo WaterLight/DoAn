@@ -35,7 +35,7 @@ import "../../../../assets/scss/pages/app-ecommerce-shop.scss"
 import "react-toastify/dist/ReactToastify.css"
 import "../../../../assets/scss/plugins/extensions/toastr.scss"
 import imageDefault from "../../../../assets/img/pages/eCommerce/nike7.jfif"
-import {saveOrder} from "./cartService";
+import { saveOrder } from "./cartService";
 
 class Checkout extends React.Component {
   state = {
@@ -51,10 +51,10 @@ class Checkout extends React.Component {
                 <Card className="ecommerce-card" key={i}>
                   <div className="card-content">
                     <div className="item-img text-center">
-                      {item.imageUrl ? (
+                      {item.sanPham.imageUrl ? (
                         <img
                           className="img-fluid"
-                          src={ConstantList.API_ENPOINT + "/public/getImage/" + item.imageUrl.split(".")[0] + "/" + item.imageUrl.split(".")[1]}
+                          src={ConstantList.API_ENPOINT + "/public/getImage/" + item.sanPham.imageUrl.split(".")[0] + "/" + item.sanPham.imageUrl.split(".")[1]}
                           alt={item.tenSP}
                         />
                       ) : (
@@ -68,7 +68,7 @@ class Checkout extends React.Component {
                     </div>
                     <CardBody>
                       <div className="item-name">
-                        <span>{item.tenSP} - <span>Giá: {item.giaBanHienThoi.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} đ</span> </span>
+                        <span>{item.sanPham.tenSP} - <span>Giá: {item.sanPham.giaBanHienThoi.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} đ</span> </span>
                         <p className="item-company">
                           {/* By <span className="company-name">{item.by}</span> */}
                         </p>
@@ -83,8 +83,8 @@ class Checkout extends React.Component {
                             style={mobileStyle}
                           />
                         </div>
-                        <p className="delivery-date">{item.deliveryBy}</p>
-                        <p className="offers">{item.offers}</p>
+                        {/* <p className="delivery-date">{item.deliveryBy}</p>
+                        <p className="offers">{item.offers}</p> */}
                       </div>
                     </CardBody>
                     <div className="item-options text-center">
@@ -96,7 +96,7 @@ class Checkout extends React.Component {
                           </Badge>
                         </div>
                         <div className="item-cost">
-                          <h6 className="item-price">{item.price}</h6>
+                          <h6 className="item-price">{item.sanPham.price}</h6>
                         </div>
                       </div>
                       <div className="wishlist">
@@ -290,18 +290,18 @@ class Checkout extends React.Component {
                 </CardHeader>
                 <CardBody>
                   <p className="mb-0">{JSON.parse(window.localStorage.getItem("currentUser")) != null && JSON.parse(window.localStorage.getItem("currentUser")).person != null && JSON.parse(window.localStorage.getItem("currentUser")).person.phoneNumber != null ? (
-                      <span>Số điện thoại: {JSON.parse(window.localStorage.getItem("currentUser")).person.phoneNumber}</span>
-                    ) : ("")
-                    }</p>
+                    <span>Số điện thoại: {JSON.parse(window.localStorage.getItem("currentUser")).person.phoneNumber}</span>
+                  ) : ("")
+                  }</p>
                   <p className="mb-0">{JSON.parse(window.localStorage.getItem("currentUser")) != null && JSON.parse(window.localStorage.getItem("currentUser")).person != null && JSON.parse(window.localStorage.getItem("currentUser")).person.address[0] != null ? (
-                      <span>Địa chỉ nhận hàng: {JSON.parse(window.localStorage.getItem("currentUser")).person.address[0].address}</span>
-                    ) : ("")
-                    }</p>
+                    <span>Địa chỉ nhận hàng: {JSON.parse(window.localStorage.getItem("currentUser")).person.address[0].address}</span>
+                  ) : ("")
+                  }</p>
                   {/* <p>UTC-5: Eastern Standard Time (EST) </p>
                   <p>202-555-0140</p> */}
                   <hr />
                   <Button.Ripple
-                    type="submit"
+                    // type="submit"
                     color="primary"
                     className="btn-block"
                     onClick={() => this.handleChooseDefaultAddress()}>
@@ -459,11 +459,21 @@ class Checkout extends React.Component {
     }
     this.setState({ activeStep: index })
   }
-  handleChooseDefaultAddress = ()=>{
+  handleChooseDefaultAddress = () => {
     let currentUser = JSON.parse(window.localStorage.getItem("currentUser"));
     let order = JSON.parse(window.localStorage.getItem("saleOrder"));
-    if(currentUser!= null && currentUser.id != null && order.sanPhamDonHang != null && order.sanPhamDonHang.length >0){
-      saveOrder(order);
+    if (currentUser != null && currentUser.id != null && order.sanPhamDonHang != null && order.sanPhamDonHang.length > 0) {
+      debugger
+      saveOrder(order).then((res) => {
+        if (res.status == 200) {
+          toast.info("Chúc mừng bạn đã đặt hàng thành công");
+        }else{
+          toast.error("Có lỗi xảy ra khi đặt hàng, vui lòng thử lại");
+        }
+      }).catch(err=>{
+        toast.error("Có lỗi xảy ra khi đặt hàng, vui lòng thử lại");
+        console.log(err)
+      })
     }
   }
 

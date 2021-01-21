@@ -20,8 +20,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import com.globits.core.service.FileDescriptionService;
+import com.globits.da.dto.RegisterDto;
 import com.globits.da.dto.SanPhamDto;
 import com.globits.da.dto.search.SearchDto;
+import com.globits.da.service.MemberService;
 import com.globits.da.service.SanPhamService;
 
 @RestController
@@ -33,6 +35,8 @@ public class RestPublicController {
 	FileDescriptionService fileDescriptionService;
 	@Autowired
 	SanPhamService sanPhamService;
+	@Autowired
+	MemberService memberService; 
 	
 	@RequestMapping(value = "/getListProductByPage", method = RequestMethod.POST)
 	public ResponseEntity<Page<SanPhamDto>> getPage(@RequestBody SearchDto dto ) {
@@ -82,7 +86,11 @@ public class RestPublicController {
 	    }
 	}
 
-	
+	@RequestMapping(value = "user/register", method = RequestMethod.POST)
+	public RegisterDto registerUser(@RequestBody RegisterDto registerDto) {
+		RegisterDto dto = memberService.registerUser(registerDto);
+		return dto;
+	}
 
 }
 
