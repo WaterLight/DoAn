@@ -46,6 +46,11 @@ public class NhanVienServiceImpl extends GenericServiceImpl<NhanVien, UUID> impl
 			}
 			entity.setMaNV(dto.getMaNV());
 			entity.setType(dto.getType());
+			entity.setDisplayName(dto.getDisplayName());
+			entity.setGender(dto.getGender());
+			entity.setBirthDate(dto.getBirthDate());
+			entity.setPhoneNumber(dto.getPhoneNumber());
+			entity.setEmail(dto.getEmail());
 			
 			entity = repos.save(entity);
 			if (entity != null) {

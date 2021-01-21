@@ -1,12 +1,3 @@
-
-
-
-
-
-
-
-
-
 import React, { Component } from "react";
 import {
   Grid,
@@ -170,9 +161,9 @@ class RealEstateSourceTable extends React.Component {
     });
   }
   checkData = () => {
-    let {t} = this.props
+    let { t } = this.props;
     if (!this.data || this.data.length === 0) {
-      toast.warning(t("general.noti_check_data"))
+      toast.warning(t("general.noti_check_data"));
       // this.setState({
       //   shouldOpenNotificationPopup: true,
       //   Notification: "general.noti_check_data",
@@ -366,7 +357,7 @@ class RealEstateSourceTable extends React.Component {
       shouldOpenConfirmationDeleteAllDialog,
       shouldOpenNotificationPopup,
     } = this.state;
-    let TitlePage = t("title.source");
+    let TitlePage = t("Kho");
 
     let columns = [
       {
@@ -410,13 +401,20 @@ class RealEstateSourceTable extends React.Component {
         ),
       },
       {
-        title: t("general.name") , field: "tenKho", align: "left",width: "150",
+        title: t("general.name"),
+        field: "tenKho",
+        align: "left",
+        width: "150",
       },
-      { 
-        title: t("general.code"), field: "maKho", width: "150" 
+      {
+        title: t("general.code"),
+        field: "maKho",
+        width: "150",
       },
-      { 
-        title: t("RealEstateOwner.fullAddress"), field: "diaChi", width: "150" 
+      {
+        title: t("RealEstateOwner.fullAddress"),
+        field: "diaChi",
+        width: "150",
       },
     ];
 

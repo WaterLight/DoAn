@@ -9,12 +9,21 @@ import {
   Select,
   Checkbox,
   TextField,
-  FormControlLabel
+  FormControlLabel,
+  DialogActions
 } from "@material-ui/core";
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import Autocomplete from "@material-ui/lab/Autocomplete";
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
-import { getUserByUsername, saveUser, addNewUser, getAllRoles } from "./UserService";
+import {
+  getUserByUsername,
+  saveUser,
+  addNewUser,
+  getAllRoles,
+} from "./UserService";
 import AsynchronousAutocomplete from "../utilities/AsynchronousAutocomplete";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+toast.configure();
 
 class UserEditorDialog extends Component {
   constructor(props) {
@@ -30,19 +39,19 @@ class UserEditorDialog extends Component {
     listRole: [],
     roles: [],
     active: true,
-    email: '',
+    email: "",
     person: {},
-    username: '',
+    username: "",
     changePass: true,
-    password: '',
-    confirmPassword: ''
+    password: "",
+    confirmPassword: "",
   };
 
   listGender = [
-    { id: 'M', name: 'Nam' },
-    { id: 'F', name: 'Nữ' },
-    { id: 'U', name: 'Không rõ' }
-  ]
+    { id: "M", name: "Nam" },
+    { id: "F", name: "Nữ" },
+    { id: "U", name: "Không rõ" },
+  ];
 
   handleChange = (event, source) => {
     event.persist();
@@ -59,21 +68,21 @@ class UserEditorDialog extends Component {
       return;
     }
     if (source === "displayName") {
-      let {person} = this.state;
+      let { person } = this.state;
       person = person ? person : {};
       person.displayName = event.target.value;
       this.setState({ person: person });
       return;
     }
     if (source === "gender") {
-      let {person} = this.state;
+      let { person } = this.state;
       person = person ? person : {};
       person.gender = event.target.value;
       this.setState({ person: person });
       return;
     }
     this.setState({
-      [event.target.name]: event.target.value
+      [event.target.name]: event.target.value,
     });
   };
 
@@ -82,33 +91,35 @@ class UserEditorDialog extends Component {
 
     getUserByUsername(this.state.username).then((data) => {
       if (data && data.id) {
-          if (!id || (id && data.id != id)) {
-              alert("Tên đăng nhập đã tồn tại!");
-              return;
-          }
+        if (!id || (id && data.id != id)) {
+          alert("Tên đăng nhập đã tồn tại!");
+          return;
+        }
       }
 
       getUserByUsername(this.state.username).then((data2) => {
         if (data2 && data2.id) {
-            alert("Địa chỉ email đã tồn tại!");
-            return;
+          alert("Địa chỉ email đã tồn tại!");
+          return;
         }
-        
       });
-
+      
       saveUser({
-        ...this.state
+        ...this.state,
       }).then(() => {
+        if(id) {
+          toast.info(this.props.t('general.updateSuccess'));
+        } else {
+          toast.info(this.props.t('general.addSuccess'));
+        }
         this.props.handleOKEditClose();
       });
-
     });
   };
 
   selectRoles = (rolesSelected) => {
-    this.setState({ roles: rolesSelected }, function () {
-    });
-  }
+    this.setState({ roles: rolesSelected }, function () {});
+  };
 
   componentWillMount() {
     let { open, handleClose, item } = this.props;
@@ -117,7 +128,7 @@ class UserEditorDialog extends Component {
 
   componentDidMount() {
     // custom rule will have name 'isPasswordMatch'
-    ValidatorForm.addValidationRule('isPasswordMatch', (value) => {
+    ValidatorForm.addValidationRule("isPasswordMatch", (value) => {
       if (value !== this.state.password) {
         return false;
       }
@@ -126,7 +137,7 @@ class UserEditorDialog extends Component {
 
     getAllRoles().then(({ data }) => {
       this.setState({
-        listRole: data
+        listRole: data,
       });
     });
   }
@@ -144,40 +155,53 @@ class UserEditorDialog extends Component {
       username,
       changePass,
       password,
-      confirmPassword
+      confirmPassword,
     } = this.state;
 
     return (
-      <Dialog onClose={handleClose} open={open} maxWidth={'md'} fullWidth={true}>
+      <Dialog
+        onClose={handleClose}
+        open={open}
+        maxWidth={"md"}
+        fullWidth={true}
+      >
         <div className="p-24">
-          <h4 className="mb-20">{t('SaveUpdate')}</h4>
+          <h4 className="mb-20">{t("Thêm mới/Cập nhật")}</h4>
           <ValidatorForm ref="form" onSubmit={this.handleFormSubmit}>
             <Grid className="mb-16" container spacing={2}>
               <Grid item sm={6} xs={12}>
                 <TextValidator
                   className="w-100 mb-16"
-                  label={t('user.displayName')}
-                  onChange={displayName => this.handleChange(displayName, "displayName")}
+                  label={t("user.displayName")}
+                  onChange={(displayName) =>
+                    this.handleChange(displayName, "displayName")
+                  }
                   type="text"
                   name="name"
-                  value={person ? person.displayName : ''}
+                  value={person ? person.displayName : ""}
                   validators={["required"]}
-                  errorMessages={["this field is required"]}
+                  errorMessages={[t("general.required")]}
                 />
               </Grid>
               <Grid item sm={6} xs={12}>
                 <FormControl fullWidth={true}>
-                  <InputLabel htmlFor="gender-simple">{t('user.gender')}</InputLabel>
+                  <InputLabel htmlFor="gender-simple">
+                    {t("user.gender")}
+                  </InputLabel>
                   <Select
-                    value={person ? person.gender : ''}
-                    onChange={gender => this.handleChange(gender, "gender")}
+                    value={person ? person.gender : ""}
+                    onChange={(gender) => this.handleChange(gender, "gender")}
                     inputProps={{
                       name: "gender",
-                      id: "gender-simple"
+                      id: "gender-simple",
                     }}
                   >
-                    {this.listGender.map(item => {
-                      return <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>;
+                    {this.listGender.map((item) => {
+                      return (
+                        <MenuItem key={item.id} value={item.id}>
+                          {item.name}
+                        </MenuItem>
+                      );
                     })}
                   </Select>
                 </FormControl>
@@ -188,13 +212,13 @@ class UserEditorDialog extends Component {
                     readOnly: !isAddNew,
                   }}
                   className="w-100 mb-16"
-                  label={t('user.username')}
+                  label={t("user.username")}
                   onChange={this.handleChange}
                   type="text"
                   name="username"
                   value={username}
                   validators={["required"]}
-                  errorMessages={["this field is required"]}
+                  errorMessages={[t("general.required")]}
                 />
               </Grid>
               <Grid item sm={6} xs={12}>
@@ -207,100 +231,126 @@ class UserEditorDialog extends Component {
                   value={email}
                   validators={["required", "isEmail"]}
                   errorMessages={[
-                    "This field is required",
-                    "Email is not valid"
+                    t("general.required"),
+                    "Email is not valid",
                   ]}
                 />
               </Grid>
               <Grid item sm={12} xs={12}>
-                {listRole && (<Autocomplete
-                  style={{ width: '100%' }}
-                  multiple
-                  id="combo-box-demo"
-                  defaultValue={roles}
-                  options={listRole}
-                  getOptionSelected={(option, value) => option.id === value.id}
-                  getOptionLabel={(option) => option.authority}
-                  onChange={(event, value)=> {
-                    this.selectRoles(value);
-                  }}
-                  renderInput={(params) =>
-                    <TextValidator
-                      {...params}
-                      value={roles}
-                      label={t('user.role')}
-                      fullWidth
-                      validators={["required"]}
-                      errorMessages={[t('user.please_select_permission')]}
-                    />}
-                />)}
+                {listRole && (
+                  <Autocomplete
+                    style={{ width: "100%" }}
+                    multiple
+                    id="combo-box-demo"
+                    defaultValue={roles}
+                    options={listRole}
+                    getOptionSelected={(option, value) =>
+                      option.id === value.id
+                    }
+                    getOptionLabel={(option) => option.authority}
+                    onChange={(event, value) => {
+                      this.selectRoles(value);
+                    }}
+                    renderInput={(params) => (
+                      <TextValidator
+                        {...params}
+                        value={roles}
+                        label={t("user.role")}
+                        fullWidth
+                        validators={["required"]}
+                        errorMessages={[t("user.please_select_permission")]}
+                      />
+                    )}
+                  />
+                )}
               </Grid>
-              {!isAddNew && <Grid item sm={6} xs={12}>
-                <FormControlLabel
-                  value={changePass}
-                  className="mb-16"
-                  name="changePass"
-                  onChange={changePass => this.handleChange(changePass, "changePass")}
-                  control={<Checkbox
-                    checked={changePass}
-                  />}
-                  label={t("user.changePass")}
-                />
-              </Grid>}
+              {!isAddNew && (
+                <Grid item sm={6} xs={12}>
+                  <FormControlLabel
+                    value={changePass}
+                    className="mb-16"
+                    name="changePass"
+                    onChange={(changePass) =>
+                      this.handleChange(changePass, "changePass")
+                    }
+                    control={<Checkbox checked={changePass} />}
+                    label={t("user.changePass")}
+                  />
+                </Grid>
+              )}
               <Grid item sm={6} xs={12}>
                 <FormControlLabel
                   value={active}
                   className="mb-16"
                   name="active"
-                  onChange={active => this.handleChange(active, "active")}
-                  control={<Checkbox
-                    checked={active}
-                  />}
+                  onChange={(active) => this.handleChange(active, "active")}
+                  control={<Checkbox checked={active} />}
                   label={t("user.active")}
                 />
               </Grid>
-              {
-                (changePass != null && changePass == true)
-                  ?
-                  <Grid container spacing={2}>
-                    <Grid item sm={6} xs={12}>
-                      <TextValidator
-                        className="mb-16 w-100"
-                        label={t('password')}
-                        variant="outlined"
-                        onChange={this.handleChange}
-                        name="password"
-                        type="password"
-                        value={password}
-                        validators={["required"]}
-                        errorMessages={["This field is required"]}
-                      />
-                    </Grid>
-                    <Grid item sm={6} xs={12}>
-                      <TextValidator
-                        className="mb-16 w-100"
-                        label={t('re_password')}
-                        variant="outlined"
-                        onChange={this.handleChange}
-                        name="confirmPassword"
-                        type="password"
-                        value={confirmPassword}
-                        validators={['required', 'isPasswordMatch']}
-                        errorMessages={['This field is required', 'Password mismatch']}
-                      />
-                    </Grid>
+              {changePass != null && changePass == true ? (
+                <Grid container spacing={2}>
+                  <Grid item sm={6} xs={12}>
+                    <TextValidator
+                      className="mb-16 w-100"
+                      label={t("password")}
+                      variant="outlined"
+                      onChange={this.handleChange}
+                      name="password"
+                      type="password"
+                      value={password}
+                      validators={["required"]}
+                      errorMessages={[t("general.required")]}
+                    />
                   </Grid>
-                  :
-                  <div></div>
-              }
+                  <Grid item sm={6} xs={12}>
+                    <TextValidator
+                      className="mb-16 w-100"
+                      label={t("re_password")}
+                      variant="outlined"
+                      onChange={this.handleChange}
+                      name="confirmPassword"
+                      type="password"
+                      value={confirmPassword}
+                      validators={["required", "isPasswordMatch"]}
+                      errorMessages={[
+                        t("general.required"),
+                        "Mật khẩu không khớp",
+                      ]}
+                    />
+                  </Grid>
+                </Grid>
+              ) : (
+                <div></div>
+              )}
             </Grid>
-
-            <div className="flex flex-space-between flex-middle">
+            <DialogActions style={{padding:'0px'}}>
+              <div className="flex flex-space-between flex-middle">
+                <Button
+                  className="mr-12"
+                  variant="contained"
+                  color="secondary"
+                  onClick={() => this.props.handleClose()}
+                >
+                  {t("general.cancel")}
+                </Button>
+                <Button variant="contained" color="primary" type="submit">
+                  {t("general.save")}
+                </Button>
+              </div>
+            </DialogActions>
+            {/* <div className="flex flex-space-between flex-middle">
               <Button variant="contained" color="primary" type="submit">
                 Save
               </Button>
-              <Button variant="contained" color="secondary" onClick={() => this.props.handleClose()}>Cancel</Button>
-            </div>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={() => this.props.handleClose()}
+              >
+                Cancel
+              </Button>
+            </div> */}
           </ValidatorForm>
         </div>
       </Dialog>
