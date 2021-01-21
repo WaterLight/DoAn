@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.globits.da.domain.DanhMucSanPham;
 import com.globits.da.domain.SanPham;
 import com.globits.da.domain.SanPhamKho;
 
@@ -11,7 +12,6 @@ public class SanPhamDto extends BaseObjectDto{
 	private String tenSP;
 	private String maSP;
 	private Double giaBanHienThoi;
-	private Double giamGia;
 	private Date ngayCapNhat;
 	private Date ngayTao;
 	private NhanVienDto nguoiTao;
@@ -21,8 +21,7 @@ public class SanPhamDto extends BaseObjectDto{
 	private Integer soLuongDangCo;
 	private Set<SanPhamKhoDto> sanPhamKho;
 	private String imageUrl;//Đường dẫn đến File ảnh tiêu đề bài báo (nếu có)
-	private Boolean isShowHome = false;
-	
+	private DanhMucSanPhamDto danhMucSanPham;
 	public String getTenSP() {
 		return tenSP;
 	}
@@ -95,19 +94,11 @@ public class SanPhamDto extends BaseObjectDto{
 	public void setImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
 	}
-	
-	public Double getGiamGia() {
-		return giamGia;
+	public DanhMucSanPhamDto getDanhMucSanPham() {
+		return danhMucSanPham;
 	}
-	public void setGiamGia(Double giamGia) {
-		this.giamGia = giamGia;
-	}
-	
-	public Boolean getIsShowHome() {
-		return isShowHome;
-	}
-	public void setIsShowHome(Boolean isShowHome) {
-		this.isShowHome = isShowHome;
+	public void setDanhMucSanPham(DanhMucSanPhamDto danhMucSanPham) {
+		this.danhMucSanPham = danhMucSanPham;
 	}
 	public SanPhamDto() {
 		super();
@@ -119,10 +110,11 @@ public class SanPhamDto extends BaseObjectDto{
 		this.tenSP = e.getTenSP();
 		this.baiViet = e.getBaiViet();
 		this.imageUrl = e.getImageUrl();
-		this.giamGia = e.getGiamGia();
-		this.isShowHome = e.getIsShowHome();
 		if(e.getDonViTinh() != null) {
 			this.donViTinh = new DonViTinhDto(e.getDonViTinh());
+		}
+		if(e.getDanhMucSanPham() != null) {
+			this.danhMucSanPham = new DanhMucSanPhamDto(e.getDanhMucSanPham());
 		}
 		if (e.getSanPhamKho()!= null) {
 			Integer count =  0;
@@ -143,6 +135,9 @@ public class SanPhamDto extends BaseObjectDto{
 		this.imageUrl = e.getImageUrl();
 		if(e.getDonViTinh() != null) {
 			this.donViTinh = new DonViTinhDto(e.getDonViTinh());
+		}
+		if(e.getDanhMucSanPham() != null) {
+			this.danhMucSanPham = new DanhMucSanPhamDto(e.getDanhMucSanPham());
 		}
 		
 	}

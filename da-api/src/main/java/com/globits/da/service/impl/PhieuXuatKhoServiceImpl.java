@@ -1,5 +1,6 @@
 package com.globits.da.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -18,13 +19,12 @@ import org.springframework.util.StringUtils;
 import com.globits.core.service.impl.GenericServiceImpl;
 import com.globits.da.domain.Kho;
 import com.globits.da.domain.NhanVien;
-import com.globits.da.domain.PhieuNhapKho;
 import com.globits.da.domain.PhieuXuatKho;
 import com.globits.da.domain.SanPhamKho;
 import com.globits.da.domain.SanPhamPhieuXuat;
-import com.globits.da.dto.PhieuNhapKhoDto;
 import com.globits.da.dto.PhieuXuatKhoDto;
 import com.globits.da.dto.SanPhamPhieuXuatDto;
+import com.globits.da.dto.search.BaoCaoDto;
 import com.globits.da.dto.search.SearchDto;
 import com.globits.da.repository.KhoRepository;
 import com.globits.da.repository.NhanVienRepository;
@@ -204,6 +204,73 @@ public class PhieuXuatKhoServiceImpl extends GenericServiceImpl< PhieuXuatKho, U
 				return count != 0l;
 			}
 		return null;
+	}
+
+	@Override
+	public List<BaoCaoDto> baoCao(SearchDto dto) {
+		String whereClause = "";
+		
+		String orderBy = " ORDER BY entity.createDate DESC";
+		
+		String sql = "select new com.globits.da.dto.PhieuXuatKhoDto(entity) from PhieuXuatKho as entity where (1=1)  ";
+
+		if (dto.getKeyword() != null && StringUtils.hasText(dto.getKeyword())) {
+			whereClause += " AND ( entity.ma LIKE :text or  entity.ten LIKE :text )";
+		}
+		if (dto.getFromDate() != null && dto.getToDate() != null ) {
+			whereClause += " AND ( entity.ngayXuat BETWEEN :fromDate and :toDate  )";
+		}
+		
+		sql += whereClause + orderBy;
+
+
+		Query q = manager.createQuery(sql, PhieuXuatKhoDto.class);
+
+		if (dto.getKeyword() != null && StringUtils.hasText(dto.getKeyword())) {
+			q.setParameter("text", '%' + dto.getKeyword() + '%');
+		}
+		if (dto.getFromDate() != null && dto.getToDate() != null ) {
+			q.setParameter("fromDate",dto.getFromDate());
+			q.setParameter("toDate",dto.getToDate());
+		}
+		List<PhieuXuatKhoDto> entities = q.getResultList();
+		List<BaoCaoDto> result = new ArrayList<BaoCaoDto>();
+		if(entities != null && entities.size() > 0) {
+			for (PhieuXuatKhoDto nhapdto : entities) {
+				for (SanPhamPhieuXuatDto sanPhamPhieuXuat : nhapdto.getSanPhamPhieuXuat()) {
+					BaoCaoDto bc = new BaoCaoDto();
+					if(result!= null && result.size() ==0 ) {
+						bc.setTenSP(sanPhamPhieuXuat.getSanPham().getTenSP());
+						bc.setSanPhamId(sanPhamPhieuXuat.getSanPham().getId());
+						bc.setKhoId(sanPhamPhieuXuat.getPhieu().getKho().getId());
+						bc.setTenKho(sanPhamPhieuXuat.getPhieu().getKho().getTenKho());
+						bc.setSoLuong(sanPhamPhieuXuat.getSoLuong());
+						result.add(bc);
+					}
+					if(result!= null && result.size() > 0 ) {
+						for (BaoCaoDto baoCaoDto : result) {
+							if(baoCaoDto.getSanPhamId().equals(sanPhamPhieuXuat.getSanPham().getId()) && baoCaoDto.getKhoId().equals(sanPhamPhieuXuat.getPhieu().getKho().getId())) {
+								if(baoCaoDto.getSoLuongNhap() == null) {
+									baoCaoDto.setSoLuongNhap(0+sanPhamPhieuXuat.getSoLuong());
+								}else {
+									baoCaoDto.setSoLuongNhap(baoCaoDto.getSoLuong()+sanPhamPhieuXuat.getSoLuong());
+								}
+							}else {
+								bc.setTenSP(sanPhamPhieuXuat.getSanPham().getTenSP());
+								bc.setSanPhamId(sanPhamPhieuXuat.getSanPham().getId());
+								bc.setKhoId(sanPhamPhieuXuat.getPhieu().getKho().getId());
+								bc.setTenKho(sanPhamPhieuXuat.getPhieu().getKho().getTenKho());
+								bc.setSoLuong(sanPhamPhieuXuat.getSoLuong());
+								result.add(bc);
+							}
+						}
+						
+					}
+				}
+			}
+		}
+
+		return result;
 	}
 
 }

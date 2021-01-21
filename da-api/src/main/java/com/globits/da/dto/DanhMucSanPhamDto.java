@@ -2,6 +2,8 @@ package com.globits.da.dto;
 
 import javax.persistence.Column;
 
+import com.globits.da.domain.DanhMucSanPham;
+
 public class DanhMucSanPhamDto extends BaseObjectDto{
 	private String ten;
 	private String ma;
@@ -16,6 +18,17 @@ public class DanhMucSanPhamDto extends BaseObjectDto{
 	}
 	public void setMa(String ma) {
 		this.ma = ma;
+	}
+	public DanhMucSanPhamDto() {
+		super();
+	}
+
+	public DanhMucSanPhamDto(DanhMucSanPham entity) {
+		if(entity != null) {
+			this.setId(entity.getId());
+			this.ma = entity.getMa();
+			this.ten = entity.getTen();
+		}
 	}
 	
 }
