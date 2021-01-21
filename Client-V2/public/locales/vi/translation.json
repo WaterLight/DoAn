@@ -479,5 +479,29 @@
   },
   "productAttribute": {
     "type": "Loại"
+  },
+  "staff": {
+    "title": "Nhân viên",
+    "name": "Tên nhân viên",
+    "code": "Mã nhân viên",
+    "firstName": "Tên",
+    "lastName": "Họ",
+    "displayName": "Họ và tên nhân viên",
+    "gender": "Giới tính",
+    "birthDate": "Ngày sinh",
+    "birthPlaceame": "Nơi sinh",
+    "phoneNumber": "SĐT",
+    "email": "Email",
+    "search": "Tìm kiếm theo tên hoặc mã nhân viên",
+    "UserName": "Tên đăng nhập",
+    "department": "Phòng ban",
+    "Email": "Email",
+    "noti": {
+      "use": "Nhân viên đang sử dụng, không thể xóa",
+      "use_all": "Nhân viên đều đã sử dụng",
+      "deleted_unused": "Đã xoá nhân viên chưa sử dụng",
+      "dupli_code": "Mã đã được sử dụng"
+    },
+    "saveUpdate":"Thêm mới/Cập nhật nhân viên"
   }
 }
