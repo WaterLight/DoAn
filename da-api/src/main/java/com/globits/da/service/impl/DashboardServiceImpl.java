@@ -101,9 +101,9 @@ public class DashboardServiceImpl implements DashboardService {
 	}
 
 	public List<AnalyticsCountDto> countDonHangByCreatedDate() {
-		String sqlCount = "select new com.globits.da.dto.AnalyticsCountDto(v.issueDate, count(v.id)) FROM DonHang v where (1=1)";
-		String groupQuery = " GROUP BY cast(v.issueDate as date)";
-		String orderQuery = " ORDER BY v.issueDate ASC";
+		String sqlCount = "select new com.globits.da.dto.AnalyticsCountDto(v.createDate, count(v.id)) FROM DonHang v where (1=1)";
+		String groupQuery = " GROUP BY cast(v.createDate as date)";
+		String orderQuery = " ORDER BY v.createDate ASC";
 		String whereClause = "";
 		sqlCount += whereClause + groupQuery + orderQuery;
 		Query qCount = manager.createQuery(sqlCount);
@@ -112,9 +112,9 @@ public class DashboardServiceImpl implements DashboardService {
 	}
 
 	public List<AnalyticsCountDto> countKhoByIssueDate() {
-		String sqlCount = "select new com.globits.da.dto.AnalyticsCountDto(v.issueDate, count(v.id)) FROM Kho v where (1=1)";
-		String groupQuery = " GROUP BY cast(v.issueDate as date)";
-		String orderQuery = " ORDER BY v.issueDate ASC";
+		String sqlCount = "select new com.globits.da.dto.AnalyticsCountDto(v.createDate, count(v.id)) FROM Kho v where (1=1)";
+		String groupQuery = " GROUP BY cast(v.createDate as date)";
+		String orderQuery = " ORDER BY v.createDate ASC";
 		String whereClause = "";
 		sqlCount += whereClause + groupQuery + orderQuery;
 		Query qCount = manager.createQuery(sqlCount);
@@ -123,9 +123,9 @@ public class DashboardServiceImpl implements DashboardService {
 	}
 	
 	public List<AnalyticsCountDto> countUserByIssueDate() {
-		String sqlCount = "select new com.globits.da.dto.AnalyticsCountDto(v.issueDate, count(v.id)) FROM User v where (1=1)";
-		String groupQuery = " GROUP BY cast(v.issueDate as date)";
-		String orderQuery = " ORDER BY v.issueDate ASC";
+		String sqlCount = "select new com.globits.da.dto.AnalyticsCountDto(v.createDate, count(v.id)) FROM User v where (1=1)";
+		String groupQuery = " GROUP BY cast(v.createDate as date)";
+		String orderQuery = " ORDER BY v.createDate ASC";
 		String whereClause = "";
 		sqlCount += whereClause + groupQuery + orderQuery;
 		Query qCount = manager.createQuery(sqlCount);
