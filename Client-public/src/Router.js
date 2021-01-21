@@ -10,6 +10,7 @@ const shop = lazy(() => import("./views/apps/ecommerce/shop/Shop"))
 const home = lazy(() => import("./views/pages/Home"))
 const page2 = lazy(() => import("./views/pages/Page2"))
 const login = lazy(() => import("./views/pages/authentication/login/Login"))
+const registerMember = lazy(() => import("./views/pages/authentication/login/RegisterMember"))
 const productDetail = lazy(() => import("./views/apps/ecommerce/detail/Detail"))
 const wishlist = lazy(() => import("./views/apps/ecommerce/wishlist/Wishlist"))
 const checkout = lazy(() => import("./views/apps/ecommerce/cart/Cart"))
@@ -90,6 +91,12 @@ class AppRouter extends React.Component {
             component={login}
             fullLayout
           />
+          <AppRoute
+            path= {ConstantsList.ROOT_PATH + "/register"}
+            component={registerMember}
+            fullLayout
+          />
+          
            {/* <AppRoute
             exact
             path={ConstantsList.ROOT_PATH+"/ecommerce/shop"}

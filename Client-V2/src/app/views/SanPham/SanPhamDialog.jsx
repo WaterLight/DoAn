@@ -26,6 +26,8 @@ import {
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import EditorForm from "./EditorForm";
+import DanhMucSanPham from "./DanhMucSanPham";
+
 toast.configure({
   autoClose: 2000,
   draggable: false,
@@ -60,12 +62,14 @@ class AgentDialog extends Component {
     imageUrl: "",
     noteAvatarImage: "",
     files: [],
+    shouldOpenSelectDMPopup:false,
   };
 
   handleDialogClose = () => {
     this.setState({ shouldOpenNotificationPopup: false,
                     shouldOpenSelectUserPopup:false,
                     shouldOpenSelectAgencyPopup: false,
+                    shouldOpenSelectDMPopup:false,
                  });
   };
 
@@ -122,6 +126,9 @@ class AgentDialog extends Component {
   }
   handleSelectAgency =(item) =>{
     this.setState({agency:item ? item : null,shouldOpenSelectAgencyPopup: false, })
+  }
+  handleSelectDM =(item)=>{
+    this.setState({danhMucSanPham:item ? item : null,shouldOpenSelectDMPopup: false, })
   }
   handleFileBrowserDialogClose = () => {
     this.setState({ shouldOpenFileBrowserDialog: false });
@@ -395,6 +402,53 @@ getImageNameAndType = (name) => {
                     selectedItem={
                       this.state.agency != null
                         ? this.state.agency
+                        : {}
+                    }
+                    handleClose={this.handleDialogClose}
+                    t={t}
+                    i18n={i18n}
+                  />
+                )}
+              </Grid>
+              <Grid item sm={12} xs={12}>
+                <Button
+                  size="small"
+                  style={{ float: "right" }}
+                  className=" mt-16"
+                  variant="contained"
+                  color="primary"
+                  onClick={()=>{
+                      this.setState({shouldOpenSelectDMPopup:true})
+                  }}
+                >
+                  {t("general.select")}
+                </Button>
+                <TextValidator
+                  size="small"
+                  InputLabelProps={{ shrink: true }}
+                  // InputProps={{
+                  //   readOnly: true,
+                  // }}
+                  label={
+                    <span>
+                      <span style={{ color: "red" }}></span>
+                      {t("Danh mục sản phẩm")}
+                    </span>
+                  }
+                  // className="w-80"
+                  style ={{width: "80%"}}
+                  value={
+                    this.state.danhMucSanPham != null ? this.state.danhMucSanPham.ten : ""
+                  }
+                />
+
+                {this.state.shouldOpenSelectDMPopup && (
+                  <DanhMucSanPham
+                    open={this.state.shouldOpenSelectDMPopup}
+                    handleSelect={this.handleSelectDM}
+                    selectedItem={
+                      this.state.danhMucSanPham != null
+                        ? this.state.danhMucSanPham
                         : {}
                     }
                     handleClose={this.handleDialogClose}

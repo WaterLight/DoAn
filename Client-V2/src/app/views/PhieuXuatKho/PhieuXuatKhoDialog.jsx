@@ -433,7 +433,7 @@ class PhieuXuatKhoDialog extends Component {
                   }}
                   label={
                     <span>
-                      <span style={{ color: "red" }}></span>
+                      <span style={{ color: "red" }}>*</span>
                       {t("Kho")}
                     </span>
                   }
@@ -462,12 +462,17 @@ class PhieuXuatKhoDialog extends Component {
                     className=" mt-10 mb-10"
                     variant="contained"
                     color="primary"
-                    onClick={() =>
+                    onClick={() =>{
+                      if(this.state.kho == null ){
+                        toast.warning("Chưa chọn kho");
+                        return
+                      }
                       this.setState({
                         shouldOpenMultipleDialog: true,
                         item: {},
                       })
                     }
+                  }
                   >{t("general.select")}</Button>
                 {this.state.shouldOpenMultipleDialog && (
                 <MultipleProduct
@@ -477,6 +482,7 @@ class PhieuXuatKhoDialog extends Component {
                   handleClose={this.handleDialogCancel}
                   t={t}
                   i18n={i18n}
+                  khoId = {this.state.kho ? this.state.kho.id:""}
                 />
               )}
                 <Grid item sm={12} xs="12" className = "mt-10">

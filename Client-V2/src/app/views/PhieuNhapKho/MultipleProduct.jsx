@@ -106,7 +106,7 @@ import {
       var searchObject = {};
       let { keyword } = this.state;
       if (keyword != null) {
-        searchObject.text = keyword.trim();
+        searchObject.keyword = keyword.trim();
       }
       searchObject.pageIndex = this.state.page + 1;
       searchObject.pageSize = this.state.rowsPerPage;
@@ -133,7 +133,7 @@ import {
       var searchObject = {};
       let { keyword, } = this.state;
       if (keyword != null) {
-        searchObject.text = keyword.trim();
+        searchObject.keyword = keyword.trim();
       }
       searchObject.pageIndex = this.state.page;
       searchObject.pageSize = this.state.rowsPerPage;
@@ -149,7 +149,7 @@ import {
       var searchObject = {};
       let { keyword, } = this.state;
       if (keyword != null) {
-        searchObject.text = keyword.trim();
+        searchObject.keyword = keyword.trim();
       }
       searchObject.pageIndex = 1
       searchObject.pageSize = 999999;

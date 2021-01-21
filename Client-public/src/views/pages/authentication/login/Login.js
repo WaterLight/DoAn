@@ -10,7 +10,7 @@ import {
   Input,
   Label
 } from "reactstrap"
-import { Mail, Lock, Check, Facebook, Twitter, GitHub } from "react-feather"
+import { Phone, Lock, Check, Facebook, Twitter, GitHub } from "react-feather"
 import { history } from "../../../../history"
 import Checkbox from "../../../../components/@vuexy/checkbox/CheckboxesVuexy"
 import googleSvg from "../../../../assets/img/svg/google.svg"
@@ -21,6 +21,7 @@ import axios from "axios";
 import { loginWithEmailAndPassword } from "./LoginActions";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ConstantList from "../../../../configs/appConfig";
 
 toast.configure({
   autoClose: 2000,
@@ -61,19 +62,23 @@ class Login extends React.Component {
     return window.sessionStorage.getItem("auth_user");
   }
   async loginWithUserNameAndPassword() {
-    if(!this.state.username || this.state.username == ""){
+    if (!this.state.username || this.state.username == "") {
       toast.warning("Vui lòng nhập tên đăng nhập!");
       return;
     }
-    else if(!this.state.password || this.state.password == ""){
+    else if (!this.state.password || this.state.password == "") {
       toast.warning("Vui lòng nhập mật khẩu!");
       return;
     }
-    else{
+    else {
       loginWithEmailAndPassword({ ...this.state });
     }
   };
-  
+  registerMember = ()=>{
+    history.push({
+      pathname: ConstantList.ROOT_PATH + "/register"
+    });
+  }
   handleEnterKey = e => {
     if (e.key === 'Enter') {
       this.loginWithUserNameAndPassword();
@@ -116,9 +121,8 @@ class Login extends React.Component {
                           ]}
                         />
                         <div className="form-control-position">
-                          <Mail size={15} />
+                          <Phone size={15} />
                         </div>
-                        <Label>Email</Label>
                       </FormGroup>
                       <FormGroup className="form-label-group position-relative has-icon-left">
                         <Input
@@ -147,9 +151,9 @@ class Login extends React.Component {
                             </div>
                       </FormGroup>
                       <div className="d-flex justify-content-between">
-                        <Button.Ripple color="primary" outline>
+                        <Button.Ripple color="primary" outline onClick = {() => this.registerMember()}>
                           Đăng ký
-                            </Button.Ripple>
+                        </Button.Ripple>
                         <Button.Ripple color="primary" type="submit" onClick={() => this.loginWithUserNameAndPassword()}>
                           Đăng nhập
                         </Button.Ripple>

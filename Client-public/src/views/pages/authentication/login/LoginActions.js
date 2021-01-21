@@ -19,6 +19,17 @@ export function loginWithEmailAndPassword({ username, password }) {
     });
 }
 
+export function registerMember({ displayName, username, password,phoneNumber,email,address }) {
+  jwtAuthService.registerMember(displayName, username, password,phoneNumber,email,address ).then(user => {
+    setUserData(user);
+    history.push({
+      pathname: ConstantList.ROOT_PATH + "/home"
+    });
+  })
+    .catch(error => {
+      alert('Có lỗi xảy ra khi đăng ký tài khoản');
+    });
+}
 export function resetPassword({ email }) {
   return dispatch => {
     dispatch({

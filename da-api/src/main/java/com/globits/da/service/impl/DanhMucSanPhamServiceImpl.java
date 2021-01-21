@@ -16,32 +16,25 @@ import org.springframework.util.StringUtils;
 import com.globits.core.service.impl.GenericServiceImpl;
 import com.globits.da.domain.DanhMucSanPham;
 import com.globits.da.domain.DonViTinh;
-import com.globits.da.domain.SanPham;
-import com.globits.da.dto.SanPhamDto;
+import com.globits.da.dto.DanhMucSanPhamDto;
+import com.globits.da.dto.DonViTinhDto;
 import com.globits.da.dto.search.SearchDto;
 import com.globits.da.repository.DanhMucSanPhamRepository;
-import com.globits.da.repository.DonViTinhRepository;
-import com.globits.da.repository.SanPhamRepository;
-import com.globits.da.service.SanPhamService;
-
+import com.globits.da.service.DanhMucSanPhamService;
 @Service
-public class SanPhamServiceImpl extends GenericServiceImpl<SanPham, UUID> implements SanPhamService{
+public class DanhMucSanPhamServiceImpl extends GenericServiceImpl<DanhMucSanPham, UUID> implements DanhMucSanPhamService{
 	@Autowired
-	SanPhamRepository repos;
-	@Autowired
-	DonViTinhRepository donViTinhRepository;
-	@Autowired
-	DanhMucSanPhamRepository danhMucSanPhamRepository;
+	DanhMucSanPhamRepository repos;
 	@Override
-	public Page<SanPhamDto> getPage(int pageSize, int pageIndex) {
+	public Page<DanhMucSanPhamDto> getPage(int pageSize, int pageIndex) {
 		Pageable pageable = PageRequest.of(pageIndex-1, pageSize);
 		return repos.getListPage(pageable);
 	}
 
 	@Override
-	public SanPhamDto saveOrUpdate(UUID id, SanPhamDto dto) {
+	public DanhMucSanPhamDto saveOrUpdate(UUID id, DanhMucSanPhamDto dto) {
 		if(dto != null ) {
-			SanPham entity = null;
+			DanhMucSanPham entity = null;
 			if(dto.getId() !=null) {
 				if (dto.getId() != null && !dto.getId().equals(id)) {
 					return null;
@@ -49,24 +42,14 @@ public class SanPhamServiceImpl extends GenericServiceImpl<SanPham, UUID> implem
 				entity =  repos.getOne(dto.getId());
 			}
 			if(entity == null) {
-				entity = new SanPham();
+				entity = new DanhMucSanPham();
 			}
-			entity.setMaSP(dto.getMaSP());
-			entity.setTenSP(dto.getTenSP());
-			entity.setGiaBanHienThoi(dto.getGiaBanHienThoi());
-			entity.setBaiViet(dto.getBaiViet());
-			entity.setImageUrl(dto.getImageUrl());
-			if(dto.getDonViTinh() != null) {
-				DonViTinh nv = donViTinhRepository.getOne(dto.getDonViTinh().getId());
-				entity.setDonViTinh(nv);
-			}
-			if(dto.getDanhMucSanPham() != null) {
-				DanhMucSanPham nv = danhMucSanPhamRepository.getOne(dto.getDanhMucSanPham().getId());
-				entity.setDanhMucSanPham(nv);
-			}
+			entity.setMa(dto.getMa());
+			entity.setTen(dto.getTen());
+			
 			entity = repos.save(entity);
 			if (entity != null) {
-				return new SanPhamDto(entity);
+				return new DanhMucSanPhamDto(entity);
 			}
 			}
 			return null;
@@ -82,16 +65,16 @@ public class SanPhamServiceImpl extends GenericServiceImpl<SanPham, UUID> implem
 	}
 
 	@Override
-	public SanPhamDto getCertificate(UUID id) {
-		SanPham entity = repos.getOne(id);
+	public DanhMucSanPhamDto getCertificate(UUID id) {
+		DanhMucSanPham entity = repos.getOne(id);
 		if(entity!=null) {
-			return new SanPhamDto(entity);
+			return new DanhMucSanPhamDto(entity);
 		}
 		return null;
 	}
 
 	@Override
-	public Page<SanPhamDto> searchByPage(SearchDto dto) {
+	public Page<DanhMucSanPhamDto> searchByPage(SearchDto dto) {
 		if (dto == null) {
 			return null;
 		}
@@ -109,39 +92,32 @@ public class SanPhamServiceImpl extends GenericServiceImpl<SanPham, UUID> implem
 		
 		String orderBy = " ORDER BY entity.createDate DESC";
 		
-		String sqlCount = "select count(entity.id) from SanPham as entity where (1=1)   ";
-		String sql = "select new com.globits.da.dto.SanPhamDto(entity) from SanPham as entity where (1=1)  ";
+		String sqlCount = "select count(entity.id) from DanhMucSanPham as entity where (1=1)   ";
+		String sql = "select new com.globits.da.dto.DanhMucSanPhamDto(entity) from DanhMucSanPham as entity where (1=1)  ";
 
 		if (dto.getKeyword() != null && StringUtils.hasText(dto.getKeyword())) {
-			whereClause += " AND ( entity.maSP LIKE :text or entity.tenSP LIKE :text )";
-		}
-		if (dto.getDanhMucSanPhamId() != null) {
-			whereClause += " AND ( entity.danhMucSanPham.id  =: danhMucSanPhamId  )";
+			whereClause += " AND ( entity.ten LIKE :text OR entity.ma LIKE :text )";
 		}
 
 		
 		sql += whereClause + orderBy;
 		sqlCount += whereClause;
 
-		Query q = manager.createQuery(sql, SanPhamDto.class);
+		Query q = manager.createQuery(sql, DanhMucSanPhamDto.class);
 		Query qCount = manager.createQuery(sqlCount);
 
 		if (dto.getKeyword() != null && StringUtils.hasText(dto.getKeyword())) {
 			q.setParameter("text", '%' + dto.getKeyword() + '%');
 			qCount.setParameter("text", '%' + dto.getKeyword() + '%');
 		}
-		if (dto.getDanhMucSanPhamId() != null) {
-			q.setParameter("danhMucSanPhamId",  dto.getDanhMucSanPhamId());
-			qCount.setParameter("danhMucSanPhamId", dto.getDanhMucSanPhamId());
-		}
 		int startPosition = pageIndex * pageSize;
 		q.setFirstResult(startPosition);
 		q.setMaxResults(pageSize);
-		List<SanPhamDto> entities = q.getResultList();
+		List<DanhMucSanPhamDto> entities = q.getResultList();
 		long count = (long) qCount.getSingleResult();
 
 		Pageable pageable = PageRequest.of(pageIndex, pageSize);
-		Page<SanPhamDto> result = new PageImpl<SanPhamDto>(entities, pageable, count);
+		Page<DanhMucSanPhamDto> result = new PageImpl<DanhMucSanPhamDto>(entities, pageable, count);
 		return result;
 	}
 

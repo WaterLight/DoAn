@@ -19,10 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.globits.core.service.impl.GenericServiceImpl;
-import com.globits.crm.CrmConstants;
-import com.globits.crm.domain.CommonKeyCode;
-import com.globits.crm.domain.CrmAdministrativeUnit;
-import com.globits.crm.dto.SaleOrderDto;
 import com.globits.da.domain.DonHang;
 import com.globits.da.domain.DonViTinh;
 import com.globits.da.domain.Kho;
@@ -78,7 +74,7 @@ public class DonHangServiceImpl extends GenericServiceImpl<DonHang, UUID> implem
 				entity = new DonHang();
 			}
 			entity.setTen(dto.getTen());
-			entity.setMa(RandomStringUtils.randomAlphabetic(9));
+			entity.setMa(RandomStringUtils.random(9,true,true));
 			entity.setNgayDatHang(new Date());
 			entity.setNgayGiaoHang(dto.getNgayGiaoHang());
 			entity.setTongGia(dto.getTongGia());

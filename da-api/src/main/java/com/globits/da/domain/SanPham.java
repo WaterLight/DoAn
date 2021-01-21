@@ -21,10 +21,6 @@ public class SanPham extends BaseObject{
 	private String maSP;
 	@Column(name = "gia_ban_hien_Thoi")
 	private Double giaBanHienThoi;
-	@Column(name = "giam_gia")
-	private Double giamGia;
-	@Column(name = "is_show_home")
-	private Boolean isShowHome = false;
 	@ManyToOne
 	@JoinColumn(name="don_vi_tinh_id")
 	private DonViTinh donViTinh;
@@ -33,7 +29,10 @@ public class SanPham extends BaseObject{
 	@OneToMany(mappedBy = "sanPham", cascade=CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval=true)
 	private Set<SanPhamKho> sanPhamKho;
 	@Column(name="image_url")
-	private String imageUrl;//Đường dẫn đến File ảnh tiêu đề bài báo (nếu có)
+	private String imageUrl;//Đường dẫn đến File ảnh  (nếu có)
+	@ManyToOne
+	@JoinColumn(name="danh_muc_san_pham_id")
+	private DanhMucSanPham danhMucSanPham;
 	public String getTenSP() {
 		return tenSP;
 	}
@@ -76,17 +75,11 @@ public class SanPham extends BaseObject{
 	public void setImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
 	}
-	public Double getGiamGia() {
-		return giamGia;
+	public DanhMucSanPham getDanhMucSanPham() {
+		return danhMucSanPham;
 	}
-	public void setGiamGia(Double giamGia) {
-		this.giamGia = giamGia;
-	}
-	public Boolean getIsShowHome() {
-		return isShowHome;
-	}
-	public void setIsShowHome(Boolean isShowHome) {
-		this.isShowHome = isShowHome;
+	public void setDanhMucSanPham(DanhMucSanPham danhMucSanPham) {
+		this.danhMucSanPham = danhMucSanPham;
 	}
 
 	

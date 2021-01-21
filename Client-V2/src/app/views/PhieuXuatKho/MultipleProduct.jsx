@@ -107,10 +107,11 @@ import {
       var searchObject = {};
       let { keyword } = this.state;
       if (keyword != null) {
-        searchObject.text = keyword.trim();
+        searchObject.keyword = keyword.trim();
       }
       searchObject.pageIndex = this.state.page + 1;
       searchObject.pageSize = this.state.rowsPerPage;
+      searchObject.khoId = this.state.khoId ? this.state.khoId:""
       searchByPageK(searchObject).then(({ data }) => {
         const selectedData = data.content.map(row =>
           this.state.selectedItemList.find(selected => selected.id === row.id)
@@ -134,10 +135,11 @@ import {
       var searchObject = {};
       let { keyword, } = this.state;
       if (keyword != null) {
-        searchObject.text = keyword.trim();
+        searchObject.keyword = keyword.trim();
       }
       searchObject.pageIndex = this.state.page;
       searchObject.pageSize = this.state.rowsPerPage;
+      searchObject.khoId = this.state.khoId ? this.state.khoId:""
       searchByPageK(searchObject).then(({ data }) => {
         this.setState({
           itemList: [...data.content],
