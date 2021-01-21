@@ -68,7 +68,14 @@ class ShopContent extends React.Component {
   handleAddToCart = product => {
     toast.info("Thêm thành công " + product.tenSP + " vào giỏ hàng của bạn!");
     if(product && product.id){
-      this.state.saleOrder.sanPhamDonHang.push(product);
+      let sanPhamDonHangDto = {};
+      sanPhamDonHangDto.sanPham = product;
+      sanPhamDonHangDto.soLuong = 1;//tạm fix là 1 sản phẩm
+      sanPhamDonHangDto.donGia = product.giaBanHienThoi
+      sanPhamDonHangDto.trietKhau = product.giamGia/100;
+      sanPhamDonHangDto.thanhTien = sanPhamDonHangDto.soLuong*sanPhamDonHangDto.donGia*(1-sanPhamDonHangDto.trietKhau);
+
+      this.state.saleOrder.sanPhamDonHang.push(sanPhamDonHangDto);
       this.state.saleOrder.totalAmount +=  product.giaBanHienThoi;
       if(product.giamGia != 0 && product.giamGia != null){
         this.state.saleOrder.giamGia += product.giamGia;
