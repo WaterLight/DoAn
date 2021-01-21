@@ -34,6 +34,8 @@ import ConstantList from "../../../../configs/appConfig";
 import "../../../../assets/scss/pages/app-ecommerce-shop.scss"
 import "react-toastify/dist/ReactToastify.css"
 import "../../../../assets/scss/plugins/extensions/toastr.scss"
+import imageDefault from "../../../../assets/img/pages/eCommerce/nike7.jfif"
+import {saveOrder} from "./cartService";
 
 class Checkout extends React.Component {
   state = {
@@ -45,11 +47,24 @@ class Checkout extends React.Component {
         content: (
           <div className="list-view product-checkout">
             <div className="checkout-items">
-              {JSON.parse(window.localStorage.getItem("saleOrder")) != null && JSON.parse(window.localStorage.getItem("saleOrder")).items != null && JSON.parse(window.localStorage.getItem("saleOrder")).items.length >= 0 && JSON.parse(window.localStorage.getItem("saleOrder")).items.map((item, i) => (
+              {JSON.parse(window.localStorage.getItem("saleOrder")) != null && JSON.parse(window.localStorage.getItem("saleOrder")).sanPhamDonHang != null && JSON.parse(window.localStorage.getItem("saleOrder")).sanPhamDonHang.length >= 0 && JSON.parse(window.localStorage.getItem("saleOrder")).sanPhamDonHang.map((item, i) => (
                 <Card className="ecommerce-card" key={i}>
                   <div className="card-content">
                     <div className="item-img text-center">
-                      <img src={ConstantList.API_ENPOINT + "/public/getImage/" + item.imageUrl.split(".")[0] + "/" + item.imageUrl.split(".")[1]} alt={item.tenSP} />
+                      {item.imageUrl ? (
+                        <img
+                          className="img-fluid"
+                          src={ConstantList.API_ENPOINT + "/public/getImage/" + item.imageUrl.split(".")[0] + "/" + item.imageUrl.split(".")[1]}
+                          alt={item.tenSP}
+                        />
+                      ) : (
+                          <img
+                            className="img-fluid"
+                            src={imageDefault}
+                            alt="Empty Image"
+                          />
+                        )
+                      }
                     </div>
                     <CardBody>
                       <div className="item-name">
@@ -116,14 +131,16 @@ class Checkout extends React.Component {
                   <div className="detail">
                     <div className="detail-title">Tổng tiền sản phẩm</div>
                     <div className="detail-amt">
-                      {JSON.parse(window.localStorage.getItem("saleOrder")).totalAmount ? (
+                      {JSON.parse(window.localStorage.getItem("saleOrder")) != null && JSON.parse(window.localStorage.getItem("saleOrder")).totalAmount != null ? (
                         <span>{JSON.parse(window.localStorage.getItem("saleOrder")).totalAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} đ</span>
-                      ) : ("")}
+                      ) : ("0đ")}
                     </div>
                   </div>
                   <div className="detail">
                     <div className="detail-title">Khuyến mãi</div>
-                    <div className="detail-amt discount-amt">{JSON.parse(window.localStorage.getItem("saleOrder")).totalDiscont} %</div>
+                    {JSON.parse(window.localStorage.getItem("saleOrder")) != null && JSON.parse(window.localStorage.getItem("saleOrder")).giamGia != null ? (
+                      <div className="detail-amt discount-amt">{JSON.parse(window.localStorage.getItem("saleOrder")).giamGia} %</div>
+                    ) : ("0%")}
                   </div>
                   {/* <div className="detail">
                     <div className="detail-title">Estimated Tax</div>
@@ -140,7 +157,9 @@ class Checkout extends React.Component {
                   <hr /> */}
                   <div className="detail">
                     <div className="detail-title detail-total">Tổng tiền thanh toán</div>
-                    <div className="detail-amt total-amt">{JSON.parse(window.localStorage.getItem("saleOrder")).totalPrice} đ </div>
+                    {JSON.parse(window.localStorage.getItem("saleOrder")) != null && JSON.parse(window.localStorage.getItem("saleOrder")).tongGia != null ? (
+                      <span>{JSON.parse(window.localStorage.getItem("saleOrder")).tongGia.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} đ</span>
+                    ) : ("0đ")}
                   </div>
                   <Button.Ripple
                     type="submit"
@@ -162,76 +181,77 @@ class Checkout extends React.Component {
           <div className="list-view product-checkout">
             <Card>
               <CardHeader className="flex-column align-items-start">
-                <CardTitle>Add New Address</CardTitle>
+                <CardTitle>Thêm địa chỉ nhận hàng khác</CardTitle>
                 <p className="text-muted mt-25">
-                  Be sure to check "Deliver to this address" when you have
-                  finished
+                  Hãy chắc chắn bạn sẽ nhận đơn hàng tại địa chỉ dưới đây.
                 </p>
               </CardHeader>
               <CardBody>
                 <Row>
                   <Col md="6" sm="12">
                     <AvGroup>
-                      <Label for="name"> Name </Label>
+                      <Label for="name"> Tên người nhận </Label>
                       <AvInput id="name" name="name" type="text" required />
-                      <AvFeedback>Please enter valid Name</AvFeedback>
+                      <AvFeedback>Bạn chưa điền tên người nhậng </AvFeedback>
                     </AvGroup>
                   </Col>
                   <Col md="6" sm="12">
                     <AvGroup>
-                      <Label for="contact-number"> Contact Number </Label>
+                      <Label for="contact-number"> Số điện thoại </Label>
                       <AvInput
                         id="contact-number"
                         name="contact-number"
                         type="text"
                         required
                       />
-                      <AvFeedback>Please enter valid Contact Number</AvFeedback>
+                      <AvFeedback>Bạn chưa nhập số điện thoại</AvFeedback>
                     </AvGroup>
                   </Col>
                   <Col md="6" sm="12">
                     <AvGroup>
-                      <Label for="apt-no"> Apt/House No </Label>
+                      <Label for="apt-no">Số nhà </Label>
                       <AvInput id="apt-no" name="apt-no" type="text" required />
                       <AvFeedback>
-                        Please enter valid Apt/House Number
+                        Bạn chưa nhập số nhà
                       </AvFeedback>
                     </AvGroup>
                   </Col>
                   <Col md="6" sm="12">
                     <AvGroup>
                       <Label for="landmark">
-                        {" "}
-                        Landmark e.g. near Times Square{" "}
+                        Phường/Xã
                       </Label>
                       <AvInput id="landmark" name="landmark" type="text" />
+                      <AvFeedback>
+                        Bạn chưa chọn phường xã
+                      </AvFeedback>
                     </AvGroup>
                   </Col>
                   <Col md="6" sm="12">
                     <AvGroup>
-                      <Label for="town-city"> Town/City</Label>
+                      <Label for="town-city">Quận/Huyện</Label>
                       <AvInput
                         id="town-city"
                         name="town-city"
                         type="text"
                         required
                       />
-                      <AvFeedback>Please enter valid Town/City</AvFeedback>
+                      <AvFeedback>Bạn chưa chọn quận huyện</AvFeedback>
                     </AvGroup>
                   </Col>
                   <Col md="6" sm="12">
                     <AvGroup>
-                      <Label for="pincode"> Pincode</Label>
+                      <Label for="pincode">Tỉnh/Thành phố</Label>
                       <AvInput
                         id="pincode"
                         name="pincode"
                         type="text"
                         required
                       />
-                      <AvFeedback>Please enter valid Pincode</AvFeedback>
+                      <AvFeedback>Bạn chưa chọn tỉnh thành phố</AvFeedback>
                     </AvGroup>
                   </Col>
-                  <Col md="6" sm="12">
+                  {/* <Col md="6" sm="12">
                     <AvGroup>
                       <Label for="state"> State</Label>
                       <AvInput id="state" name="state" type="text" required />
@@ -246,13 +266,13 @@ class Checkout extends React.Component {
                         <option>Work</option>
                       </Input>
                     </FormGroup>
-                  </Col>
+                  </Col>*/}
                   <Col sm="6" md={{ offset: 6, size: 6 }}>
                     <Button.Ripple
                       type="submit"
                       color="primary"
                       onClick={() => this.handleActiveStep(2)}>
-                      SAVE AND DELIVER HERE
+                      Giao đến địa chỉ này
                     </Button.Ripple>
                   </Col>
                 </Row>
@@ -261,20 +281,31 @@ class Checkout extends React.Component {
             <div className="customer-card">
               <Card>
                 <CardHeader>
-                  <CardTitle>John Doe</CardTitle>
+                  <CardTitle>
+                    Người nhận hàng: {JSON.parse(window.localStorage.getItem("currentUser")) != null ? (
+                      <span>{JSON.parse(window.localStorage.getItem("currentUser")).displayName}</span>
+                    ) : ("")
+                    }
+                  </CardTitle>
                 </CardHeader>
                 <CardBody>
-                  <p className="mb-0">9447 Glen Eagles Drive</p>
-                  <p>Lewis Center, OH 43035</p>
-                  <p>UTC-5: Eastern Standard Time (EST) </p>
-                  <p>202-555-0140</p>
+                  <p className="mb-0">{JSON.parse(window.localStorage.getItem("currentUser")) != null && JSON.parse(window.localStorage.getItem("currentUser")).person != null && JSON.parse(window.localStorage.getItem("currentUser")).person.phoneNumber != null ? (
+                      <span>Số điện thoại: {JSON.parse(window.localStorage.getItem("currentUser")).person.phoneNumber}</span>
+                    ) : ("")
+                    }</p>
+                  <p className="mb-0">{JSON.parse(window.localStorage.getItem("currentUser")) != null && JSON.parse(window.localStorage.getItem("currentUser")).person != null && JSON.parse(window.localStorage.getItem("currentUser")).person.address[0] != null ? (
+                      <span>Địa chỉ nhận hàng: {JSON.parse(window.localStorage.getItem("currentUser")).person.address[0].address}</span>
+                    ) : ("")
+                    }</p>
+                  {/* <p>UTC-5: Eastern Standard Time (EST) </p>
+                  <p>202-555-0140</p> */}
                   <hr />
                   <Button.Ripple
                     type="submit"
                     color="primary"
                     className="btn-block"
-                    onClick={() => this.handleActiveStep(1)}>
-                    DELIVER TO THIS ADDRESS
+                    onClick={() => this.handleChooseDefaultAddress()}>
+                    Giao đến địa chỉ này
                   </Button.Ripple>
                 </CardBody>
               </Card>
@@ -403,7 +434,6 @@ class Checkout extends React.Component {
     ]
   }
   handleDeleteProductInCart = product => {
-    debugger
     if (product && product.id) {
       let order = JSON.parse(window.localStorage.getItem("saleOrder")).items;
       if (order != null && order.length > 0) {
@@ -423,10 +453,18 @@ class Checkout extends React.Component {
     }
   }
   handleActiveStep = index => {
-    if(this.state.user == null){
+    let currentUser = JSON.parse(window.localStorage.getItem("currentUser"));
+    if (currentUser == null || currentUser.id == null) {
       window.location.href = ConstantList.URL + "authentication/login";
     }
     this.setState({ activeStep: index })
+  }
+  handleChooseDefaultAddress = ()=>{
+    let currentUser = JSON.parse(window.localStorage.getItem("currentUser"));
+    let order = JSON.parse(window.localStorage.getItem("saleOrder"));
+    if(currentUser!= null && currentUser.id != null && order.sanPhamDonHang != null && order.sanPhamDonHang.length >0){
+      saveOrder(order);
+    }
   }
 
   onValidationError = errors => {

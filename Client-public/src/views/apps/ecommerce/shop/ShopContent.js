@@ -28,9 +28,9 @@ import { Link } from "react-router-dom"
 import { searchByPage } from "./ShopService"
 import "../../../../assets/scss/plugins/forms/react-select/_react-select.scss"
 import ConstantList from "../../../../configs/appConfig";
-import { toast, ToastContainer } from "react-toastify"
-import "react-toastify/dist/ReactToastify.css"
 import imageDefault from "../../../../assets/img/pages/eCommerce/nike7.jfif"
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const sortOptions = [
   {
@@ -58,16 +58,24 @@ class ShopContent extends React.Component {
     totalElements: 0,
     keyword: "",
     saleOrder : {
-      items: [],
-      totalAmount: 0
+      sanPhamDonHang: [],
+      totalAmount: 0,
+      tongGia: 0,
+      giamGia:0
     }
   }
 
   handleAddToCart = product => {
+    toast.info("Thêm thành công " + product.tenSP + " vào giỏ hàng của bạn!");
     if(product && product.id){
-      this.state.saleOrder.items.push(product);
+      this.state.saleOrder.sanPhamDonHang.push(product);
       this.state.saleOrder.totalAmount +=  product.giaBanHienThoi;
-      // toast.info("Thêm thành công " + product.tenSP + " vào giỏ hàng của bạn!");
+      if(product.giamGia != 0 && product.giamGia != null){
+        this.state.saleOrder.giamGia += product.giamGia;
+        this.state.saleOrder.tongGia +=  product.giaBanHienThoi*(100 - product.giamGia)/100;
+      }else{
+        this.state.saleOrder.tongGia +=  product.giaBanHienThoi;
+      }
       this.setState({inCart:product.id});
       window.localStorage.setItem("saleOrder", JSON.stringify(this.state.saleOrder));
     }
@@ -197,7 +205,6 @@ render() {
               </span>
             </div>
             <div className="ecommerce-application">
-          <ToastContainer />
         </div>
           </div>
         </div>
