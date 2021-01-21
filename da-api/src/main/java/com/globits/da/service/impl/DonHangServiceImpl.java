@@ -1,12 +1,15 @@
 package com.globits.da.service.impl;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 import javax.persistence.Query;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -16,6 +19,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.globits.core.service.impl.GenericServiceImpl;
+import com.globits.crm.CrmConstants;
+import com.globits.crm.domain.CommonKeyCode;
+import com.globits.crm.domain.CrmAdministrativeUnit;
+import com.globits.crm.dto.SaleOrderDto;
 import com.globits.da.domain.DonHang;
 import com.globits.da.domain.DonViTinh;
 import com.globits.da.domain.Kho;
@@ -71,8 +78,8 @@ public class DonHangServiceImpl extends GenericServiceImpl<DonHang, UUID> implem
 				entity = new DonHang();
 			}
 			entity.setTen(dto.getTen());
-			entity.setMa(dto.getMa());
-			entity.setNgayDatHang(dto.getNgayDatHang());
+			entity.setMa(RandomStringUtils.randomAlphabetic(9));
+			entity.setNgayDatHang(new Date());
 			entity.setNgayGiaoHang(dto.getNgayGiaoHang());
 			entity.setTongGia(dto.getTongGia());
 			entity.setGiamGia(dto.getTongGia());

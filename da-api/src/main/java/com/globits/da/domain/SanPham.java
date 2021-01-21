@@ -21,6 +21,10 @@ public class SanPham extends BaseObject{
 	private String maSP;
 	@Column(name = "gia_ban_hien_Thoi")
 	private Double giaBanHienThoi;
+	@Column(name = "giam_gia")
+	private Double giamGia;
+	@Column(name = "is_show_home")
+	private Boolean isShowHome = false;
 	@ManyToOne
 	@JoinColumn(name="don_vi_tinh_id")
 	private DonViTinh donViTinh;
@@ -71,6 +75,18 @@ public class SanPham extends BaseObject{
 	}
 	public void setImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
+	}
+	public Double getGiamGia() {
+		return giamGia;
+	}
+	public void setGiamGia(Double giamGia) {
+		this.giamGia = giamGia;
+	}
+	public Boolean getIsShowHome() {
+		return isShowHome;
+	}
+	public void setIsShowHome(Boolean isShowHome) {
+		this.isShowHome = isShowHome;
 	}
 
 	
