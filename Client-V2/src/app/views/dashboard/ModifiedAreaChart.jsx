@@ -3,6 +3,30 @@ import ReactEcharts from "echarts-for-react";
 import { merge } from "lodash";
 
 const defaultOption = {
+  visualMap: {
+    top: 0,
+    right: 10,
+    pieces: [{
+      gt: 0,
+      lte: 50,
+      color: '#096'
+    }, {
+      gt: 50,
+      lte: 200,
+      color: '#ffde33'
+    }, {
+      gt: 200,
+      lte: 500,
+      color: '#ff9933'
+    }, {
+      gt: 500,
+      lte: 1000,
+      color: '#cc0033'
+    }],
+    outOfRange: {
+      color: '#999'
+    }
+  },
   grid: {
     top: 16,
     left: 24,
@@ -12,15 +36,15 @@ const defaultOption = {
   legend: {},
   tooltip: {},
   xAxis: {
-    show: false,
+    show: true,
     type: "category",
     showGrid: false,
-    boundaryGap: false
+    boundaryGap: false,
   },
   yAxis: {
     type: "value",
-    min: 10,
-    max: 60,
+    min: 1,
+    max: 50,
     splitLine: {
       show: false
     },
@@ -32,7 +56,7 @@ const defaultOption = {
     },
     axisLabel: {
       color: "rgba(0,0,0,0.54)",
-      fontSize: 13,
+      fontSize: 11,
       fontFamily: "roboto",
     }
   }

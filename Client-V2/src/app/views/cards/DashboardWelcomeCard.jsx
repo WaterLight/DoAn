@@ -18,11 +18,11 @@ const DashboardWelcomeCard = ({ classes, analytics, t }) => {
           elevation={3}
           className={`p-16 py-28 text-center h-100 w-100 ${classes.root}`}
         >
-          <a href={ConstantList.ROOT_PATH + "directory/apartment"} >
+          <a href={ConstantList.ROOT_PATH + "directory/sanpham"} >
             <div className="font-weight-300 flex flex-space-between">
               <div className="text-white margin-auto">
-                <div className="font-size-32"><b>{analytics? analytics.apartmentNum:0}</b></div>
-                <p className="uppercase bold m-0"><b>{t('directory.real_state')}</b></p>
+                <div className="font-size-32"><b>{analytics? analytics.sanPhamNum:0}</b></div>
+                <p className="uppercase bold m-0"><b>{t('Sản phẩm')}</b></p>
               </div>
             </div>
           </a>
@@ -36,8 +36,8 @@ const DashboardWelcomeCard = ({ classes, analytics, t }) => {
           <a href={ConstantList.ROOT_PATH + "directory/building"} >
           <div className="font-weight-300 flex flex-space-between">
             <div className="text-white margin-auto">
-              <div className="font-size-32"><b>{analytics ? analytics.buildingNum:0}</b></div>
-              <p className="uppercase m-0"><b>{t('directory.building')}</b></p>
+              <div className="font-size-32"><b>{analytics ? analytics.donHangNum:0}</b></div>
+              <p className="uppercase m-0"><b>{t('Đơn hàng')}</b></p>
             </div>
           </div>
           </a>
@@ -48,11 +48,11 @@ const DashboardWelcomeCard = ({ classes, analytics, t }) => {
           elevation={3}
           className={`p-16 py-28 text-center h-100 w-100 ${classes.root}`}
         >
-          <a href={ConstantList.ROOT_PATH + "directory/project"} >
+          <a href={ConstantList.ROOT_PATH + "directory/kho"} >
           <div className="font-weight-300  flex flex-space-between">
             <div className="text-white margin-auto">
-              <div className="font-size-32"><b>{analytics ? analytics.projectNum : 0}</b></div>
-              <p className="uppercase m-0"><b>{t('directory.project')}</b></p>
+              <div className="font-size-32"><b>{analytics ? analytics.khoNum : 0}</b></div>
+              <p className="uppercase m-0"><b>{t('Kho')}</b></p>
             </div>
           </div>
           </a>
@@ -63,11 +63,11 @@ const DashboardWelcomeCard = ({ classes, analytics, t }) => {
           elevation={3}
           className={`p-16 py-28 text-center h-100 w-100 ${classes.root}`}
         >
-          <a href={ConstantList.ROOT_PATH + "directory/urban-area"} >
+          <a href={ConstantList.ROOT_PATH + "user_manager/user"} >
           <div className="font-weight-300 flex flex-space-between">
             <div className="text-white margin-auto">
-              <div className="font-size-32"><b>{analytics ? analytics.urbanAreaNum :0}</b></div>
-              <p className="uppercase m-0"><b>{t('directory.urbanArea')}</b></p>
+              <div className="font-size-32"><b>{analytics ? analytics.userNum :0}</b></div>
+              <p className="uppercase m-0"><b>{t('Người dùng')}</b></p>
             </div>
           </div>
           </a>

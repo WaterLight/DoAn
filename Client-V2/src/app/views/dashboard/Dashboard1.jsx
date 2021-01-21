@@ -7,9 +7,12 @@ import SimpleTable from "../material-kit/tables/SimpleTable";
 import ReactEcharts from "echarts-for-react";
 import { withStyles } from "@material-ui/styles";
 import ConstantList from "../../appConfig";
+import { Helmet } from 'react-helmet';
+import { useTranslation, withTranslation, Trans } from 'react-i18next';
+
+
 class Analytics extends Component {
   state = {};
-
   recenBuyerList = [
     {
       imgUrl: ConstantList.ROOT_PATH+"assets/images/face-1.jpg",
@@ -132,10 +135,13 @@ class Analytics extends Component {
   };
 
   render() {
-    let { theme } = this.props;
-    // console.log(theme)
+    const { theme, t } = this.props;
+    let TitlePage = "Dashboard";
     return (
       <div className="analytics m-sm-30">
+        <Helmet>
+          <title>Asset | {TitlePage}</title>
+        </Helmet>
         <div className="mb-sm-30">
           <Breadcrumb
             routeSegments={[
