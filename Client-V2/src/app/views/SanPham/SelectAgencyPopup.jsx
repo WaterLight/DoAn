@@ -155,13 +155,13 @@ class SelectAgencyPopup extends React.Component {
         render: rowData => <Radio id={`radio${rowData.id}`} name="radSelected" value={rowData.id} checked={this.state.selectedValue === rowData.id} onClick={(event) => this.handleClick(event, rowData)}
         />
       },
-      { title: t("general.code"), field: "code", align: "left", width: "150" },
-      { title: t("general.name"), field: "name", width: "150" },
+      { title: t("general.code"), field: "ma", align: "left", width: "150" },
+      { title: t("general.name"), field: "ten", width: "150" },
     ];
     return (
       <Dialog onClose={handleClose} open={open} PaperComponent={PaperComponent} maxWidth={'md'} fullWidth>
         <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
-          <span className="mb-20">{t("directory.agency")}</span>
+          <span className="mb-20">{t("Chọn đơn vị tính")}</span>
         </DialogTitle>
         <DialogContent>
           <Grid item container xs={12}>
