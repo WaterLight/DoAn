@@ -4,13 +4,13 @@ export const navigations = [
     name: "Dashboard.dashboard",
     icon: "dashboard",
     path: ConstantList.ROOT_PATH + "dashboard/analytics",
-    isVisible:true,
+    isVisible: true,
   },
   {
     name: "Danh mục",
     icon: "dashboard",
     path: "",
-    isVisible:true,
+    isVisible: true,
     children: [
       // {
       //   name: "directory.real_state",
@@ -25,38 +25,46 @@ export const navigations = [
       //   isVisible:true,
       // },
       {
-		name: "Danh Sách Sản Phẩm",
-        path: ConstantList.ROOT_PATH+"directory/sanpham",        iconText: "S",
-        isVisible:true,
+        name: "Danh Sách Sản Phẩm",
+        path: ConstantList.ROOT_PATH + "directory/sanpham",
+        iconText: "S",
+        isVisible: true,
       },
       {
- 		name: "Đơn Vi Tính",
-        path: ConstantList.ROOT_PATH+"directory/donvitinh",        iconText: "S",
-        isVisible:true,
+        name: "Đơn Vi Tính",
+        path: ConstantList.ROOT_PATH + "directory/donvitinh",
+        iconText: "S",
+        isVisible: true,
+      },
+      {
+        name: "Thuộc Tính Sản Phẩm",
+        path:  ConstantList.ROOT_PATH+"directory/thuocTinhSanPham",
+        iconText: "S",
+        isVisible: true,
       },
       {
         name: "Kho",
-        path: ConstantList.ROOT_PATH+"directory/kho",
+        path: ConstantList.ROOT_PATH + "directory/kho",
         iconText: "S",
-        isVisible:true,
+        isVisible: true,
       },
       {
         name: "Nhân Viên",
-        path: ConstantList.ROOT_PATH+"directory/nhanvien",
+        path: ConstantList.ROOT_PATH + "directory/nhanvien",
         iconText: "S",
-        isVisible:true,
+        isVisible: true,
       },
       {
         name: "Phiếu Nhập Kho",
-        path: ConstantList.ROOT_PATH+"directory/phieunhapkho",
+        path: ConstantList.ROOT_PATH + "directory/phieunhapkho",
         iconText: "S",
-        isVisible:true,
+        isVisible: true,
       },
       {
         name: "Phiếu Xuất Kho",
-        path: ConstantList.ROOT_PATH+"directory/phieuxuatkho",
+        path: ConstantList.ROOT_PATH + "directory/phieuxuatkho",
         iconText: "S",
-        isVisible:true,
+        isVisible: true,
       },
       // {
       //   name: "directory.project",
@@ -87,26 +95,27 @@ export const navigations = [
       //   path: ConstantList.ROOT_PATH+"directory/ownertype",
       //   iconText: "S",
       //   isVisible:true,
-      // }    
-    ]
-  }, 
-  ,{
+      // }
+    ],
+  },
+  ,
+  {
     name: "Dashboard.manage",
-    isVisible:true,
+    isVisible: true,
     icon: "engineering",
     children: [
       {
         name: "manage.user",
-        isVisible:true,
+        isVisible: true,
         path: ConstantList.ROOT_PATH + "user_manager/user",
-        icon: "keyboard_arrow_right"
+        icon: "keyboard_arrow_right",
       },
       {
         name: "manage.menu",
-        isVisible:true,
+        isVisible: true,
         path: ConstantList.ROOT_PATH + "list/menu",
-        icon: "keyboard_arrow_right"
-      }
-    ]
-  }
+        icon: "keyboard_arrow_right",
+      },
+    ],
+  },
 ];
