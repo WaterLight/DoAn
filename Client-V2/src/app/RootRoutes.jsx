@@ -21,6 +21,7 @@ import RequirementTypeRoutes from "./views/RequirementType/RequirementTypeRoutes
 import SanPhamRoutes from "./views/SanPham/SanPhamRoutes";
 import PhieuNhapKhoRoutes from "./views/PhieuNhapKho/PhieuNhapKhoRoutes";
 import PhieuXuatKhoRoutes from "./views/PhieuXuatKho/PhieuXuatKhoRoutes";
+import ThuocTinhSanPhamRoutes from "./views/ThuocTinhSanPham/ThuocTinhSanPhamRoutes";
 
 const redirectRoute = [
   {
@@ -55,6 +56,7 @@ const routes = [
   ...SanPhamRoutes,
   ...PhieuNhapKhoRoutes,
   ...PhieuXuatKhoRoutes,
+  ...ThuocTinhSanPhamRoutes,
   ...errorRoute,
 ];
 

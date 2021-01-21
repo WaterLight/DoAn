@@ -6,8 +6,8 @@
     "project": "Dự Án ",
     "building": "Tòa Nhà ",
     "apartment": "Bất động sản ",
-    "owner":"Chủ sở hữu",
-    "stateType":"Loại bất động sản"
+    "owner": "Chủ sở hữu",
+    "stateType": "Loại bất động sản"
   },
   "directory": {
     "source": "Nguồn Hàng",
@@ -15,31 +15,31 @@
     "project": "Dự Án ",
     "building": "Tòa Nhà ",
     "apartment": "Căn hộ ",
-    "ownertype":"Loại chủ sở hữu",
-    "real_state":"Danh sách BĐS",
-    "stateType":"Loại bất động sản",
-    "agency":"Đại lý BĐS",
-    "RequirementType":"Loại nhu cầu",
-    "agent":"Người đăng tin"
+    "ownertype": "Loại chủ sở hữu",
+    "real_state": "Danh sách BĐS",
+    "stateType": "Loại bất động sản",
+    "agency": "Đại lý BĐS",
+    "RequirementType": "Loại nhu cầu",
+    "agent": "Người đăng tin"
   },
-  "AdministrativeUnit":{
-    "title":"Đơn vị hành chính",
-    "name":"Tên đơn vị",
-    "code":"Mã đơn vị",
-    "warning_parent":"Không thể chọn đơn vị này làm đơn vị cha",
-    "level":"Cấp độ"
+  "AdministrativeUnit": {
+    "title": "Đơn vị hành chính",
+    "name": "Tên đơn vị",
+    "code": "Mã đơn vị",
+    "warning_parent": "Không thể chọn đơn vị này làm đơn vị cha",
+    "level": "Cấp độ"
   },
   "building": {
     "numberOfFloors": "Số Tầng",
-    "warning-delete":"Tòa nhà đã được sử dụng",
-    "use_all":"Tòa nhà sở đều đã sử dụng",
-    "deleted_unused":"Đã xoá tòa nhà chưa sử dụng"
+    "warning-delete": "Tòa nhà đã được sử dụng",
+    "use_all": "Tòa nhà sở đều đã sử dụng",
+    "deleted_unused": "Đã xoá tòa nhà chưa sử dụng"
   },
   "apartment": {
-    "adminUnit":"Khu vực",
-    "adminUnit_child":"Quận huyện",
-    "advanced_search":"Tìm kiếm nâng cao",
-    "name":"Tên bất động sản",
+    "adminUnit": "Khu vực",
+    "adminUnit_child": "Quận huyện",
+    "advanced_search": "Tìm kiếm nâng cao",
+    "name": "Tên bất động sản",
     "code": "Mã căn",
     "owner": "Chủ sở hữu",
     "source": "Nguồn hàng",
@@ -54,25 +54,25 @@
     "lastCheckingDate": "Ngày kiểm tra cuối",
     "acreage": "Diện tích",
     "showAll": "Hiển thị toàn bộ",
-    "select":"Chọn chủ sở hữu",
-    "add":"Thêm mới chủ sở hữu",
-    "update":"Cập nhật chủ sở hữu",
-    "owner_information":"Thông tin chủ sở hữu",
-    "real_state_information":"Thông tin bất động sản",
-    "floorsCode":"Mã tầng",
-    "numberOfToilet":"Số lượng nhà vệ sinh",
-    "doorDirection":"Hướng cửa",
-    "balconyDirection":"Hướng ban công"
+    "select": "Chọn chủ sở hữu",
+    "add": "Thêm mới chủ sở hữu",
+    "update": "Cập nhật chủ sở hữu",
+    "owner_information": "Thông tin chủ sở hữu",
+    "real_state_information": "Thông tin bất động sản",
+    "floorsCode": "Mã tầng",
+    "numberOfToilet": "Số lượng nhà vệ sinh",
+    "doorDirection": "Hướng cửa",
+    "balconyDirection": "Hướng ban công"
   },
-  "RealEstateOwner":{
-    "firstName":"Họ đệm",
-    "lastName":"Tên",
-    "displayName":"Họ và tên",
-    "code":"Mã",
-    "fullAddress":"Địa chỉ",
-    "phoneName":"Số điện thoại",
-    "noteOwner":"Ghi chú",
-    "phoneNumber":"SĐT chủ sở hữu"
+  "RealEstateOwner": {
+    "firstName": "Họ đệm",
+    "lastName": "Tên",
+    "displayName": "Họ và tên",
+    "code": "Mã",
+    "fullAddress": "Địa chỉ",
+    "phoneName": "Số điện thoại",
+    "noteOwner": "Ghi chú",
+    "phoneNumber": "SĐT chủ sở hữu"
   },
   "Dashboard": {
     "dashboard": "Trang chủ",
@@ -218,14 +218,14 @@
     "add_file": "Thêm tài liệu",
     "allProduct": "Tất cả sản phẩm",
     "invalidDateFormat": "Định dạng ngày tháng không hợp lệ",
-    "addNew":"Thêm mới",
-    "deleteItemSuccess":"Xóa thành công",
-    "addSuccess":"Thêm thành công",
-    "updateSuccess":"Cập nhật thành công",
-    "dupli_code":"Mã đã được sử dụng",
-    "deleteSuccess":"Xóa thành công",
-    "status":"Trạng thái",
-    "typeStaff":"Loại nhân viên",
+    "addNew": "Thêm mới",
+    "deleteItemSuccess": "Xóa thành công",
+    "addSuccess": "Thêm thành công",
+    "updateSuccess": "Cập nhật thành công",
+    "dupli_code": "Mã đã được sử dụng",
+    "deleteSuccess": "Xóa thành công",
+    "status": "Trạng thái",
+    "typeStaff": "Loại nhân viên",
     "noteAvatarImage": "Ghi chú ảnh đại diện"
   },
   "toastr": {
@@ -257,7 +257,7 @@
       "name": "Tên nhà cung cấp"
     }
   },
-  
+
   "Department": {
     "title": "Phòng ban",
     "name": "Tên phòng ban",
@@ -278,7 +278,6 @@
       "updateFailParent": "Không thể chọn phòng ban này làm phòng ban cha"
     }
   },
-
 
   "Add": "Thêm mới",
   "Details": "Thông tin chi tiết",
@@ -363,8 +362,6 @@
     "departmentList": "Danh sách phòng ban"
   },
 
-
-
   "menu": {
     "title": "Quản lý Menu",
     "description": "Mô tả",
@@ -376,107 +373,111 @@
     "parent": "Menu cha"
   },
 
-"adminUnit":{
-  "title":"Đơn vị hành chính",
-  "name":"Tên đơn vị",
-  "code":"Mã đơn vị",
-  "status":"Trạng thái"
-},
-"source":{
-  "warning-delete":"Nguồn hàng đã được sử dụng",
-  "use_all":"Nguồn hàng đều đã sử dụng",
-  "deleted_unused":"Đã xoá nguồn hàng chưa sử dụng"
-},
-"urbanArea":{
-  "warning-delete":"Khu đô thị đã được sử dụng",
-  "use_all":"Khu đô thị đều đã sử dụng",
-  "deleted_unused":"Đã xoá khu đô thị chưa sử dụng"
-},
-"project":{
-  "warning-delete":"Dự án đã được sử dụng",
-  "use_all":"Dự án đều đã sử dụng",
-  "deleted_unused":"Đã xoá dự án chưa sử dụng"
-},
-"ownerType":{
-  "warning-delete":"Loại chủ sở hữu đã được sử dụng",
-  "use_all":"Loại chủ sở hữu đều đã sử dụng",
-  "deleted_unused":"Đã xoá loại chủ hữu sở chưa sử dụng"
-},
-"file":{
-  "name":"Tên file",
-  "addFile":"Chọn file"
-},
-"stateType":{
-  "warning-delete":"Loại bất động sản đã được sử dụng",
-  "use_all":"Loại bất động sản đều đã sử dụng",
-  "deleted_unused":"Đã xoá loại bất động sản chưa sử dụng",
-  "warning_parent":"Loại bất động sản này không thể sử dụng làm cha"
-},
-"agency":{
-  "warning-delete":"Đại lý đã được sử dụng",
-  "use_all":"Đại lý  đều đã sử dụng",
-  "deleted_unused":"Đã xoá Đại lý chưa sử dụng"
-},
-"RequirementType":{
-  "warning-delete":"Loại yêu cầu đã được sử dụng",
-  "use_all":"Loại yêu cầu  đều đã sử dụng",
-  "deleted_unused":"Đã xoá Loại yêu cầu chưa sử dụng"
-},
-"filter":{
-  "open":"Mở bộ lọc",
-  "close":"Đóng bộ lọc",
-  "realStateName":"Lọc theo tên căn hộ",
-  "ownerName":"Lọc theo tên chủ sở hữu",
-  "phoneNumber":"Lọc theo SĐT",
-  "project":"Lọc theo dự án",
-  "building":"Lọc theo tòa nhà",
-  "floorsCode":"Lọc theo mã tầng",
-  "realStateCode":"Lọc theo mã căn hộ",
-  "numberOfBedRoom":"Số lượng phòng ngủ",
-  "numberOfToilet":"Số lượng nhà vệ sinh",
-  "doorDirection":"Lọc theo hướng cửa",
-  "balconyDirection":"Lọc theo hướng ban công",
-  "status":"Lọc theo trạng thái",
-  "price":"Lọc theo giá",
-  "furniture":"Lọc theo đồ nội thất"
-},
-"StockKeepingUnit": {
-  "name": "Tên đơn vị tính",
-  "code": "Mã đơn vị tính",
-  "coefficient": "Trọng số",
-  "title": "Đơn vị tính",
-  "filter": "Tìm theo tên, mã đơn vị tính",
-  "noti": {
-    "use": "Đơn vị tính đang sử dụng, không thể xóa",
-    "use_all": "Đơn vị tính đều đã sử dụng",
-    "deleted_unused": "Đã xoá đơn vị tính chưa sử dụng",
-    "dupli_code": "Mã đã được sử dụng",
-    "addSuccess": "Tạo mới thành công một đơn vị tính",
-    "addFail": "Có lỗi xảy ra khi thêm mới đơn vị tính",
-    "updateSuccess": "Cập nhật thành công thông tin đơn vị tính",
-    "deleteSuccess": "Xoá thành công",
-    "deleteFail": "Xoá thất bại, đơn vị tính đã được sử dụng"
+  "adminUnit": {
+    "title": "Đơn vị hành chính",
+    "name": "Tên đơn vị",
+    "code": "Mã đơn vị",
+    "status": "Trạng thái"
+  },
+  "source": {
+    "warning-delete": "Nguồn hàng đã được sử dụng",
+    "use_all": "Nguồn hàng đều đã sử dụng",
+    "deleted_unused": "Đã xoá nguồn hàng chưa sử dụng"
+  },
+  "urbanArea": {
+    "warning-delete": "Khu đô thị đã được sử dụng",
+    "use_all": "Khu đô thị đều đã sử dụng",
+    "deleted_unused": "Đã xoá khu đô thị chưa sử dụng"
+  },
+  "project": {
+    "warning-delete": "Dự án đã được sử dụng",
+    "use_all": "Dự án đều đã sử dụng",
+    "deleted_unused": "Đã xoá dự án chưa sử dụng"
+  },
+  "ownerType": {
+    "warning-delete": "Loại chủ sở hữu đã được sử dụng",
+    "use_all": "Loại chủ sở hữu đều đã sử dụng",
+    "deleted_unused": "Đã xoá loại chủ hữu sở chưa sử dụng"
+  },
+  "file": {
+    "name": "Tên file",
+    "addFile": "Chọn file"
+  },
+  "stateType": {
+    "warning-delete": "Loại bất động sản đã được sử dụng",
+    "use_all": "Loại bất động sản đều đã sử dụng",
+    "deleted_unused": "Đã xoá loại bất động sản chưa sử dụng",
+    "warning_parent": "Loại bất động sản này không thể sử dụng làm cha"
+  },
+  "agency": {
+    "warning-delete": "Đại lý đã được sử dụng",
+    "use_all": "Đại lý  đều đã sử dụng",
+    "deleted_unused": "Đã xoá Đại lý chưa sử dụng"
+  },
+  "RequirementType": {
+    "warning-delete": "Loại yêu cầu đã được sử dụng",
+    "use_all": "Loại yêu cầu  đều đã sử dụng",
+    "deleted_unused": "Đã xoá Loại yêu cầu chưa sử dụng"
+  },
+  "filter": {
+    "open": "Mở bộ lọc",
+    "close": "Đóng bộ lọc",
+    "realStateName": "Lọc theo tên căn hộ",
+    "ownerName": "Lọc theo tên chủ sở hữu",
+    "phoneNumber": "Lọc theo SĐT",
+    "project": "Lọc theo dự án",
+    "building": "Lọc theo tòa nhà",
+    "floorsCode": "Lọc theo mã tầng",
+    "realStateCode": "Lọc theo mã căn hộ",
+    "numberOfBedRoom": "Số lượng phòng ngủ",
+    "numberOfToilet": "Số lượng nhà vệ sinh",
+    "doorDirection": "Lọc theo hướng cửa",
+    "balconyDirection": "Lọc theo hướng ban công",
+    "status": "Lọc theo trạng thái",
+    "price": "Lọc theo giá",
+    "furniture": "Lọc theo đồ nội thất"
+  },
+  "StockKeepingUnit": {
+    "name": "Tên đơn vị tính",
+    "code": "Mã đơn vị tính",
+    "coefficient": "Trọng số",
+    "title": "Đơn vị tính",
+    "filter": "Tìm theo tên, mã đơn vị tính",
+    "noti": {
+      "use": "Đơn vị tính đang sử dụng, không thể xóa",
+      "use_all": "Đơn vị tính đều đã sử dụng",
+      "deleted_unused": "Đã xoá đơn vị tính chưa sử dụng",
+      "dupli_code": "Mã đã được sử dụng",
+      "addSuccess": "Tạo mới thành công một đơn vị tính",
+      "addFail": "Có lỗi xảy ra khi thêm mới đơn vị tính",
+      "updateSuccess": "Cập nhật thành công thông tin đơn vị tính",
+      "deleteSuccess": "Xoá thành công",
+      "deleteFail": "Xoá thất bại, đơn vị tính đã được sử dụng"
+    }
+  },
+  "Store": {
+    "title": "Kho",
+    "name": "Tên kho",
+    "code": "Mã kho",
+    "address": "Địa điểm",
+    "filter": "Tìm theo tên, mã hoặc địa điểm kho",
+    "inventory_receiving_voucher": "Nhập kho",
+    "inventory_delivery_voucher": "Xuất kho",
+    "report": "Báo cáo nhập xuất tồn",
+    "select_title": "Chọn kho",
+    "noti": {
+      "use": "Kho đang sử dụng, không thể xóa",
+      "use_all": "Kho đều đã sử dụng",
+      "deleted_unused": "Đã xoá kho chưa sử dụng",
+      "dupli_code": "Mã đã được sử dụng",
+      "addSuccess": "Thêm mới kho thành công",
+      "addFail": "Có lỗi xảy ra khi thêm mới kho",
+      "updateFail": "Có lỗi xảy ra khi cập nhật thông tin kho",
+      "updateSuccess": "Cập nhật thông tin kho thành công",
+      "deleteSuccess": "Xoá thành công"
+    }
+  },
+  "productAttribute": {
+    "type": "Loại"
   }
-}, "Store": {
-  "title": "Kho",
-  "name": "Tên kho",
-  "code": "Mã kho",
-  "address": "Địa điểm",
-  "filter": "Tìm theo tên, mã hoặc địa điểm kho",
-  "inventory_receiving_voucher": "Nhập kho",
-  "inventory_delivery_voucher": "Xuất kho",
-  "report": "Báo cáo nhập xuất tồn",
-  "select_title": "Chọn kho",
-  "noti": {
-    "use": "Kho đang sử dụng, không thể xóa",
-    "use_all": "Kho đều đã sử dụng",
-    "deleted_unused": "Đã xoá kho chưa sử dụng",
-    "dupli_code": "Mã đã được sử dụng",
-    "addSuccess": "Thêm mới kho thành công",
-    "addFail": "Có lỗi xảy ra khi thêm mới kho",
-    "updateFail": "Có lỗi xảy ra khi cập nhật thông tin kho",
-    "updateSuccess": "Cập nhật thông tin kho thành công",
-    "deleteSuccess": "Xoá thành công"
-  }
-}
 }
