@@ -34,31 +34,47 @@ import ConstantList from "../../../../configs/appConfig";
 import "../../../../assets/scss/pages/app-ecommerce-shop.scss"
 import "react-toastify/dist/ReactToastify.css"
 import "../../../../assets/scss/plugins/extensions/toastr.scss"
+import imageDefault from "../../../../assets/img/pages/eCommerce/nike7.jfif"
+import {saveOrder} from "./cartService";
 
 class Checkout extends React.Component {
   state = {
     activeStep: 0,
+    user: null,
     steps: [
       {
         title: <ShoppingCart size={22} />,
         content: (
           <div className="list-view product-checkout">
             <div className="checkout-items">
-              {JSON.parse(window.localStorage.getItem("saleOrder")) && JSON.parse(window.localStorage.getItem("saleOrder")).items.length >0 && JSON.parse(window.localStorage.getItem("saleOrder")).items.map((item, i) => (
+              {JSON.parse(window.localStorage.getItem("saleOrder")) != null && JSON.parse(window.localStorage.getItem("saleOrder")).sanPhamDonHang != null && JSON.parse(window.localStorage.getItem("saleOrder")).sanPhamDonHang.length >= 0 && JSON.parse(window.localStorage.getItem("saleOrder")).sanPhamDonHang.map((item, i) => (
                 <Card className="ecommerce-card" key={i}>
                   <div className="card-content">
                     <div className="item-img text-center">
-                      <img src={ConstantList.API_ENPOINT + "/public/getImage/" + item.imageUrl.split(".")[0] + "/" + item.imageUrl.split(".")[1]} alt={item.tenSP} />
+                      {item.imageUrl ? (
+                        <img
+                          className="img-fluid"
+                          src={ConstantList.API_ENPOINT + "/public/getImage/" + item.imageUrl.split(".")[0] + "/" + item.imageUrl.split(".")[1]}
+                          alt={item.tenSP}
+                        />
+                      ) : (
+                          <img
+                            className="img-fluid"
+                            src={imageDefault}
+                            alt="Empty Image"
+                          />
+                        )
+                      }
                     </div>
                     <CardBody>
                       <div className="item-name">
-                        <span>{item.tenSP}</span>
+                        <span>{item.tenSP} - <span>Giá: {item.giaBanHienThoi.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} đ</span> </span>
                         <p className="item-company">
-                          By <span className="company-name">{item.by}</span>
+                          {/* By <span className="company-name">{item.by}</span> */}
                         </p>
-                        <p className="stock-status-in">In Stock</p>
-                        <div className="item-quantity">
-                          <p className="quantity-title">Quantity</p>
+                        {/* <p className="stock-status-in">In Stock</p> */}
+                        <div className="item-quantity mt-60">
+                          <p className="quantity-title">Số lượng</p>
                           <NumericInput
                             min={0}
                             max={10}
@@ -75,8 +91,8 @@ class Checkout extends React.Component {
                       <div className="item-wrapper">
                         <div className="item-rating">
                           <Badge color="primary" className="badge-md mr-25">
-                            <span className="align-middle">4</span>{" "}
-                            <Star size={15} />
+                            {/* <span className="align-middle">4</span>{" "} */}
+                            {/* <Star size={15} /> */}
                           </Badge>
                         </div>
                         <div className="item-cost">
@@ -84,13 +100,13 @@ class Checkout extends React.Component {
                         </div>
                       </div>
                       <div className="wishlist">
-                        <X size={15} />
-                        <span className="align-middle ml-25">Remove</span>
+                        {/* <X size={15} /> */}
+                        <span className="align-middle ml-25" onClick={() => this.handleDeleteProductInCart(item)}>Xóa</span>
                       </div>
-                      <div className="cart">
-                        <Heart size={15} />
-                        <span className="align-middle ml-25">Wishlist</span>
-                      </div>
+                      {/* <div className="cart"> */}
+                      {/* <Heart size={15} /> */}
+                      {/* <span className="align-middle ml-25">Wishlist</span> */}
+                      {/* </div> */}
                     </div>
                   </div>
                 </Card>
@@ -99,7 +115,7 @@ class Checkout extends React.Component {
             <div className="checkout-options">
               <Card>
                 <CardBody>
-                  <p className="options-title">Options</p>
+                  {/* <p className="options-title">Options</p>
                   <div className="coupons">
                     <div className="coupons-title">
                       <p>Coupons</p>
@@ -108,19 +124,25 @@ class Checkout extends React.Component {
                       <p>Apply</p>
                     </div>
                   </div>
-                  <hr />
+                  <hr /> */}
                   <div className="price-details">
-                    <p>Price Details</p>
+                    <p>Khuyến Mãi - Thanh Toán</p>
                   </div>
                   <div className="detail">
-                    <div className="detail-title">Total MRP</div>
-                    <div className="detail-amt">$598</div>
+                    <div className="detail-title">Tổng tiền sản phẩm</div>
+                    <div className="detail-amt">
+                      {JSON.parse(window.localStorage.getItem("saleOrder")) != null && JSON.parse(window.localStorage.getItem("saleOrder")).totalAmount != null ? (
+                        <span>{JSON.parse(window.localStorage.getItem("saleOrder")).totalAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} đ</span>
+                      ) : ("0đ")}
+                    </div>
                   </div>
                   <div className="detail">
-                    <div className="detail-title">Bag Discount</div>
-                    <div className="detail-amt discount-amt">-25$</div>
+                    <div className="detail-title">Khuyến mãi</div>
+                    {JSON.parse(window.localStorage.getItem("saleOrder")) != null && JSON.parse(window.localStorage.getItem("saleOrder")).giamGia != null ? (
+                      <div className="detail-amt discount-amt">{JSON.parse(window.localStorage.getItem("saleOrder")).giamGia} %</div>
+                    ) : ("0%")}
                   </div>
-                  <div className="detail">
+                  {/* <div className="detail">
                     <div className="detail-title">Estimated Tax</div>
                     <div className="detail-amt">$1.3</div>
                   </div>
@@ -132,10 +154,12 @@ class Checkout extends React.Component {
                     <div className="detail-title">Delivery Charges</div>
                     <div className="detail-amt discount-amt">Free</div>
                   </div>
-                  <hr />
+                  <hr /> */}
                   <div className="detail">
-                    <div className="detail-title detail-total">Total</div>
-                    <div className="detail-amt total-amt">$574</div>
+                    <div className="detail-title detail-total">Tổng tiền thanh toán</div>
+                    {JSON.parse(window.localStorage.getItem("saleOrder")) != null && JSON.parse(window.localStorage.getItem("saleOrder")).tongGia != null ? (
+                      <span>{JSON.parse(window.localStorage.getItem("saleOrder")).tongGia.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} đ</span>
+                    ) : ("0đ")}
                   </div>
                   <Button.Ripple
                     type="submit"
@@ -143,7 +167,7 @@ class Checkout extends React.Component {
                     color="primary"
                     className="btn-block"
                     onClick={() => this.handleActiveStep(1)}>
-                    Place Order
+                    Đặt hàng
                   </Button.Ripple>
                 </CardBody>
               </Card>
@@ -157,76 +181,77 @@ class Checkout extends React.Component {
           <div className="list-view product-checkout">
             <Card>
               <CardHeader className="flex-column align-items-start">
-                <CardTitle>Add New Address</CardTitle>
+                <CardTitle>Thêm địa chỉ nhận hàng khác</CardTitle>
                 <p className="text-muted mt-25">
-                  Be sure to check "Deliver to this address" when you have
-                  finished
+                  Hãy chắc chắn bạn sẽ nhận đơn hàng tại địa chỉ dưới đây.
                 </p>
               </CardHeader>
               <CardBody>
                 <Row>
                   <Col md="6" sm="12">
                     <AvGroup>
-                      <Label for="name"> Name </Label>
+                      <Label for="name"> Tên người nhận </Label>
                       <AvInput id="name" name="name" type="text" required />
-                      <AvFeedback>Please enter valid Name</AvFeedback>
+                      <AvFeedback>Bạn chưa điền tên người nhậng </AvFeedback>
                     </AvGroup>
                   </Col>
                   <Col md="6" sm="12">
                     <AvGroup>
-                      <Label for="contact-number"> Contact Number </Label>
+                      <Label for="contact-number"> Số điện thoại </Label>
                       <AvInput
                         id="contact-number"
                         name="contact-number"
                         type="text"
                         required
                       />
-                      <AvFeedback>Please enter valid Contact Number</AvFeedback>
+                      <AvFeedback>Bạn chưa nhập số điện thoại</AvFeedback>
                     </AvGroup>
                   </Col>
                   <Col md="6" sm="12">
                     <AvGroup>
-                      <Label for="apt-no"> Apt/House No </Label>
+                      <Label for="apt-no">Số nhà </Label>
                       <AvInput id="apt-no" name="apt-no" type="text" required />
                       <AvFeedback>
-                        Please enter valid Apt/House Number
+                        Bạn chưa nhập số nhà
                       </AvFeedback>
                     </AvGroup>
                   </Col>
                   <Col md="6" sm="12">
                     <AvGroup>
                       <Label for="landmark">
-                        {" "}
-                        Landmark e.g. near Times Square{" "}
+                        Phường/Xã
                       </Label>
                       <AvInput id="landmark" name="landmark" type="text" />
+                      <AvFeedback>
+                        Bạn chưa chọn phường xã
+                      </AvFeedback>
                     </AvGroup>
                   </Col>
                   <Col md="6" sm="12">
                     <AvGroup>
-                      <Label for="town-city"> Town/City</Label>
+                      <Label for="town-city">Quận/Huyện</Label>
                       <AvInput
                         id="town-city"
                         name="town-city"
                         type="text"
                         required
                       />
-                      <AvFeedback>Please enter valid Town/City</AvFeedback>
+                      <AvFeedback>Bạn chưa chọn quận huyện</AvFeedback>
                     </AvGroup>
                   </Col>
                   <Col md="6" sm="12">
                     <AvGroup>
-                      <Label for="pincode"> Pincode</Label>
+                      <Label for="pincode">Tỉnh/Thành phố</Label>
                       <AvInput
                         id="pincode"
                         name="pincode"
                         type="text"
                         required
                       />
-                      <AvFeedback>Please enter valid Pincode</AvFeedback>
+                      <AvFeedback>Bạn chưa chọn tỉnh thành phố</AvFeedback>
                     </AvGroup>
                   </Col>
-                  <Col md="6" sm="12">
+                  {/* <Col md="6" sm="12">
                     <AvGroup>
                       <Label for="state"> State</Label>
                       <AvInput id="state" name="state" type="text" required />
@@ -241,13 +266,13 @@ class Checkout extends React.Component {
                         <option>Work</option>
                       </Input>
                     </FormGroup>
-                  </Col>
+                  </Col>*/}
                   <Col sm="6" md={{ offset: 6, size: 6 }}>
                     <Button.Ripple
                       type="submit"
                       color="primary"
                       onClick={() => this.handleActiveStep(2)}>
-                      SAVE AND DELIVER HERE
+                      Giao đến địa chỉ này
                     </Button.Ripple>
                   </Col>
                 </Row>
@@ -256,20 +281,31 @@ class Checkout extends React.Component {
             <div className="customer-card">
               <Card>
                 <CardHeader>
-                  <CardTitle>John Doe</CardTitle>
+                  <CardTitle>
+                    Người nhận hàng: {JSON.parse(window.localStorage.getItem("currentUser")) != null ? (
+                      <span>{JSON.parse(window.localStorage.getItem("currentUser")).displayName}</span>
+                    ) : ("")
+                    }
+                  </CardTitle>
                 </CardHeader>
                 <CardBody>
-                  <p className="mb-0">9447 Glen Eagles Drive</p>
-                  <p>Lewis Center, OH 43035</p>
-                  <p>UTC-5: Eastern Standard Time (EST) </p>
-                  <p>202-555-0140</p>
+                  <p className="mb-0">{JSON.parse(window.localStorage.getItem("currentUser")) != null && JSON.parse(window.localStorage.getItem("currentUser")).person != null && JSON.parse(window.localStorage.getItem("currentUser")).person.phoneNumber != null ? (
+                      <span>Số điện thoại: {JSON.parse(window.localStorage.getItem("currentUser")).person.phoneNumber}</span>
+                    ) : ("")
+                    }</p>
+                  <p className="mb-0">{JSON.parse(window.localStorage.getItem("currentUser")) != null && JSON.parse(window.localStorage.getItem("currentUser")).person != null && JSON.parse(window.localStorage.getItem("currentUser")).person.address[0] != null ? (
+                      <span>Địa chỉ nhận hàng: {JSON.parse(window.localStorage.getItem("currentUser")).person.address[0].address}</span>
+                    ) : ("")
+                    }</p>
+                  {/* <p>UTC-5: Eastern Standard Time (EST) </p>
+                  <p>202-555-0140</p> */}
                   <hr />
                   <Button.Ripple
                     type="submit"
                     color="primary"
                     className="btn-block"
-                    onClick={() => this.handleActiveStep(1)}>
-                    DELIVER TO THIS ADDRESS
+                    onClick={() => this.handleChooseDefaultAddress()}>
+                    Giao đến địa chỉ này
                   </Button.Ripple>
                 </CardBody>
               </Card>
@@ -397,9 +433,38 @@ class Checkout extends React.Component {
       }
     ]
   }
-
+  handleDeleteProductInCart = product => {
+    if (product && product.id) {
+      let order = JSON.parse(window.localStorage.getItem("saleOrder")).items;
+      if (order != null && order.length > 0) {
+        for (let i = 0; i < order.length; i++) {
+          if (order[i].id === product.id) {
+            var removeIndex = order.map(function (item) { return item.id; }).indexOf(product.id);
+            order.splice(removeIndex, 1);
+            window.localStorage.setItem("saleOrder", JSON.stringify(order));
+          }
+        }
+      }
+    }
+  }
+  formatPrice = value => {
+    if (value) {
+      return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+    }
+  }
   handleActiveStep = index => {
+    let currentUser = JSON.parse(window.localStorage.getItem("currentUser"));
+    if (currentUser == null || currentUser.id == null) {
+      window.location.href = ConstantList.URL + "authentication/login";
+    }
     this.setState({ activeStep: index })
+  }
+  handleChooseDefaultAddress = ()=>{
+    let currentUser = JSON.parse(window.localStorage.getItem("currentUser"));
+    let order = JSON.parse(window.localStorage.getItem("saleOrder"));
+    if(currentUser!= null && currentUser.id != null && order.sanPhamDonHang != null && order.sanPhamDonHang.length >0){
+      saveOrder(order);
+    }
   }
 
   onValidationError = errors => {

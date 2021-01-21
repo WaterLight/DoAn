@@ -67,9 +67,9 @@ public class SanPhamDonHangDto extends BaseObjectDto {
 			if(entity.getSanPham() != null && entity.getSanPham().getId() != null) {
 				this.setSanPham(new SanPhamDto(entity.getSanPham()));
 			}
-			if(entity.getDonHang() != null && entity.getDonHang().getId() != null) {
-				this.setDonHang(new DonHangDto(entity.getDonHang()));
-			}
+//			if(entity.getDonHang() != null && entity.getDonHang().getId() != null) {
+//				this.setDonHang(new DonHangDto(entity.getDonHang()));
+//			}
 			this.setSoLuong(entity.getSoLuong());
 			this.setDonGia(entity.getDonGia());
 			this.setThanhTien(entity.getThanhTien());

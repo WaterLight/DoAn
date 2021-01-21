@@ -70,7 +70,7 @@
     "react-select": "~3.0.8",
     "react-sidebar": "~3.0.2",
     "react-table": "~6.10.0",
-    "react-toastify": "^5.5.0",
+    "react-toastify": "^6.0.8",
     "react-toggle": "~4.1.1",
     "react-treebeard": "~3.2.3",
     "reactstrap": "^8.4.1",
@@ -82,7 +82,8 @@
     "swiper": "^5.3.0",
     "xlsx": "^0.15.5",
     "yarn": "^1.21.1",
-    "yup": "^0.28.1"
+    "yup": "^0.28.1",
+    "keycloak-js": "^9.0.0"
   },
   "scripts": {
     "start": "react-app-rewired start",

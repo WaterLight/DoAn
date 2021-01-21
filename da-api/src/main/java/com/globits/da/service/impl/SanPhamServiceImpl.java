@@ -52,6 +52,8 @@ public class SanPhamServiceImpl extends GenericServiceImpl<SanPham, UUID> implem
 			entity.setGiaBanHienThoi(dto.getGiaBanHienThoi());
 			entity.setBaiViet(dto.getBaiViet());
 			entity.setImageUrl(dto.getImageUrl());
+			entity.setIsShowHome(dto.getIsShowHome());
+			entity.setGiamGia(dto.getGiamGia());
 			if(dto.getDonViTinh() != null) {
 				DonViTinh nv = donViTinhRepository.getOne(dto.getDonViTinh().getId());
 				entity.setDonViTinh(nv);

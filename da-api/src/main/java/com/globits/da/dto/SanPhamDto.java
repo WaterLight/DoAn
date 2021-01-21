@@ -11,6 +11,7 @@ public class SanPhamDto extends BaseObjectDto{
 	private String tenSP;
 	private String maSP;
 	private Double giaBanHienThoi;
+	private Double giamGia;
 	private Date ngayCapNhat;
 	private Date ngayTao;
 	private NhanVienDto nguoiTao;
@@ -20,6 +21,8 @@ public class SanPhamDto extends BaseObjectDto{
 	private Integer soLuongDangCo;
 	private Set<SanPhamKhoDto> sanPhamKho;
 	private String imageUrl;//Đường dẫn đến File ảnh tiêu đề bài báo (nếu có)
+	private Boolean isShowHome = false;
+	
 	public String getTenSP() {
 		return tenSP;
 	}
@@ -92,6 +95,20 @@ public class SanPhamDto extends BaseObjectDto{
 	public void setImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
 	}
+	
+	public Double getGiamGia() {
+		return giamGia;
+	}
+	public void setGiamGia(Double giamGia) {
+		this.giamGia = giamGia;
+	}
+	
+	public Boolean getIsShowHome() {
+		return isShowHome;
+	}
+	public void setIsShowHome(Boolean isShowHome) {
+		this.isShowHome = isShowHome;
+	}
 	public SanPhamDto() {
 		super();
 	}
@@ -102,6 +119,8 @@ public class SanPhamDto extends BaseObjectDto{
 		this.tenSP = e.getTenSP();
 		this.baiViet = e.getBaiViet();
 		this.imageUrl = e.getImageUrl();
+		this.giamGia = e.getGiamGia();
+		this.isShowHome = e.getIsShowHome();
 		if(e.getDonViTinh() != null) {
 			this.donViTinh = new DonViTinhDto(e.getDonViTinh());
 		}

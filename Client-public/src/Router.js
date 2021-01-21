@@ -71,7 +71,6 @@ class AppRouter extends React.Component {
           <AppRoute
             path={ConstantsList.ROOT_PATH +"/home"}
             component={home}
-            fullLayout
           />
           <AppRoute 
             path={ConstantsList.ROOT_PATH +"/ecommerce/product-detail"} 
@@ -86,11 +85,11 @@ class AppRouter extends React.Component {
             component={checkout}
             // permission="admin"
           />                   
-          {/* <AppRoute
-            path= {ConstantsList.ROOT_PATH}
+          <AppRoute
+            path= {ConstantsList.ROOT_PATH + "/authentication/login"}
             component={login}
             fullLayout
-          />*/}
+          />
            {/* <AppRoute
             exact
             path={ConstantsList.ROOT_PATH+"/ecommerce/shop"}

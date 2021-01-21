@@ -28,6 +28,9 @@ import { Link } from "react-router-dom"
 import { searchByPage } from "./ShopService"
 import "../../../../assets/scss/plugins/forms/react-select/_react-select.scss"
 import ConstantList from "../../../../configs/appConfig";
+import imageDefault from "../../../../assets/img/pages/eCommerce/nike7.jfif"
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const sortOptions = [
   {
@@ -49,26 +52,33 @@ class ShopContent extends React.Component {
     inCart: [],
     inWishlist: [],
     view: "grid-view",
-    rowsPerPage: 5,
+    rowsPerPage: 100000,
     page: 0,
     data: [],
     totalElements: 0,
     keyword: "",
     saleOrder : {
-      items: [],
-      totalAmount: 0
+      sanPhamDonHang: [],
+      totalAmount: 0,
+      tongGia: 0,
+      giamGia:0
     }
   }
 
   handleAddToCart = product => {
-    debugger
+    toast.info("Thêm thành công " + product.tenSP + " vào giỏ hàng của bạn!");
     if(product && product.id){
-      this.state.saleOrder.items.push(product);
+      this.state.saleOrder.sanPhamDonHang.push(product);
+      this.state.saleOrder.totalAmount +=  product.giaBanHienThoi;
+      if(product.giamGia != 0 && product.giamGia != null){
+        this.state.saleOrder.giamGia += product.giamGia;
+        this.state.saleOrder.tongGia +=  product.giaBanHienThoi*(100 - product.giamGia)/100;
+      }else{
+        this.state.saleOrder.tongGia +=  product.giaBanHienThoi;
+      }
       this.setState({inCart:product.id});
       window.localStorage.setItem("saleOrder", JSON.stringify(this.state.saleOrder));
     }
-    this.state.saleOrder = JSON.parse(window.localStorage.getItem("saleOrder"));
-    console.log(this.state.saleOrder);
   }
 
   handleView = view => {
@@ -78,6 +88,8 @@ class ShopContent extends React.Component {
   }
   componentDidMount() {
     this.search();
+    // this.state.saleOrder = JSON.parse(window.localStorage.getItem("saleOrder"));
+    // console.log(this.state.saleOrder);
   }
   search() {
     this.setState({ page: 0 }, function () {
@@ -111,11 +123,20 @@ render() {
         <div className="card-content">
           <div className="item-img text-center">
             <Link to="/ecommerce/product-detail">
-              <img
+              {product.imageUrl? (
+                <img
                 className="img-fluid"
                 src={ConstantList.API_ENPOINT + "/public/getImage/" + product.imageUrl.split(".")[0] + "/" + product.imageUrl.split(".")[1]}
                 alt={product.tenSP}
               />
+              ):(
+                <img
+                className="img-fluid"
+                src={imageDefault}
+                alt="Empty Image"
+              />
+              )
+              }
             </Link>
           </div>
           <CardBody>
@@ -169,24 +190,29 @@ render() {
               />
               <span className="align-middle ml-50">Wishlist</span>
             </div>
-            <div className="cart" onClick={() => this.handleAddToCart(product)}>
+            <div className="cart">
               <ShoppingCart size={15} />
               <span className="align-middle ml-50">
                 {this.state.inCart.includes(product.id) ? (
                   <Link to="checkout" className="text-white">
-                    {" "}
-                      Đơn hàng của tôi{" "}
+                    {""}Đơn hàng của tôi
                   </Link>
                 ) : (
-                    "Thêm vào giỏ hàng"
+                  <span onClick={() => this.handleAddToCart(product)}>
+                    {""}Thêm vào giỏ hàng
+                  </span>
                   )}
               </span>
             </div>
+            <div className="ecommerce-application">
+        </div>
           </div>
         </div>
       </Card>
     )
-  })
+  }
+  )
+  
   return (
     <div className="shop-content">
       <Row>
