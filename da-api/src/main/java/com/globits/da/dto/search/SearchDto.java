@@ -1,5 +1,6 @@
 package com.globits.da.dto.search;
 
+import java.util.Date;
 import java.util.UUID;
 
 public class SearchDto {
@@ -9,6 +10,9 @@ public class SearchDto {
 	private String keyword;
 	private Boolean voided;
 	private UUID khoId;
+	private Date fromDate;
+	private Date toDate;
+	private UUID danhMucSanPhamId;
 	public UUID getId() {
 		return id;
 	}
@@ -44,6 +48,24 @@ public class SearchDto {
 	}
 	public void setKhoId(UUID khoId) {
 		this.khoId = khoId;
+	}
+	public Date getFromDate() {
+		return fromDate;
+	}
+	public void setFromDate(Date fromDate) {
+		this.fromDate = fromDate;
+	}
+	public Date getToDate() {
+		return toDate;
+	}
+	public void setToDate(Date toDate) {
+		this.toDate = toDate;
+	}
+	public UUID getDanhMucSanPhamId() {
+		return danhMucSanPhamId;
+	}
+	public void setDanhMucSanPhamId(UUID danhMucSanPhamId) {
+		this.danhMucSanPhamId = danhMucSanPhamId;
 	}
 	
 	
