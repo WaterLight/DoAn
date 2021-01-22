@@ -37,7 +37,7 @@ public class DonHang extends BaseObject{
 	private NhanVien nguoiBan;
 	@Column(name = "ghi_chu")
 	private String ghiChu;
-	@OneToMany(mappedBy = "sanPham", cascade=CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval=true)
+	@OneToMany(mappedBy = "donHang", cascade=CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval=true)
 	private Set<SanPhamDonHang> sanPhamDonHang;
 	public String getTen() {
 		return ten;
