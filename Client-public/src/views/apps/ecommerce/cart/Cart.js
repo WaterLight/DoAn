@@ -434,13 +434,13 @@ class Checkout extends React.Component {
     ]
   }
   handleDeleteProductInCart = product => {
-    if (product && product.id) {
-      let order = JSON.parse(window.localStorage.getItem("saleOrder")).items;
+    if (product && product.sanPham.id) {
+      let order = JSON.parse(window.localStorage.getItem("saleOrder")).sanPhamDonHang;
       if (order != null && order.length > 0) {
         for (let i = 0; i < order.length; i++) {
-          if (order[i].id === product.id) {
-            var removeIndex = order.map(function (item) { return item.id; }).indexOf(product.id);
-            order.splice(removeIndex, 1);
+          if (order[i].sanPham.id == product.sanPham.id) {
+            var removeIndex = order.map(function (item) { return item.id; }).indexOf(product.sanPham.id);
+            order.splice(removeIndex + 1, 1);
             window.localStorage.setItem("saleOrder", JSON.stringify(order));
           }
         }

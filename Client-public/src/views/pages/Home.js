@@ -17,14 +17,14 @@ import {
 import Breacrumbs from "../../components/@vuexy/breadCrumbs/BreadCrumb"
 import classnames from "classnames"
 import Swiper from "react-id-swiper"
-import macbook from "../../assets/img/elements/macbook-pro.png"
-import headphones from "../../assets/img/elements/beats-headphones.png"
-import laptop from "../../assets/img/elements/macbook-pro.png"
-import homepod from "../../assets/img/elements/homepod.png"
-import earphones from "../../assets/img/elements/wireless-earphones.png"
-import iphoneX from "../../assets/img/elements/iphone-x.png"
-import watch from "../../assets/img/elements/apple-watch.png"
-import mouse from "../../assets/img/elements/magic-mouse.png"
+import macbook from "../../assets/img/elements/nike7.jfif"
+import headphones from "../../assets/img/elements/nike1.jfif"
+import laptop from "../../assets/img/elements/nike2.jfif"
+import homepod from "../../assets/img/elements/nike3.jfif"
+import earphones from "../../assets/img/elements/nike4.jfif"
+import iphoneX from "../../assets/img/elements/nike5.jfif"
+import watch from "../../assets/img/elements/nike8.jfif"
+import mouse from "../../assets/img/elements/nike6.jfif"
 import "swiper/css/swiper.css"
 import "../../assets/scss/pages/app-ecommerce-shop.scss"
 import { searchByPage } from "../apps/ecommerce/shop/ShopService"
@@ -94,10 +94,9 @@ class Home extends React.Component {
                 <div>
                   <div className="title mb-1">
                     <p className="font-medium-1 text-bold-600 truncate mb-0">
-                      Beats by Dr. Dre - Powerbeats2 Wireless Earbud
-                      Headphones - Black/Red
+                    Nike Air Max.
                         </p>
-                    <small>By Dr. Dre</small>
+                    <small>By VN</small>
                   </div>
                   <div className="img-container">
                     <img src={watch} alt="watch" />
@@ -110,16 +109,15 @@ class Home extends React.Component {
                     <Star size={15} fill="#fff" stroke="#b8c2cc" />
                   </div>
                   <p className="text-bold-500 font-medium-2 text-primary mt-50">
-                    $129
+                  690.000 đ
                       </p>
                 </div>
                 <div>
                   <div className="title mb-1">
                     <p className="font-medium-1 text-bold-600 truncate mb-0">
-                      Apple - Apple Watch Nike+ 42mm Silver Aluminum Case
-                      Silver/Volt Nike Sport Band - Silver Aluminum
+                    Nike Air Force 1.
                         </p>
-                    <small>By Apple</small>
+                    <small>By VN</small>
                   </div>
                   <div className="img-container">
                     <img src={earphones} alt="earphones" />
@@ -132,15 +130,15 @@ class Home extends React.Component {
                     <Star size={15} fill="#fff" stroke="#b8c2cc" />
                   </div>
                   <p className="text-bold-500 font-medium-2 text-primary mt-50">
-                    $399
+                  800.000 đ
                       </p>
                 </div>
                 <div>
                   <div className="title mb-1">
                     <p className="font-medium-1 text-bold-600 truncate mb-0">
-                      Google - Google Home - White/Slate fabric
+                    Nike Zoom.
                         </p>
-                    <small>By Google</small>
+                    <small>By VN</small>
                   </div>
                   <div className="img-container">
                     <img src={laptop} alt="laptop" />
@@ -153,15 +151,15 @@ class Home extends React.Component {
                     <Star size={15} fill="#fff" stroke="#b8c2cc" />
                   </div>
                   <p className="text-bold-500 font-medium-2 text-primary mt-50">
-                    $1999.99
+                  390.000 đ
                       </p>
                 </div>
                 <div>
                   <div className="title mb-1">
                     <p className="font-medium-1 text-bold-600 truncate mb-0">
-                      Amazon - Fire TV Stick with Alexa Voice Remote - Black
+                    Nike Flyknit.
                         </p>
-                    <small>By Amazon</small>
+                    <small>By VN</small>
                   </div>
                   <div className="img-container">
                     <img src={homepod} alt="homepod" />
@@ -174,15 +172,15 @@ class Home extends React.Component {
                     <Star size={15} fill="#fff" stroke="#b8c2cc" />
                   </div>
                   <p className="text-bold-500 font-medium-2 text-primary mt-50">
-                    $39.99
+                  590.000 đ
                       </p>
                 </div>
                 <div>
                   <div className="title mb-1">
                     <p className="font-medium-1 text-bold-600 truncate mb-0">
-                      Google - Chromecast Ultra - Black
+                    Nike SF-AF1 “Desert Camo”
                         </p>
-                    <small>By Google</small>
+                    <small>By VN</small>
                   </div>
                   <div className="img-container">
                     <img src={iphoneX} alt="homepod" />
@@ -195,15 +193,15 @@ class Home extends React.Component {
                     <Star size={15} fill="#fff" stroke="#b8c2cc" />
                   </div>
                   <p className="text-bold-500 font-medium-2 text-primary mt-50">
-                    $69.99
+                  2.190.000 đ
                       </p>
                 </div>
                 <div>
                   <div className="title mb-1">
                     <p className="font-medium-1 text-bold-600 truncate mb-0">
-                      Beats by Dr. Dre - Beats EP Headphones - White
+                    Nike Air Huarache “Legion Green”
                         </p>
-                    <small>Beats by Dr. Dre</small>
+                    <small>by VN</small>
                   </div>
                   <div className="img-container">
                     <img src={headphones} alt="homepod" />
@@ -216,16 +214,15 @@ class Home extends React.Component {
                     <Star size={15} fill="#fff" stroke="#b8c2cc" />
                   </div>
                   <p className="text-bold-500 font-medium-2 text-primary mt-50">
-                    $129.99
+                  1.890.000 đ
                       </p>
                 </div>
                 <div>
                   <div className="title mb-1">
                     <p className="font-medium-1 text-bold-600 truncate mb-0">
-                      LG - 40" Class (39.5" Diag.) - LED - 1080p - HDTV -
-                      Black
+                    Nike Air TR 17.
                         </p>
-                    <small>by LG</small>
+                    <small>by VN</small>
                   </div>
                   <div className="img-container">
                     <img src={mouse} alt="homepod" />
@@ -238,7 +235,7 @@ class Home extends React.Component {
                     <Star size={15} fill="#fff" stroke="#b8c2cc" />
                   </div>
                   <p className="text-bold-500 font-medium-2 text-primary mt-50">
-                    $279.99
+                    890.000 đ
                       </p>
                 </div>
               </Swiper>
@@ -253,10 +250,10 @@ class Home extends React.Component {
                   <div className="w-50 mx-auto">
                     <Award className="text-primary mb-1" size={42} />
                     <p className="font-medium-2 text-bold-600 mb-0">
-                      100% Original
+                      Sản phẩm được lựa chọn số 1
                       </p>
                     <p>
-                      Chocolate bar candy canes ice cream toffee cookie halvah.
+                      Trẻ trung - Năng động - Thời trang
                       </p>
                   </div>
                 </Col>
@@ -264,18 +261,18 @@ class Home extends React.Component {
                   <div className="w-50 mx-auto">
                     <Clock className="text-primary mb-1" size={42} />
                     <p className="font-medium-2 text-bold-600 mb-0">
-                      10 Day Replacement
+                      Thời gian phản hồi nhanh chóng
                       </p>
-                    <p>Marshmallow biscuit donut dragée fruitcake wafer.</p>
+                    <p>Nhân viên hỗ trợ, phụ vụ tận tình chu đáo.</p>
                   </div>
                 </Col>
                 <Col className="text-center" md="4" sm="12">
                   <div className="w-50 mx-auto">
                     <Shield className="text-primary mb-1" size={42} />
                     <p className="font-medium-2 text-bold-600 mb-0">
-                      1 Year Warranty
+                      Sự tin tưởng
                       </p>
-                    <p>Cotton candy gingerbread cake I love sugar sweet.</p>
+                    <p>Ra mắt những sản phẩm tốt nhất</p>
                   </div>
                 </Col>
               </Row>
