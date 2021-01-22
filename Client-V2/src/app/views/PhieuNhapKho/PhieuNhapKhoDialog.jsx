@@ -10,7 +10,6 @@ import {
   DialogContent,
   Icon,
   IconButton,
-
 } from "@material-ui/core";
 // import Paper from '@material-ui/core/Paper'
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
@@ -19,7 +18,7 @@ import NotificationPopup from "../Component/NotificationPopup/NotificationPopup"
 import ChonKho from "./ChonKhoNhap";
 import ChonNhanVien from "./ChonNhanVien";
 import {
-    saveItem,
+  saveItem,
   addItem,
   updateItem,
   checkCode,
@@ -108,21 +107,22 @@ class PhieuNhapKhoDialog extends Component {
     Notification: "",
     shouldOpenChonKho: false,
     ChonNhanVien: false,
-    agency:null,
-    user:null,
-    shouldOpenMultipleDialog : false,
+    agency: null,
+    user: null,
+    shouldOpenMultipleDialog: false,
   };
 
   handleDialogClose = () => {
-    this.setState({ shouldOpenNotificationPopup: false,
-                    shouldOpenChonKho:false,
-                    shouldOpenChonNhanVien: false,
-                    shouldOpenMultipleDialog : false,
-                 });
+    this.setState({
+      shouldOpenNotificationPopup: false,
+      shouldOpenChonKho: false,
+      shouldOpenChonNhanVien: false,
+      shouldOpenMultipleDialog: false,
+    });
   };
   handleDialogCancel = () => {
     this.setState({
-      shouldOpenMultipleDialog : false,
+      shouldOpenMultipleDialog: false,
     });
   };
   handleChange = (event, source) => {
@@ -155,7 +155,7 @@ class PhieuNhapKhoDialog extends Component {
             this.props.handleOKEditClose();
           });
         } else {
-            saveItem({
+          saveItem({
             ...this.state,
           }).then(() => {
             toast.success(t("general.addSuccess"));
@@ -169,71 +169,68 @@ class PhieuNhapKhoDialog extends Component {
   componentWillMount() {
     //getUserById(this.props.uid).then(data => this.setState({ ...data.data }));
     let { open, handleClose, item } = this.props;
-    this.setState({...item});
+    this.setState({ ...item });
   }
-  handleSelectUser =(item)=>{
-      this.setState({kho:item ? item : null,shouldOpenChonKho: false, })
-  }
-  handleSelectAgency =(item) =>{
-    this.setState({nguoiNhap:item ? item : null,shouldOpenChonNhanVien: false, })
-  }
-  handleChangeSL  =(item,e) =>{
-    let {sanPhamPhieuNhap} = this.state
-    if(sanPhamPhieuNhap == null ){
-      sanPhamPhieuNhap =[] 
-      let p = {}
+  handleSelectUser = (item) => {
+    this.setState({ kho: item ? item : null, shouldOpenChonKho: false });
+  };
+  handleSelectAgency = (item) => {
+    this.setState({
+      nguoiNhap: item ? item : null,
+      shouldOpenChonNhanVien: false,
+    });
+  };
+  handleChangeSL = (item, e) => {
+    let { sanPhamPhieuNhap } = this.state;
+    if (sanPhamPhieuNhap == null) {
+      sanPhamPhieuNhap = [];
+      let p = {};
       p.sanPham = item;
-      p.soluong = e.target.value
-      sanPhamPhieuNhap.push(p)
+      p.soluong = e.target.value;
+      sanPhamPhieuNhap.push(p);
     }
-    if(sanPhamPhieuNhap != null && sanPhamPhieuNhap.length > 0){
-      sanPhamPhieuNhap.forEach(el=>{
-        if(el.sanPham.id == item.sanPham.id){
+    if (sanPhamPhieuNhap != null && sanPhamPhieuNhap.length > 0) {
+      sanPhamPhieuNhap.forEach((el) => {
+        if (el.sanPham.id == item.sanPham.id) {
           // let p ={}
-          el.soLuong =e.target.value
+          el.soLuong = e.target.value;
         }
-      })
+      });
     }
-    this.setState({sanPhamPhieuNhap:sanPhamPhieuNhap})
-  }
+    this.setState({ sanPhamPhieuNhap: sanPhamPhieuNhap });
+  };
   //
-  handleChangeGia  =(item,e) =>{
-    let {sanPhamPhieuNhap} = this.state
-    if(sanPhamPhieuNhap == null ){
-      sanPhamPhieuNhap =[] 
-      let p = {}
+  handleChangeGia = (item, e) => {
+    let { sanPhamPhieuNhap } = this.state;
+    if (sanPhamPhieuNhap == null) {
+      sanPhamPhieuNhap = [];
+      let p = {};
       p.sanPham = item;
-      p.gia = e.target.value
-      sanPhamPhieuNhap.push(p)
+      p.gia = e.target.value;
+      sanPhamPhieuNhap.push(p);
     }
-    if(sanPhamPhieuNhap != null && sanPhamPhieuNhap.length > 0){
-      sanPhamPhieuNhap.forEach(el=>{
-        if(el.sanPham.id == item.sanPham.id){
+    if (sanPhamPhieuNhap != null && sanPhamPhieuNhap.length > 0) {
+      sanPhamPhieuNhap.forEach((el) => {
+        if (el.sanPham.id == item.sanPham.id) {
           // let p ={}
-          el.gia =e.target.value
+          el.gia = e.target.value;
         }
-      })
+      });
     }
-    this.setState({sanPhamPhieuNhap:sanPhamPhieuNhap},()=>{
-      console.log(this.state.sanPhamPhieuNhap)
-    })
-  }
+    this.setState({ sanPhamPhieuNhap: sanPhamPhieuNhap }, () => {
+      console.log(this.state.sanPhamPhieuNhap);
+    });
+  };
   handleSelectSP = (item) => {
     let data = item.map((row) => ({ ...row, tableData: { checked: false } }));
-    this.setState({ sanPhamPhieuNhap: data },()=>{
-      console.log(this.state.sanPhamPhieuNhap)
+    this.setState({ sanPhamPhieuNhap: data }, () => {
+      console.log(this.state.sanPhamPhieuNhap);
     });
     this.handleDialogCancel();
   };
   render() {
-    let {
-      id,
-      ma,
-      ten,
-      description,
-      sanPhamPhieuNhap,
-    } = this.state;
-    
+    let { id, ma, ten, description, sanPhamPhieuNhap } = this.state;
+
     let { open, handleClose, handleOKEditClose, t, i18n } = this.props;
 
     let columns = [
@@ -253,7 +250,10 @@ class PhieuNhapKhoDialog extends Component {
             item={rowData}
             onSelect={(rowData, method) => {
               if (method === 0) {
-                this.setState({shouldOpenLabTestPropertyEditDialog: true, item: rowData});
+                this.setState({
+                  shouldOpenLabTestPropertyEditDialog: true,
+                  item: rowData,
+                });
               } else if (method === 1) {
                 sanPhamPhieuNhap.map((pro, index) => {
                   if (pro.sanPham.maSP === rowData.sanPham.maSP) {
@@ -282,33 +282,32 @@ class PhieuNhapKhoDialog extends Component {
         title: t("Số lượng"),
         field: "code",
         align: "left",
-        render: (row) => 
-              <TextValidator
-                  className="w-100 "
-                  onChange={(e) =>this.handleChangeSL(row,e)}
-                  type="number"
-                  value={row.soLuong}
-                  validators={["required"]}
-                  errorMessages={[t("general.required")]}
-                />
-        
+        render: (row) => (
+          <TextValidator
+            className="w-100 "
+            onChange={(e) => this.handleChangeSL(row, e)}
+            type="number"
+            value={row.soLuong}
+            validators={["required"]}
+            errorMessages={[t("general.required")]}
+          />
+        ),
       },
       {
         title: t("Giá"),
         field: "code",
         align: "left",
-        render: (row) => 
-              <TextValidator
-                  className="w-100 "
-                  onChange={e=>this.handleChangeGia(row,e)}
-                  type="number"
-                  value={row.gia}
-                  validators={["required"]}
-                  errorMessages={[t("general.required")]}
-                />
-        
+        render: (row) => (
+          <TextValidator
+            className="w-100 "
+            onChange={(e) => this.handleChangeGia(row, e)}
+            type="number"
+            value={row.gia}
+            validators={["required"]}
+            errorMessages={[t("general.required")]}
+          />
+        ),
       },
-      
     ];
     return (
       <Dialog
@@ -326,7 +325,7 @@ class PhieuNhapKhoDialog extends Component {
 
         <ValidatorForm ref="form" onSubmit={this.handleFormSubmit}>
           <DialogContent>
-            <Grid className="" container spacing={2} >
+            <Grid className="" container spacing={2}>
               <Grid item sm={12} xs={12}>
                 <TextValidator
                   className="w-100 "
@@ -369,8 +368,8 @@ class PhieuNhapKhoDialog extends Component {
                   className=" mt-16"
                   variant="contained"
                   color="primary"
-                  onClick={()=>{
-                      this.setState({shouldOpenChonNhanVien:true})
+                  onClick={() => {
+                    this.setState({ shouldOpenChonNhanVien: true });
                   }}
                 >
                   {t("general.select")}
@@ -388,9 +387,11 @@ class PhieuNhapKhoDialog extends Component {
                     </span>
                   }
                   // className="w-80"
-                  style ={{width: "80%"}}
+                  style={{ width: "80%" }}
                   value={
-                    this.state.nguoiNhap != null ? this.state.nguoiNhap.displayName : ""
+                    this.state.nguoiNhap != null
+                      ? this.state.nguoiNhap.displayName
+                      : ""
                   }
                 />
 
@@ -399,9 +400,7 @@ class PhieuNhapKhoDialog extends Component {
                     open={this.state.shouldOpenChonNhanVien}
                     handleSelect={this.handleSelectAgency}
                     selectedItem={
-                      this.state.nguoiNhap != null
-                        ? this.state.nguoiNhap
-                        : {}
+                      this.state.nguoiNhap != null ? this.state.nguoiNhap : {}
                     }
                     handleClose={this.handleDialogClose}
                     t={t}
@@ -416,8 +415,8 @@ class PhieuNhapKhoDialog extends Component {
                   className=" mt-16"
                   variant="contained"
                   color="primary"
-                  onClick={()=>{
-                      this.setState({shouldOpenChonKho:true})
+                  onClick={() => {
+                    this.setState({ shouldOpenChonKho: true });
                   }}
                 >
                   {t("general.select")}
@@ -435,50 +434,50 @@ class PhieuNhapKhoDialog extends Component {
                     </span>
                   }
                   // className="w-80"
-                  style ={{width: "80%"}}
-                  value={
-                    this.state.kho != null ? this.state.kho.tenKho : ""
-                  }
+                  style={{ width: "80%" }}
+                  value={this.state.kho != null ? this.state.kho.tenKho : ""}
                 />
 
                 {this.state.shouldOpenChonKho && (
                   <ChonKho
                     open={this.state.shouldOpenChonKho}
                     handleSelect={this.handleSelectUser}
-                    selectedItem={
-                      this.state.kho != null 
-                        ? this.state.kho
-                        : {}
-                    }
+                    selectedItem={this.state.kho != null ? this.state.kho : {}}
                     handleClose={this.handleDialogClose}
                     t={t}
                     i18n={i18n}
                   />
                 )}
                 <Button
-                    className=" mt-10 mb-10"
-                    variant="contained"
-                    color="primary"
-                    onClick={() =>
-                      this.setState({
-                        shouldOpenMultipleDialog: true,
-                        item: {},
-                      })
-                    }
-                  >{t("general.select")}</Button>
+                  className=" mt-10 mb-10"
+                  variant="contained"
+                  color="primary"
+                  onClick={() =>
+                    this.setState({
+                      shouldOpenMultipleDialog: true,
+                      item: {},
+                    })
+                  }
+                >
+                  {t("general.select")}
+                </Button>
                 {this.state.shouldOpenMultipleDialog && (
-                <MultipleProduct
-                  open={this.state.shouldOpenMultipleDialog}
-                  selected={this.state.sanPhamPhieuNhap}
-                  handleSelect={this.handleSelectSP}
-                  handleClose={this.handleDialogCancel}
-                  t={t}
-                  i18n={i18n}
-                />
-              )}
-                <Grid item sm={12} xs="12" className = "mt-10">
+                  <MultipleProduct
+                    open={this.state.shouldOpenMultipleDialog}
+                    selected={this.state.sanPhamPhieuNhap}
+                    handleSelect={this.handleSelectSP}
+                    handleClose={this.handleDialogCancel}
+                    t={t}
+                    i18n={i18n}
+                  />
+                )}
+                <Grid item sm={12} xs="12" className="mt-10">
                   <MaterialTable
-                    data={this.state.sanPhamPhieuNhap ? this.state.sanPhamPhieuNhap : []}
+                    data={
+                      this.state.sanPhamPhieuNhap
+                        ? this.state.sanPhamPhieuNhap
+                        : []
+                    }
                     columns={columns}
                     options={{
                       selection: false,

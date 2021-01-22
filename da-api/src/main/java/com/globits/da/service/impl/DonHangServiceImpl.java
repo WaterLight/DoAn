@@ -155,8 +155,11 @@ public class DonHangServiceImpl extends GenericServiceImpl<DonHang, UUID> implem
 	@Override
 	public DonHangDto getCertificate(UUID id) {
 		DonHang entity = repos.getOne(id);
+		System.out.println(entity.getSanPhamDonHang().size());
 		if (entity != null) {
-			return new DonHangDto(entity);
+			DonHangDto dto = new DonHangDto(entity);
+			System.out.println(dto.getSanPhamDonHang().size());
+			return dto;
 		}
 		return null;
 	}

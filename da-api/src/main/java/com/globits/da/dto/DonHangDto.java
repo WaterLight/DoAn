@@ -105,6 +105,7 @@ public class DonHangDto extends BaseObjectDto {
 			this.setGiamGia(entity.getGiamGia());
 			this.setThanhTien(entity.getThanhTien());
 			this.setTrangThai(entity.getTrangThai());
+			this.setGhiChu(entity.getGhiChu());
 			if(entity.getNguoiBan() != null && entity.getNguoiBan().getId() != null) {
 				this.setNguoiBan(new NhanVienDto(entity.getNguoiBan()));
 			}

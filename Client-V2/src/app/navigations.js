@@ -38,7 +38,7 @@ export const navigations = [
       },
       {
         name: "Thuộc Tính Sản Phẩm",
-        path:  ConstantList.ROOT_PATH+"directory/thuocTinhSanPham",
+        path: ConstantList.ROOT_PATH + "directory/thuocTinhSanPham",
         iconText: "S",
         isVisible: true,
       },
@@ -63,6 +63,24 @@ export const navigations = [
       {
         name: "Phiếu Xuất Kho",
         path: ConstantList.ROOT_PATH + "directory/phieuxuatkho",
+        iconText: "S",
+        isVisible: true,
+      },
+      {
+        name: "Đơn Hàng",
+        path: ConstantList.ROOT_PATH + "directory/donHang",
+        iconText: "S",
+        isVisible: true,
+      },
+      {
+        name: "Báo Cáo Nhập",
+        path: ConstantList.ROOT_PATH + "directory/BaoCaoNhap",
+        iconText: "S",
+        isVisible: true,
+      },
+      {
+        name: "Báo Cáo Xuất",
+        path: ConstantList.ROOT_PATH + "directory/BaoCaoXuat",
         iconText: "S",
         isVisible: true,
       },
