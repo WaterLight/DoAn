@@ -72,7 +72,6 @@ class Checkout extends React.Component {
                         <p className="item-company">
                           {/* By <span className="company-name">{item.by}</span> */}
                         </p>
-                        {/* <p className="stock-status-in">In Stock</p> */}
                         <div className="item-quantity mt-60">
                           <p className="quantity-title">Số lượng</p>
                           <NumericInput
