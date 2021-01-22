@@ -33,7 +33,7 @@ const DashboardWelcomeCard = ({ classes, analytics, t }) => {
           elevation={3}
           className={`p-16 py-28 text-center h-100 w-100 ${classes.root}`}
         >
-          <a href={ConstantList.ROOT_PATH + "directory/building"} >
+          <a href={ConstantList.ROOT_PATH + "directory/donHang"} >
           <div className="font-weight-300 flex flex-space-between">
             <div className="text-white margin-auto">
               <div className="font-size-32"><b>{analytics ? analytics.donHangNum:0}</b></div>
