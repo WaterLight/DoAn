@@ -293,8 +293,8 @@ class Checkout extends React.Component {
                     <span>Số điện thoại: {JSON.parse(window.localStorage.getItem("currentUser")).person.phoneNumber}</span>
                   ) : ("")
                   }</p>
-                  <p className="mb-0">{JSON.parse(window.localStorage.getItem("currentUser")) != null && JSON.parse(window.localStorage.getItem("currentUser")).person != null && JSON.parse(window.localStorage.getItem("currentUser")).person.address[0] != null ? (
-                    <span>Địa chỉ nhận hàng: {JSON.parse(window.localStorage.getItem("currentUser")).person.address[0].address}</span>
+                  <p className="mb-0">{JSON.parse(window.localStorage.getItem("currentUser")) != null && JSON.parse(window.localStorage.getItem("currentUser")).person != null && JSON.parse(window.localStorage.getItem("currentUser")).person.address != null ? (
+                    <span>Địa chỉ nhận hàng: {JSON.parse(window.localStorage.getItem("currentUser")).person.address}</span>
                   ) : ("")
                   }</p>
                   {/* <p>UTC-5: Eastern Standard Time (EST) </p>

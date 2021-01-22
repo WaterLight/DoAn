@@ -36,10 +36,10 @@ class JwtAuthService {
       this.setLoginUser(res.data);
     });
   };
-  async registerMember(displayName, username, password,phoneNumber,email,address ) {
+  async registerMember(displayName, userName, password,phoneNumber,email,address ) {
     let requestBody = {};
     requestBody.displayName = displayName;
-    requestBody.username = username;
+    requestBody.userName = userName;
     requestBody.password = password;
     requestBody.phoneNumber = phoneNumber;
     requestBody.email = email;
