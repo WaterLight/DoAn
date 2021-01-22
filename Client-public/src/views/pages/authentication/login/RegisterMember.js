@@ -61,7 +61,7 @@ class RegisterMember extends React.Component {
     return window.sessionStorage.getItem("auth_user");
   }
   async registerMember() {
-    if (!this.state.username || this.state.username == "") {
+    if (!this.state.userName || this.state.userName == "") {
       toast.warning("Vui lòng nhập tên đăng nhập!");
       return;
     }
@@ -165,8 +165,8 @@ class RegisterMember extends React.Component {
                         <Input
                           type="text"
                           placeholder="Tên đăng nhập"
-                          value={this.state.username}
-                          onChange={e => this.setState({ username: e.target.value })}
+                          value={this.state.userName}
+                          onChange={e => this.setState({ userName: e.target.value })}
                           validators={["required"]}
                           errorMessages={[
                             "Bạn chưa nhập tên đăng nhập"
