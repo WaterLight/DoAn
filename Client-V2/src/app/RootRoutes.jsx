@@ -25,6 +25,7 @@ import ThuocTinhSanPhamRoutes from "./views/ThuocTinhSanPham/ThuocTinhSanPhamRou
 import DonHangRoutes from "./views/DonHang/DonHangRoutes";
 import BaoCaoNhapRoutes from "./views/BaoCaoNhap/BaoCaoNhapRoutes";
 import BaoCaoXuatRoutes from "./views/BaoCaoXuat/BaoCaoXuatRoutes";
+import DanhMucSanPhamRoutes from "./views/DanhMucSanPham/DanhMucSanPhamRoutes";
 
 const redirectRoute = [
   {
@@ -63,6 +64,7 @@ const routes = [
   ...DonHangRoutes,
   ...BaoCaoXuatRoutes,
   ...BaoCaoNhapRoutes,
+  ...DanhMucSanPhamRoutes,
   ...errorRoute,
 ];
 

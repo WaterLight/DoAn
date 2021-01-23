@@ -84,6 +84,12 @@ export const navigations = [
         iconText: "S",
         isVisible: true,
       },
+      {
+        name: "Danh Mục Sản Phẩm",
+        path: ConstantList.ROOT_PATH + "directory/DanhMucSanPham",
+        iconText: "S",
+        isVisible: true,
+      },
       // {
       //   name: "directory.project",
       //   path: ConstantList.ROOT_PATH+"directory/project",
