@@ -319,6 +319,7 @@ import {
         },
         { title: t("general.name") , field: "tenSP", width: "150" },
         { title: t("general.code"), field: "maSP", align: "left", width: "150" },
+        { title: t("Loại"), field: "size.ma", align: "left", width: "150" },
         // { title: t("directory.agency"), field: "agency.name", align: "left", width: "150" },
         // { title: t("user.title"), field: "user.displayName", align: "left", width: "150" },    
       ];

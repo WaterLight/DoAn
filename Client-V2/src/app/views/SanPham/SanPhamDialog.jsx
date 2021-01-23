@@ -30,7 +30,8 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import EditorForm from "./EditorForm";
 import DanhMucSanPham from "./DanhMucSanPham";
-
+import AsynchronousAutocomplete from "../utilities/AsynchronousAutocomplete";
+import {searchByPage as searchByPageSize} from '../ThuocTinhSanPham/ThuocTinhSanPhamService'
 toast.configure({
   autoClose: 2000,
   draggable: false,
@@ -66,6 +67,7 @@ class AgentDialog extends Component {
     noteAvatarImage: "",
     files: [],
     shouldOpenSelectDMPopup: false,
+    size: null
   };
 
   handleDialogClose = () => {
@@ -215,6 +217,11 @@ class AgentDialog extends Component {
     }
     return "";
   };
+
+  selectSize = (item) => {
+    this.setState({ size: item }, function () {});
+  };
+
   render() {
     let {
       id,
@@ -225,8 +232,10 @@ class AgentDialog extends Component {
       imageUrl,
       files,
       noteAvatarImage,
+      size
     } = this.state;
     let { open, handleClose, handleOKEditClose, t, i18n } = this.props;
+    let searchObject = { keyword: "", pageIndex: 0, pageSize: 10000, thuocTinhSanPhamType: ConstantList.THUOCTINHSANPHAM_TYPE.size };
     let isEmpty = files.length === 0;
     if (imageUrl) {
       isEmpty = false;
@@ -252,7 +261,7 @@ class AgentDialog extends Component {
                 item
                 xs={12}
                 sm={12}
-                md={3}
+                md={12}
                 className={"container-create-category mt-16"}
               >
                 <Grid item xs={12} sm={12} md={10}>
@@ -314,7 +323,7 @@ class AgentDialog extends Component {
                   )}
                 </Grid>
               </Grid>
-              <Grid item sm={12} xs={12}>
+              <Grid item sm={12} xs={12} md={4}>
                 <TextValidator
                   className="w-100 "
                   label={
@@ -332,7 +341,7 @@ class AgentDialog extends Component {
                 />
               </Grid>
 
-              <Grid item sm={12} xs={12}>
+              <Grid item sm={12} xs={12} md={4}>
                 <TextValidator
                   className="w-100 "
                   label={
@@ -349,7 +358,7 @@ class AgentDialog extends Component {
                   errorMessages={[t("general.required")]}
                 />
               </Grid>
-              <Grid item sm={12} xs={12}>
+              <Grid item sm={12} xs={12} md={4}>
                 <TextValidator
                   className="w-100 "
                   label={
@@ -359,14 +368,14 @@ class AgentDialog extends Component {
                     </span>
                   }
                   onChange={this.handleChange}
-                  type="text"
+                  type="number"
                   name="giaBanHienThoi"
                   value={this.state.giaBanHienThoi}
                   validators={["required"]}
                   errorMessages={[t("general.required")]}
                 />
               </Grid>
-              <Grid item sm={12} xs={12}>
+              <Grid item sm={12} xs={12} md={4}>
                 <Button
                   size="small"
                   style={{ float: "right" }}
@@ -382,17 +391,13 @@ class AgentDialog extends Component {
                 <TextValidator
                   size="small"
                   InputLabelProps={{ shrink: true }}
-                  // InputProps={{
-                  //   readOnly: true,
-                  // }}
                   label={
                     <span>
                       <span style={{ color: "red" }}></span>
                       {t("Đơn vị tính")}
                     </span>
                   }
-                  // className="w-80"
-                  style={{ width: "80%" }}
+                  style={{ width: "70%" }}
                   value={
                     this.state.agency != null ? this.state.agency.name : ""
                   }
@@ -411,7 +416,7 @@ class AgentDialog extends Component {
                   />
                 )}
               </Grid>
-              <Grid item sm={12} xs={12}>
+              <Grid item sm={12} xs={12} md={4}>
                 <Button
                   size="small"
                   style={{ float: "right" }}
@@ -437,7 +442,7 @@ class AgentDialog extends Component {
                     </span>
                   }
                   // className="w-80"
-                  style={{ width: "80%" }}
+                  style={{ width: "70%" }}
                   value={
                     this.state.danhMucSanPham != null
                       ? this.state.danhMucSanPham.ten
@@ -459,6 +464,24 @@ class AgentDialog extends Component {
                     i18n={i18n}
                   />
                 )}
+              </Grid>
+              <Grid className="" item md={4} sm={12} xs={12}>
+                <AsynchronousAutocomplete
+                  label={
+                    <span>
+                      <span style={{ color: "red" }}>* </span>{" "}
+                      <span> {t("Kích thước")}</span>
+                    </span>
+                  }
+                  searchFunction={searchByPageSize}
+                  searchObject={searchObject}
+                  defaultValue={size}
+                  displayLable={"ten"}
+                  value={size}
+                  onSelect={this.selectSize}
+                  validators={["required"]}
+                  errorMessages={[t("general.required")]}
+                />
               </Grid>
 
               <Grid item sm={12} xs={12}>

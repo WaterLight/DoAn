@@ -34,6 +34,7 @@ import {
   deleteSource,
   searchByPage,
 } from "./ThuocTinhSanPhamService";
+import ConstantList from "../../appConfig";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -414,6 +415,12 @@ class RealEstateSourceTable extends React.Component {
         title: t("productAttribute.type"),
         field: "loai",
         width: "150",
+        // render: (rowData) => {
+        //   let a = ConstantList.LIST_HUOCTINHSANPHAM_TYPE.filter(
+        //     (type) => rowData.loai === type.id
+        //   );
+        //   return a ? <span>{a.name}</span> : "";
+        // },
       },
     ];
 

@@ -7,21 +7,13 @@ import {
   FormControl,
   Paper,
   DialogTitle,
-  MenuItem,
-  Select,
-  InputLabel,
   DialogContent,
 } from "@material-ui/core";
-import ConstantList from "../../appConfig";
 // import Paper from '@material-ui/core/Paper'
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 import Draggable from "react-draggable";
 import NotificationPopup from "../Component/NotificationPopup/NotificationPopup";
-import {
-  addNewSource,
-  updateSource,
-  checkCode,
-} from "./ThuocTinhSanPhamService";
+import { addNewSource, updateSource, checkCode } from "./DonHangService";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -47,7 +39,15 @@ class RealEstateSourceDialog extends Component {
     id: "",
     ten: "",
     ma: "",
-    loai: "",
+    ngayDatHang: null,
+    ngayGiaoHang: null,
+    tongGia: "",
+    giamGia: "",
+    thanhTien: "",
+    trangThai: "",
+    nguoiBan: null,
+    ghiChu: "",
+    sanPhamDonHang: [],
     shouldOpenNotificationPopup: false,
     Notification: "",
   };
@@ -104,7 +104,21 @@ class RealEstateSourceDialog extends Component {
   }
 
   render() {
-    let { id, ten, ma, loai, shouldOpenNotificationPopup } = this.state;
+    let {
+      id,
+      ten,
+      ma,
+      ngayDatHang,
+      ngayGiaoHang,
+      tongGia,
+      giamGia,
+      thanhTien,
+      trangThai,
+      nguoiBan,
+      ghiChu,
+      sanPhamDonHang,
+      shouldOpenNotificationPopup,
+    } = this.state;
     let { open, handleClose, handleOKEditClose, t, i18n } = this.props;
     return (
       <Dialog
@@ -158,23 +172,22 @@ class RealEstateSourceDialog extends Component {
                   errorMessages={[t("general.required")]}
                 />
               </Grid>
-              <Grid item sm={12} xs={12} >
-                <FormControl fullWidth={true} >
-                  <InputLabel htmlFor="indexOrderId" >{t("Loại")}</InputLabel>
-                  <Select
-                    value={loai}
-                    name="loai"
-                    onChange={this.handleChange}
-                    inputProps={{
-                      name: "loai",
-                      id: "loaiId"
-                    }}
-                  >
-                    {ConstantList.LIST_HUOCTINHSANPHAM_TYPE.map(item => {
-                      return <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>;
-                    })}
-                  </Select>
-                </FormControl>
+              <Grid item sm={12} xs={12}>
+                <TextValidator
+                  className="w-100 "
+                  label={
+                    <span>
+                      <span style={{ color: "red" }}>*</span>
+                      {t("productAttribute.type")}
+                    </span>
+                  }
+                  onChange={this.handleChange}
+                  type="number"
+                  name="loai"
+                  value={loai}
+                  validators={["required"]}
+                  errorMessages={[t("general.required")]}
+                />
               </Grid>
             </Grid>
           </DialogContent>
