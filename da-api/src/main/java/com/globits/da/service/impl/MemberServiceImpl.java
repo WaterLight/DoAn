@@ -3,6 +3,7 @@ package com.globits.da.service.impl;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.Query;
@@ -10,10 +11,13 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -21,9 +25,14 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.globits.core.Constants;
 import com.globits.core.domain.Person;
+import com.globits.core.domain.PersonAddress;
+import com.globits.core.repository.PersonAddressRepository;
+import com.globits.core.repository.PersonRepository;
+import com.globits.core.service.PersonAddressService;
 import com.globits.core.service.impl.GenericServiceImpl;
 import com.globits.core.utils.HttpUtils;
 import com.globits.core.utils.SecurityUtils;
+import com.globits.da.domain.DAPerson;
 import com.globits.da.domain.Kho;
 import com.globits.da.dto.KhoDto;
 import com.globits.da.dto.RegisterDto;
@@ -34,6 +43,7 @@ import com.globits.da.service.MemberService;
 import com.globits.security.domain.Role;
 import com.globits.security.domain.User;
 import com.globits.security.dto.UserDto;
+import com.globits.security.repository.UserRepository;
 import com.globits.security.service.RoleService;
 import com.globits.security.service.UserService;
 @Service
@@ -42,6 +52,12 @@ public class MemberServiceImpl extends GenericServiceImpl<Person, UUID> implemen
 	UserService userService;
 	@Autowired
 	RoleService roleService;
+	@Autowired
+	PersonAddressService personAddressService;
+	@Autowired
+	PersonRepository personRepository;
+	@Autowired
+	UserRepository userRepository;
 	
 	@Override
 	public RegisterDto registerUser(RegisterDto registerDto) {
@@ -84,18 +100,24 @@ public class MemberServiceImpl extends GenericServiceImpl<Person, UUID> implemen
 			if (password != null && password.length() > 0) {
 				user.setPassword(password);
 			}
+			user.setRoles(new HashSet<Role>());
+			Role userRole = roleService.findByName(Constants.ROLE_USER);
+			user.getRoles().add(userRole);
+			user = userRepository.save(user);
+			
 			Person person = new Person();
 			person.setDisplayName(registerDto.getDisplayName());
 			person.setEmail(registerDto.getEmail());
 			person.setPhoneNumber(registerDto.getPhoneNumber());
 			person.setGender(registerDto.getGender());
 			person.setBirthDate(registerDto.getBirthDate());
+//			person.setDiachi(registerDto.getAddress());
 			person.setUser(user);
-			user.setPerson(person);
-			user.setRoles(new HashSet<Role>());
-			Role userRole = roleService.findByName(Constants.ROLE_USER);
-			user.getRoles().add(userRole);
-			user = userService.save(user);
+			person = personRepository.save(person);
+			PersonAddress pa = new PersonAddress();
+			pa.setAddress(registerDto.getAddress());
+			pa.setPerson(person);
+			pa = personAddressService.save(pa);
 			return result;
 		}
 		return null;
