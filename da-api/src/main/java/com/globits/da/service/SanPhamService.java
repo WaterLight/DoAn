@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.globits.core.service.GenericService;
 import com.globits.da.domain.SanPham;
 import com.globits.da.dto.SanPhamDto;
+import com.globits.da.dto.SanPhamSizeDto;
 import com.globits.da.dto.search.SearchDto;
 
 @Service
@@ -19,4 +20,6 @@ public interface SanPhamService extends GenericService<SanPham, UUID>{
 	Page<SanPhamDto> searchByPage(SearchDto dto);
 	Boolean checkCode (UUID id,String code);
 	public Boolean deleteCheckById(UUID id);
+	
+	Page<SanPhamSizeDto> searchByPageGroupByName(SearchDto dto);
 }

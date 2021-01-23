@@ -7,6 +7,7 @@ import java.util.Set;
 import com.globits.da.domain.DanhMucSanPham;
 import com.globits.da.domain.SanPham;
 import com.globits.da.domain.SanPhamKho;
+import com.globits.da.domain.ThuocTinhSanPham;
 
 public class SanPhamDto extends BaseObjectDto{
 	private String tenSP;
@@ -22,6 +23,8 @@ public class SanPhamDto extends BaseObjectDto{
 	private Set<SanPhamKhoDto> sanPhamKho;
 	private String imageUrl;//Đường dẫn đến File ảnh tiêu đề bài báo (nếu có)
 	private DanhMucSanPhamDto danhMucSanPham;
+	private ThuocTinhSanPhamDto size;
+	
 	public String getTenSP() {
 		return tenSP;
 	}
@@ -100,6 +103,12 @@ public class SanPhamDto extends BaseObjectDto{
 	public void setDanhMucSanPham(DanhMucSanPhamDto danhMucSanPham) {
 		this.danhMucSanPham = danhMucSanPham;
 	}
+	public ThuocTinhSanPhamDto getSize() {
+		return size;
+	}
+	public void setSize(ThuocTinhSanPhamDto size) {
+		this.size = size;
+	}
 	public SanPhamDto() {
 		super();
 	}
@@ -115,6 +124,9 @@ public class SanPhamDto extends BaseObjectDto{
 		}
 		if(e.getDanhMucSanPham() != null) {
 			this.danhMucSanPham = new DanhMucSanPhamDto(e.getDanhMucSanPham());
+		}
+		if(e.getSize() != null) {
+			this.size = new ThuocTinhSanPhamDto(e.getSize());
 		}
 		if (e.getSanPhamKho()!= null) {
 			Integer count =  0;
@@ -139,6 +151,8 @@ public class SanPhamDto extends BaseObjectDto{
 		if(e.getDanhMucSanPham() != null) {
 			this.danhMucSanPham = new DanhMucSanPhamDto(e.getDanhMucSanPham());
 		}
-		
+		if(e.getSize() != null) {
+			this.size = new ThuocTinhSanPhamDto(e.getSize());
+		}
 	}
 }

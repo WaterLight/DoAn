@@ -13,6 +13,7 @@ public class SearchDto {
 	private Date fromDate;
 	private Date toDate;
 	private UUID danhMucSanPhamId;
+	private Integer thuocTinhSanPhamType;
 	public UUID getId() {
 		return id;
 	}
@@ -67,6 +68,13 @@ public class SearchDto {
 	public void setDanhMucSanPhamId(UUID danhMucSanPhamId) {
 		this.danhMucSanPhamId = danhMucSanPhamId;
 	}
+	public Integer getThuocTinhSanPhamType() {
+		return thuocTinhSanPhamType;
+	}
+	public void setThuocTinhSanPhamType(Integer thuocTinhSanPhamType) {
+		this.thuocTinhSanPhamType = thuocTinhSanPhamType;
+	}
+	
 	
 	
 }

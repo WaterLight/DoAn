@@ -99,7 +99,10 @@ public class ThuocTinhSanPhamServiceImpl extends GenericServiceImpl<ThuocTinhSan
 		if (dto.getKeyword() != null && StringUtils.hasText(dto.getKeyword())) {
 			whereClause += " AND ( entity.ten LIKE :text OR entity.ma LIKE :text )";
 		}
-
+		
+		if(dto.getThuocTinhSanPhamType() != null) {
+			whereClause += " AND ( entity.loai = :type)";
+		}
 		
 		sql += whereClause + orderBy;
 		sqlCount += whereClause;
@@ -110,6 +113,11 @@ public class ThuocTinhSanPhamServiceImpl extends GenericServiceImpl<ThuocTinhSan
 		if (dto.getKeyword() != null && StringUtils.hasText(dto.getKeyword())) {
 			q.setParameter("text", '%' + dto.getKeyword() + '%');
 			qCount.setParameter("text", '%' + dto.getKeyword() + '%');
+		}
+		
+		if (dto.getThuocTinhSanPhamType() != null) {
+			q.setParameter("type", dto.getThuocTinhSanPhamType());
+			qCount.setParameter("type", dto.getThuocTinhSanPhamType());
 		}
 		int startPosition = pageIndex * pageSize;
 		q.setFirstResult(startPosition);
