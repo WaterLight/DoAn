@@ -462,7 +462,6 @@ class Checkout extends React.Component {
     let currentUser = JSON.parse(window.localStorage.getItem("currentUser"));
     let order = JSON.parse(window.localStorage.getItem("saleOrder"));
     if (currentUser != null && currentUser.id != null && order.sanPhamDonHang != null && order.sanPhamDonHang.length > 0) {
-      debugger
       saveOrder(order).then((res) => {
         if (res.status == 200) {
           toast.info("Chúc mừng bạn đã đặt hàng thành công");

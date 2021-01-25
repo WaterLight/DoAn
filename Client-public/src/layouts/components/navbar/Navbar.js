@@ -63,7 +63,7 @@ const ThemeNavbar = props => {
               <NavbarUser
                 handleAppOverlay={props.handleAppOverlay}
                 changeCurrentLang={props.changeCurrentLang}
-                userName="John Doe"
+                userName={JSON.parse(window.localStorage.getItem("currentUser")) ? JSON.parse(window.localStorage.getItem("currentUser")).displayName :""}
                 userImg={ userImg }
               />
             </div>
