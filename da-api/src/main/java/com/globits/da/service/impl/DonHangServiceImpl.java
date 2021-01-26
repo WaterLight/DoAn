@@ -1,5 +1,6 @@
 package com.globits.da.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -29,8 +30,11 @@ import com.globits.da.domain.SanPhamKho;
 import com.globits.da.domain.SanPhamPhieuXuat;
 import com.globits.da.dto.DonHangDto;
 import com.globits.da.dto.KhoDto;
+import com.globits.da.dto.PhieuNhapKhoDto;
 import com.globits.da.dto.SanPhamDonHangDto;
+import com.globits.da.dto.SanPhamPhieuNhapKhoDto;
 import com.globits.da.dto.SanPhamPhieuXuatDto;
+import com.globits.da.dto.search.BaoCaoDto;
 import com.globits.da.dto.search.SearchDto;
 import com.globits.da.repository.DonHangRepository;
 import com.globits.da.repository.DonViTinhRepository;
@@ -224,6 +228,38 @@ public class DonHangServiceImpl extends GenericServiceImpl<DonHang, UUID> implem
 	public Boolean deleteCheckById(UUID id) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public List<BaoCaoDto> baoCao(SearchDto dto) {
+		String whereClause = "";
+
+		String orderBy = " ORDER BY entity.createDate DESC";
+
+		String sql = "select new com.globits.da.dto.DonHangDto(entity) from DonHang as entity where (1=1)  ";
+
+		if (dto.getKeyword() != null && StringUtils.hasText(dto.getKeyword())) {
+			whereClause += " AND ( entity.ma LIKE :text or entity.ten LIKE :text )";
+		}
+		if (dto.getFromDate() != null && dto.getToDate() != null) {
+			whereClause += " AND ( entity.ngayDatHang BETWEEN :fromDate and :toDate  )";
+		}
+		
+		sql += whereClause + orderBy;
+
+		Query q = manager.createQuery(sql, DonHangDto.class);
+
+		if (dto.getKeyword() != null && StringUtils.hasText(dto.getKeyword())) {
+			q.setParameter("text", '%' + dto.getKeyword() + '%');
+		}
+		if (dto.getFromDate() != null && dto.getToDate() != null) {
+			q.setParameter("fromDate", dto.getFromDate());
+			q.setParameter("toDate", dto.getToDate());
+		}
+		
+		List<DonHangDto> entities = q.getResultList();
+		List<BaoCaoDto> result = new ArrayList<BaoCaoDto>();
+		return result;
 	}
 
 }

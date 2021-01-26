@@ -223,6 +223,9 @@ public class PhieuXuatKhoServiceImpl extends GenericServiceImpl<PhieuXuatKho, UU
 		if (dto.getFromDate() != null && dto.getToDate() != null) {
 			whereClause += " AND ( entity.ngayXuat BETWEEN :fromDate and :toDate  )";
 		}
+		if (dto.getKhoId() != null && dto.getKhoId() != null) {
+			whereClause += " AND ( entity.kho.id = :khoId )";
+		}
 
 		sql += whereClause + orderBy;
 
@@ -234,6 +237,9 @@ public class PhieuXuatKhoServiceImpl extends GenericServiceImpl<PhieuXuatKho, UU
 		if (dto.getFromDate() != null && dto.getToDate() != null) {
 			q.setParameter("fromDate", dto.getFromDate());
 			q.setParameter("toDate", dto.getToDate());
+		}
+		if (dto.getKhoId() != null && dto.getKhoId() != null) {
+			q.setParameter("khoId", dto.getKhoId());
 		}
 		List<PhieuXuatKhoDto> entities = q.getResultList();
 		List<BaoCaoDto> result = new ArrayList<BaoCaoDto>();
@@ -269,6 +275,7 @@ public class PhieuXuatKhoServiceImpl extends GenericServiceImpl<PhieuXuatKho, UU
 						if (bc.getSanPhamId().equals(bcDto.getSanPhamId()) && bc.getKhoId().equals(bcDto.getKhoId())) {
 							bcDto.setSoLuong(bcDto.getSoLuong() + bc.getSoLuong());
 							check = true;
+							break;
 						} else {
 							check = false;
 						}

@@ -11,13 +11,23 @@ import com.globits.da.domain.PhieuNhapKho;
 import com.globits.da.dto.PhieuNhapKhoDto;
 import com.globits.da.dto.search.BaoCaoDto;
 import com.globits.da.dto.search.SearchDto;
+
 @Service
-public interface PhieuNhapKhoService extends GenericService<PhieuNhapKho, UUID>{
+public interface PhieuNhapKhoService extends GenericService<PhieuNhapKho, UUID> {
 	public Page<PhieuNhapKhoDto> getPage(int pageSize, int pageIndex);
-	public PhieuNhapKhoDto saveOrUpdate(UUID id,PhieuNhapKhoDto dto);
+
+	public PhieuNhapKhoDto saveOrUpdate(UUID id, PhieuNhapKhoDto dto);
+
 	public Boolean deleteKho(UUID id);
+
 	public PhieuNhapKhoDto getCertificate(UUID id);
+
 	Page<PhieuNhapKhoDto> searchByPage(SearchDto dto);
-	Boolean checkCode (UUID id,String code);
-	public  List<BaoCaoDto> baoCao(SearchDto dto);
+
+	Boolean checkCode(UUID id, String code);
+
+	public List<BaoCaoDto> baoCao(SearchDto dto);
+	
+	public List<BaoCaoDto> baoCaoTon(SearchDto dto);
+	
 }

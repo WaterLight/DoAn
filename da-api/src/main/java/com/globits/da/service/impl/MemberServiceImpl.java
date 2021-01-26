@@ -32,7 +32,6 @@ import com.globits.core.service.PersonAddressService;
 import com.globits.core.service.impl.GenericServiceImpl;
 import com.globits.core.utils.HttpUtils;
 import com.globits.core.utils.SecurityUtils;
-import com.globits.da.domain.DAPerson;
 import com.globits.da.domain.Kho;
 import com.globits.da.dto.KhoDto;
 import com.globits.da.dto.RegisterDto;

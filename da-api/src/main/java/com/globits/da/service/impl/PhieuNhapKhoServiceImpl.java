@@ -33,6 +33,7 @@ import com.globits.da.repository.SanPhamKhoRepository;
 import com.globits.da.repository.SanPhamPhieuNhapRepository;
 import com.globits.da.repository.SanPhamRepository;
 import com.globits.da.service.PhieuNhapKhoService;
+import com.globits.da.service.PhieuXuatKhoService;
 
 @Service
 public class PhieuNhapKhoServiceImpl extends GenericServiceImpl<PhieuNhapKho, UUID> implements PhieuNhapKhoService {
@@ -49,6 +50,8 @@ public class PhieuNhapKhoServiceImpl extends GenericServiceImpl<PhieuNhapKho, UU
 	NhanVienRepository nhanVienRepository;
 	@Autowired
 	SanPhamKhoRepository sanPhamKhoRepository;
+	@Autowired
+	PhieuXuatKhoService phieuXuatKhoService;
 
 	@Override
 	public Page<PhieuNhapKhoDto> getPage(int pageSize, int pageIndex) {
@@ -239,6 +242,9 @@ public class PhieuNhapKhoServiceImpl extends GenericServiceImpl<PhieuNhapKho, UU
 		if (dto.getFromDate() != null && dto.getToDate() != null) {
 			whereClause += " AND ( entity.ngayNhap BETWEEN :fromDate and :toDate  )";
 		}
+		if (dto.getKhoId() != null && dto.getKhoId() != null) {
+			whereClause += " AND ( entity.kho.id = :khoId )";
+		}
 
 		sql += whereClause + orderBy;
 
@@ -250,6 +256,9 @@ public class PhieuNhapKhoServiceImpl extends GenericServiceImpl<PhieuNhapKho, UU
 		if (dto.getFromDate() != null && dto.getToDate() != null) {
 			q.setParameter("fromDate", dto.getFromDate());
 			q.setParameter("toDate", dto.getToDate());
+		}
+		if (dto.getKhoId() != null && dto.getKhoId() != null) {
+			q.setParameter("khoId", dto.getKhoId());
 		}
 		List<PhieuNhapKhoDto> entities = q.getResultList();
 		List<BaoCaoDto> result = new ArrayList<BaoCaoDto>();
@@ -284,6 +293,7 @@ public class PhieuNhapKhoServiceImpl extends GenericServiceImpl<PhieuNhapKho, UU
 						if (bc.getSanPhamId().equals(bcDto.getSanPhamId()) && bc.getKhoId().equals(bcDto.getKhoId())) {
 							bcDto.setSoLuong(bcDto.getSoLuong() + bc.getSoLuong());
 							check = true;
+							break;
 						} else {
 							check = false;
 						}
@@ -294,45 +304,54 @@ public class PhieuNhapKhoServiceImpl extends GenericServiceImpl<PhieuNhapKho, UU
 				}
 			}
 		}
-//		if (entities != null && entities.size() > 0) {
-//			for (PhieuNhapKhoDto nhapdto : entities) {
-//				for (SanPhamPhieuNhapKhoDto sanPhamPhieuNhap : nhapdto.getSanPhamPhieuNhap()) {
-//					BaoCaoDto bc = new BaoCaoDto();
-//					if (result != null && result.size() == 0) {
-//						bc.setTenSP(sanPhamPhieuNhap.getSanPham().getTenSP());
-//						bc.setSanPhamId(sanPhamPhieuNhap.getSanPham().getId());
-//						bc.setKhoId(sanPhamPhieuNhap.getKho().getId());
-//						bc.setTenKho(sanPhamPhieuNhap.getKho().getTenKho());
-//						bc.setSoLuongNhap(sanPhamPhieuNhap.getSoLuong());
-//						result.add(bc);
-//					}
-//					
-//					if (result != null && result.size() > 0) {
-//						for (BaoCaoDto baoCaoDto : result) {
-//							if (baoCaoDto.getSanPhamId().equals(sanPhamPhieuNhap.getSanPham().getId())
-//									&& baoCaoDto.getKhoId().equals(sanPhamPhieuNhap.getKho().getId())) {
-//								if (baoCaoDto.getSoLuongNhap() == null) {
-//									baoCaoDto.setSoLuongNhap(0 + sanPhamPhieuNhap.getSoLuong());
-//								} else {
-//									baoCaoDto
-//											.setSoLuongNhap(baoCaoDto.getSoLuongNhap() + sanPhamPhieuNhap.getSoLuong());
-//								}
-//							} else {
-//								bc.setTenSP(sanPhamPhieuNhap.getSanPham().getTenSP());
-//								bc.setSanPhamId(sanPhamPhieuNhap.getSanPham().getId());
-//								bc.setKhoId(sanPhamPhieuNhap.getKho().getId());
-//								bc.setTenKho(sanPhamPhieuNhap.getKho().getTenKho());
-//								bc.setSoLuongNhap(sanPhamPhieuNhap.getSoLuong());
-//								result.add(bc);
-//							}
-//						}
-//
-//					}
-//				}
-//			}
-//		}
-
 		return result;
+	}
+
+	@Override
+	public List<BaoCaoDto> baoCaoTon(SearchDto dto) {
+		// TODO Auto-generated method stub
+		if (dto == null) {
+			return null;
+		}
+
+		List<BaoCaoDto> baoCaoNhap = this.baoCao(dto);
+		List<BaoCaoDto> baoCaoXuat = phieuXuatKhoService.baoCao(dto);
+
+		if (baoCaoNhap == null && baoCaoNhap.size() == 0) {
+			return null;
+		}
+
+		if (baoCaoXuat != null && baoCaoXuat.size() > 0) {
+			for (BaoCaoDto bc : baoCaoXuat) {
+				bc.setSoLuong(-bc.getSoLuong());
+				baoCaoNhap.add(bc);
+			}
+		}
+
+		List<BaoCaoDto> baoCaoTon = new ArrayList<BaoCaoDto>();
+		if (baoCaoNhap != null && baoCaoNhap.size() > 0) {
+			for (BaoCaoDto bc : baoCaoNhap) {
+				if (baoCaoTon != null && baoCaoTon.size() == 0) {
+					baoCaoTon.add(bc);
+				} else {
+					Boolean check = false;
+					for (BaoCaoDto bcDto : baoCaoTon) {
+						if (bc.getSanPhamId().equals(bcDto.getSanPhamId()) && bc.getKhoId().equals(bcDto.getKhoId())) {
+							bcDto.setSoLuong(bcDto.getSoLuong() + bc.getSoLuong());
+							check = true;
+							break;
+						} else {
+							check = false;
+						}
+					}
+					if (!check) {
+						baoCaoTon.add(bc);
+					}
+				}
+			}
+		}
+
+		return baoCaoTon;
 	}
 
 }
