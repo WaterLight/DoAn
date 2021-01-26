@@ -22,7 +22,9 @@ import com.globits.da.domain.NhanVien;
 import com.globits.da.domain.PhieuXuatKho;
 import com.globits.da.domain.SanPhamKho;
 import com.globits.da.domain.SanPhamPhieuXuat;
+import com.globits.da.dto.PhieuNhapKhoDto;
 import com.globits.da.dto.PhieuXuatKhoDto;
+import com.globits.da.dto.SanPhamPhieuNhapKhoDto;
 import com.globits.da.dto.SanPhamPhieuXuatDto;
 import com.globits.da.dto.search.BaoCaoDto;
 import com.globits.da.dto.search.SearchDto;
@@ -33,13 +35,14 @@ import com.globits.da.repository.SanPhamKhoRepository;
 import com.globits.da.repository.SanPhamPhieuXuatRepository;
 import com.globits.da.repository.SanPhamRepository;
 import com.globits.da.service.PhieuXuatKhoService;
+
 @Service
-public class PhieuXuatKhoServiceImpl extends GenericServiceImpl< PhieuXuatKho, UUID> implements  PhieuXuatKhoService{
+public class PhieuXuatKhoServiceImpl extends GenericServiceImpl<PhieuXuatKho, UUID> implements PhieuXuatKhoService {
 	@Autowired
 	PhieuXuatKhoRepository repos;
 	@Autowired
 	SanPhamPhieuXuatRepository sanPhamPhieuXuatRepository;
-	
+
 	@Autowired
 	SanPhamRepository sanPhamRepository;
 	@Autowired
@@ -48,36 +51,35 @@ public class PhieuXuatKhoServiceImpl extends GenericServiceImpl< PhieuXuatKho, U
 	NhanVienRepository nhanVienRepository;
 	@Autowired
 	SanPhamKhoRepository sanPhamKhoRepository;
-	
-	
+
 	@Override
 	public Page<PhieuXuatKhoDto> getPage(int pageSize, int pageIndex) {
-		Pageable pageable = PageRequest.of(pageIndex-1, pageSize);
+		Pageable pageable = PageRequest.of(pageIndex - 1, pageSize);
 		return repos.getListPage(pageable);
 	}
 
 	@Override
 	public PhieuXuatKhoDto saveOrUpdate(UUID id, PhieuXuatKhoDto dto) {
-		if(dto != null ) {
+		if (dto != null) {
 			PhieuXuatKho entity = null;
 			NhanVien nv = null;
 			Kho kho = null;
-			if(dto.getId() !=null) {
+			if (dto.getId() != null) {
 				if (dto.getId() != null && !dto.getId().equals(id)) {
 					return null;
 				}
-				entity =  repos.getOne(dto.getId());
+				entity = repos.getOne(dto.getId());
 			}
-			if(entity == null) {
+			if (entity == null) {
 				entity = new PhieuXuatKho();
 			}
 			entity.setMa(dto.getMa());
 			entity.setTen(dto.getTen());
 			entity.setNgayXuat(dto.getNgayXuat());
-			if(dto.getNguoiXuat() != null) {
+			if (dto.getNguoiXuat() != null) {
 				nv = nhanVienRepository.getOne(dto.getNguoiXuat().getId());
 			}
-			if(dto.getKho() != null) {
+			if (dto.getKho() != null) {
 				kho = khoRepository.getOne(dto.getKho().getId());
 			}
 			entity.setKho(kho);
@@ -90,29 +92,31 @@ public class PhieuXuatKhoServiceImpl extends GenericServiceImpl< PhieuXuatKho, U
 					if (sanPhamPhieuXuatlDto.getId() != null) {
 						sanPhamPhieuXuat = sanPhamPhieuXuatRepository.getOne(sanPhamPhieuXuatlDto.getId());
 					}
-					
+
 					if (sanPhamPhieuXuat == null) {
 						sanPhamPhieuXuat = new SanPhamPhieuXuat();
 					}
-					
 
-					if(sanPhamPhieuXuatlDto.getSanPham() != null) {
-						sanPhamPhieuXuat.setSanPham(sanPhamRepository.getOne(sanPhamPhieuXuatlDto.getSanPham().getId()));
-						if(kho != null && kho.getId() != null) {
-							List<SanPhamKho> listData = sanPhamKhoRepository.getListSanPhamKho(sanPhamPhieuXuatlDto.getSanPham().getId(),kho.getId());
-							if(listData != null && listData.size() > 0) {
+					if (sanPhamPhieuXuatlDto.getSanPham() != null) {
+						sanPhamPhieuXuat
+								.setSanPham(sanPhamRepository.getOne(sanPhamPhieuXuatlDto.getSanPham().getId()));
+						if (kho != null && kho.getId() != null) {
+							List<SanPhamKho> listData = sanPhamKhoRepository
+									.getListSanPhamKho(sanPhamPhieuXuatlDto.getSanPham().getId(), kho.getId());
+							if (listData != null && listData.size() > 0) {
 								SanPhamKho sanPhamKho = listData.get(0);
-								if(sanPhamKho == null) {
+								if (sanPhamKho == null) {
 									return null;
 								}
-								if(sanPhamKho.getSoLuong() >= sanPhamPhieuXuatlDto.getSoLuong()) {
+								if (sanPhamKho.getSoLuong() >= sanPhamPhieuXuatlDto.getSoLuong()) {
 									sanPhamKho.setSoLuong(sanPhamKho.getSoLuong() - sanPhamPhieuXuatlDto.getSoLuong());
 								}
 							}
 						}
 					}
 					sanPhamPhieuXuat.setSoLuong(sanPhamPhieuXuatlDto.getSoLuong());
-					sanPhamPhieuXuat.setPhieu(entity);;
+					sanPhamPhieuXuat.setPhieu(entity);
+					;
 					listSanPhamPhieuXuat.add(sanPhamPhieuXuat);
 				}
 
@@ -127,13 +131,13 @@ public class PhieuXuatKhoServiceImpl extends GenericServiceImpl< PhieuXuatKho, U
 			if (entity != null) {
 				return new PhieuXuatKhoDto(entity);
 			}
-			}
-			return null;
+		}
+		return null;
 	}
 
 	@Override
 	public Boolean deleteKho(UUID id) {
-		if(id!=null) {
+		if (id != null) {
 			repos.deleteById(id);
 			return true;
 		}
@@ -143,7 +147,7 @@ public class PhieuXuatKhoServiceImpl extends GenericServiceImpl< PhieuXuatKho, U
 	@Override
 	public PhieuXuatKhoDto getCertificate(UUID id) {
 		PhieuXuatKho entity = repos.getOne(id);
-		if(entity!=null) {
+		if (entity != null) {
 			return new PhieuXuatKhoDto(entity);
 		}
 		return null;
@@ -165,9 +169,9 @@ public class PhieuXuatKhoServiceImpl extends GenericServiceImpl< PhieuXuatKho, U
 		}
 
 		String whereClause = "";
-		
+
 		String orderBy = " ORDER BY entity.createDate DESC";
-		
+
 		String sqlCount = "select count(entity.id) from PhieuXuatKho as entity where (1=1)   ";
 		String sql = "select new com.globits.da.dto.PhieuXuatKhoDto(entity) from PhieuXuatKho as entity where (1=1)  ";
 
@@ -175,7 +179,6 @@ public class PhieuXuatKhoServiceImpl extends GenericServiceImpl< PhieuXuatKho, U
 			whereClause += " AND ( entity.ma LIKE :text or  entity.ten LIKE :text )";
 		}
 
-		
 		sql += whereClause + orderBy;
 		sqlCount += whereClause;
 
@@ -199,72 +202,79 @@ public class PhieuXuatKhoServiceImpl extends GenericServiceImpl< PhieuXuatKho, U
 
 	@Override
 	public Boolean checkCode(UUID id, String code) {
-		if(code != null && StringUtils.hasText(code)) {
-			Long count = repos.checkCode(code,id);
-				return count != 0l;
-			}
+		if (code != null && StringUtils.hasText(code)) {
+			Long count = repos.checkCode(code, id);
+			return count != 0l;
+		}
 		return null;
 	}
 
 	@Override
 	public List<BaoCaoDto> baoCao(SearchDto dto) {
 		String whereClause = "";
-		
+
 		String orderBy = " ORDER BY entity.createDate DESC";
-		
+
 		String sql = "select new com.globits.da.dto.PhieuXuatKhoDto(entity) from PhieuXuatKho as entity where (1=1)  ";
 
 		if (dto.getKeyword() != null && StringUtils.hasText(dto.getKeyword())) {
 			whereClause += " AND ( entity.ma LIKE :text or  entity.ten LIKE :text )";
 		}
-		if (dto.getFromDate() != null && dto.getToDate() != null ) {
+		if (dto.getFromDate() != null && dto.getToDate() != null) {
 			whereClause += " AND ( entity.ngayXuat BETWEEN :fromDate and :toDate  )";
 		}
-		
-		sql += whereClause + orderBy;
 
+		sql += whereClause + orderBy;
 
 		Query q = manager.createQuery(sql, PhieuXuatKhoDto.class);
 
 		if (dto.getKeyword() != null && StringUtils.hasText(dto.getKeyword())) {
 			q.setParameter("text", '%' + dto.getKeyword() + '%');
 		}
-		if (dto.getFromDate() != null && dto.getToDate() != null ) {
-			q.setParameter("fromDate",dto.getFromDate());
-			q.setParameter("toDate",dto.getToDate());
+		if (dto.getFromDate() != null && dto.getToDate() != null) {
+			q.setParameter("fromDate", dto.getFromDate());
+			q.setParameter("toDate", dto.getToDate());
 		}
 		List<PhieuXuatKhoDto> entities = q.getResultList();
 		List<BaoCaoDto> result = new ArrayList<BaoCaoDto>();
-		if(entities != null && entities.size() > 0) {
-			for (PhieuXuatKhoDto nhapdto : entities) {
-				for (SanPhamPhieuXuatDto sanPhamPhieuXuat : nhapdto.getSanPhamPhieuXuat()) {
-					BaoCaoDto bc = new BaoCaoDto();
-					if(result!= null && result.size() ==0 ) {
-						bc.setTenSP(sanPhamPhieuXuat.getSanPham().getTenSP());
-						bc.setSanPhamId(sanPhamPhieuXuat.getSanPham().getId());
-						bc.setKhoId(sanPhamPhieuXuat.getPhieu().getKho().getId());
-						bc.setTenKho(sanPhamPhieuXuat.getPhieu().getKho().getTenKho());
-						bc.setSoLuong(sanPhamPhieuXuat.getSoLuong());
-						result.add(bc);
+		List<SanPhamPhieuXuatDto> listSPPN = new ArrayList<SanPhamPhieuXuatDto>();
+		
+		if (entities != null && entities.size() > 0) {
+			for (PhieuXuatKhoDto nhapDto : entities) {
+				if (nhapDto.getSanPhamPhieuXuat() != null && nhapDto.getSanPhamPhieuXuat().size() > 0) {
+					for (SanPhamPhieuXuatDto sanPhamPhieuNhap : nhapDto.getSanPhamPhieuXuat()) {
+						listSPPN.add(sanPhamPhieuNhap);
 					}
-					if(result!= null && result.size() > 0 ) {
-						for (BaoCaoDto baoCaoDto : result) {
-							if(baoCaoDto.getSanPhamId().equals(sanPhamPhieuXuat.getSanPham().getId()) && baoCaoDto.getKhoId().equals(sanPhamPhieuXuat.getPhieu().getKho().getId())) {
-								if(baoCaoDto.getSoLuongNhap() == null) {
-									baoCaoDto.setSoLuongNhap(0+sanPhamPhieuXuat.getSoLuong());
-								}else {
-									baoCaoDto.setSoLuongNhap(baoCaoDto.getSoLuong()+sanPhamPhieuXuat.getSoLuong());
-								}
-							}else {
-								bc.setTenSP(sanPhamPhieuXuat.getSanPham().getTenSP());
-								bc.setSanPhamId(sanPhamPhieuXuat.getSanPham().getId());
-								bc.setKhoId(sanPhamPhieuXuat.getPhieu().getKho().getId());
-								bc.setTenKho(sanPhamPhieuXuat.getPhieu().getKho().getTenKho());
-								bc.setSoLuong(sanPhamPhieuXuat.getSoLuong());
-								result.add(bc);
-							}
+				}
+			}
+		}
+		if (listSPPN != null && listSPPN.size() > 0) {
+			for (SanPhamPhieuXuatDto spDto : listSPPN) {
+				BaoCaoDto bc = new BaoCaoDto();
+				bc.setSanPhamId(spDto.getSanPham().getId());
+				bc.setTenSP(spDto.getSanPham().getTenSP());
+				bc.setMaSP(spDto.getSanPham().getMaSP());
+				bc.setKhoId(spDto.getPhieu().getKho().getId());
+				bc.setTenKho(spDto.getPhieu().getKho().getTenKho());
+				bc.setSoLuong(0);
+				if (spDto.getSoLuong() != null) {
+					bc.setSoLuong(spDto.getSoLuong());
+				}
+
+				if (result != null && result.size() == 0) {
+					result.add(bc);
+				} else {
+					Boolean check = false;
+					for (BaoCaoDto bcDto : result) {
+						if (bc.getSanPhamId().equals(bcDto.getSanPhamId()) && bc.getKhoId().equals(bcDto.getKhoId())) {
+							bcDto.setSoLuong(bcDto.getSoLuong() + bc.getSoLuong());
+							check = true;
+						} else {
+							check = false;
 						}
-						
+					}
+					if (!check) {
+						result.add(bc);
 					}
 				}
 			}
