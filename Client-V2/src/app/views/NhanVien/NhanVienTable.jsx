@@ -10,6 +10,7 @@ import {
   Input,
   InputAdornment,
 } from "@material-ui/core";
+import moment from "moment";
 import MaterialTable, {
   MTableToolbar,
   Chip,
@@ -160,10 +161,9 @@ class UrbanAreaTable extends React.Component {
     });
   }
   checkData = () => {
-    let {t} = this.props
+    let { t } = this.props;
     if (!this.data || this.data.length === 0) {
       toast.warning(t("general.noti_check_data"));
-      
     } else if (this.data.length === this.state.itemList.length) {
       this.setState({ shouldOpenConfirmationDeleteAllDialog: true });
     } else {
@@ -392,12 +392,41 @@ class UrbanAreaTable extends React.Component {
           />
         ),
       },
-      
-      { 
-        title: t("general.code"), field: "maNV", width: "150" 
+      {
+        title: t("general.code"),
+        field: "maNV",
+        width: "150",
       },
-      { 
-        title: t("general.typeStaff"), field: "type", width: "150" 
+      {
+        title: t("Tên nhân viên"),
+        field: "displayName",
+        width: "150",
+      },
+      {
+        title: t("Ngày sinh"),
+        field: "birthDate",
+        width: "150",
+        render: (rowData) =>
+          rowData.birthDate ? (
+            <span>{moment(rowData.birthDate).format("DD/MM/YYYY")}</span>
+          ) : (
+            ""
+          ),
+      },
+      {
+        title: t("Số điện thoại"),
+        field: "phoneNumber",
+        width: "150",
+      },
+      {
+        title: t("Email"),
+        field: "email",
+        width: "150",
+      },
+      {
+        title: t("general.typeStaff"),
+        field: "type",
+        width: "150",
       },
     ];
 

@@ -108,6 +108,9 @@ import {
       if (keyword != null) {
         searchObject.keyword = keyword.trim();
       }
+      if(this.props.khoId) {
+        searchObject.khoId = this.props.khoId;
+      }
       searchObject.pageIndex = this.state.page + 1;
       searchObject.pageSize = this.state.rowsPerPage;
       searchByPage(searchObject).then(({ data }) => {

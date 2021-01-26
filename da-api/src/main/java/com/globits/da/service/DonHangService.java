@@ -1,5 +1,6 @@
 package com.globits.da.service;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -10,6 +11,7 @@ import com.globits.da.domain.DonHang;
 import com.globits.da.domain.Kho;
 import com.globits.da.dto.DonHangDto;
 import com.globits.da.dto.KhoDto;
+import com.globits.da.dto.search.BaoCaoDto;
 import com.globits.da.dto.search.SearchDto;
 @Service
 public interface DonHangService  extends GenericService<DonHang, UUID>{
@@ -20,4 +22,5 @@ public interface DonHangService  extends GenericService<DonHang, UUID>{
 	Page<DonHangDto> searchByPage(SearchDto dto);
 	Boolean checkCode (UUID id,String code);
 	public Boolean deleteCheckById(UUID id);
+	public List<BaoCaoDto> baoCao(SearchDto dto);
 }
