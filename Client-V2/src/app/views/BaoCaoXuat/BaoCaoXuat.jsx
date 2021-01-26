@@ -326,7 +326,7 @@ class BaoCaoXuat extends React.Component {
           type:
             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         });
-        saveAs(blob, "BaoCaoNhap.xlsx");
+        saveAs(blob, "BaoCaoXuat.xlsx");
       })
       .catch((err) => {
         // console.log(err)

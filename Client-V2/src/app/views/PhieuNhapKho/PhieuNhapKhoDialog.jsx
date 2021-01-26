@@ -487,6 +487,7 @@ class PhieuNhapKhoDialog extends Component {
                     handleClose={this.handleDialogCancel}
                     t={t}
                     i18n={i18n}
+                    khoId={this.state.kho ? this.state.kho.id : ""}
                   />
                 )}
               </Grid>
@@ -495,12 +496,12 @@ class PhieuNhapKhoDialog extends Component {
                   className=" mt-10 mb-10"
                   variant="contained"
                   color="primary"
-                  onClick={() =>
+                  onClick={() => {
                     this.setState({
                       shouldOpenMultipleDialog: true,
                       item: {},
-                    })
-                  }
+                    });
+                  }}
                 >
                   {t("general.select")}
                 </Button>

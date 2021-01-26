@@ -308,21 +308,21 @@ class PhieuXuatKhoDialog extends Component {
           />
         ),
       },
-      {
-        title: t("Giá"),
-        field: "code",
-        align: "left",
-        render: (row) => (
-          <TextValidator
-            className="w-100 "
-            onChange={(e) => this.handleChangeGia(row, e)}
-            type="number"
-            value={row.gia}
-            validators={["required"]}
-            errorMessages={[t("general.required")]}
-          />
-        ),
-      },
+      // {
+      //   title: t("Giá"),
+      //   field: "code",
+      //   align: "left",
+      //   render: (row) => (
+      //     <TextValidator
+      //       className="w-100 "
+      //       onChange={(e) => this.handleChangeGia(row, e)}
+      //       type="number"
+      //       value={row.gia}
+      //       validators={["required"]}
+      //       errorMessages={[t("general.required")]}
+      //     />
+      //   ),
+      // },
     ];
     return (
       <Dialog
