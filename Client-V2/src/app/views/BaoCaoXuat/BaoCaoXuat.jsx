@@ -25,7 +25,10 @@ import { Helmet } from "react-helmet";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
 import Tooltip from "@material-ui/core/Tooltip";
+import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
+import AsynchronousAutocomplete from "../utilities/AsynchronousAutocomplete";
 import { Link } from "react-router-dom";
+import { searchByPage as searchStore } from "../Kho/KhoService";
 import NotificationPopup from "../Component/NotificationPopup/NotificationPopup";
 // import { saveAs } from 'file-saver';
 import { isThisSecond } from "date-fns/esm";
@@ -118,6 +121,8 @@ class BaoCaoXuat extends React.Component {
     Notification: "",
     toDate: moment().endOf("month"),
     fromDate: moment().startOf("month"),
+    kho: null,
+    khoId: null
   };
   numSelected = 0;
   rowCount = 0;
@@ -182,6 +187,9 @@ class BaoCaoXuat extends React.Component {
 
   updatePageData = () => {
     var searchObject = {};
+    if (this.state.khoId) {
+      searchObject.khoId = this.state.khoId;
+    }
     searchObject.keyword = this.state.keyword;
     searchObject.pageIndex = this.state.page + 1;
     searchObject.pageSize = this.state.rowsPerPage;
@@ -324,6 +332,17 @@ class BaoCaoXuat extends React.Component {
         // console.log(err)
       });
   };
+  selectKho = (item) => {
+    if (item && Object.keys(item).length > 0) {
+      this.setState({ khoId: item.id, kho: item }, () => {
+        this.updatePageData();
+      });
+    } else {
+      this.setState({ khoId: null, kho: null }, () => {
+        this.updatePageData();
+      });
+    }
+  };
   render() {
     const { t, i18n } = this.props;
     let {
@@ -337,9 +356,10 @@ class BaoCaoXuat extends React.Component {
       shouldOpenEditorDialog,
       shouldOpenConfirmationDeleteAllDialog,
       shouldOpenNotificationPopup,
+      kho
     } = this.state;
     let TitlePage = t("Báo cáo xuất kho");
-
+    let SearchObject = { pageIndex: 1, pageSize: 100000 };
     let columns = [
       {
         title: t("general.code"),
@@ -393,7 +413,7 @@ class BaoCaoXuat extends React.Component {
               color="primary"
               onClick={this.exportToExcel}
             >
-              Xuất excle
+              Xuất excel
             </Button>
             {/* <Button
               className="mb-16 mr-16 align-bottom"
@@ -496,27 +516,18 @@ class BaoCaoXuat extends React.Component {
               cancel={t("general.cancel")}
             />
           )}
-          <Grid item md={4} sm={12} xs={12}>
-            <FormControl fullWidth>
-              <Input
-                className="search_box w-100 mt-16"
-                onChange={this.handleTextChange}
-                onKeyDown={this.handleKeyDownEnterSearch}
-                placeholder={t("general.enterKeyword")}
-                id="search_box"
-                startAdornment={
-                  <InputAdornment>
-                    <Link>
-                      {" "}
-                      <SearchIcon
-                        onClick={() => this.search(keyword)}
-                        style={{ position: "absolute", top: "0", right: "0" }}
-                      />
-                    </Link>
-                  </InputAdornment>
-                }
+           <Grid item md={4} sm={12} xs={12}>
+            <ValidatorForm>
+              <AsynchronousAutocomplete
+                label={t("Chọn kho")}
+                searchFunction={searchStore}
+                searchObject={SearchObject}
+                defaultValue={kho}
+                displayLable={"tenKho"}
+                value={kho}
+                onSelect={this.selectKho}
               />
-            </FormControl>
+            </ValidatorForm>
           </Grid>
           <Grid item xs={12}>
             <div>
@@ -564,7 +575,7 @@ class BaoCaoXuat extends React.Component {
                 },
               }}
               options={{
-                selection: true,
+                selection: false,
                 actionsColumnIndex: -1,
                 paging: false,
                 search: false,

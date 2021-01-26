@@ -29,11 +29,11 @@ import { Link } from "react-router-dom";
 import NotificationPopup from "../Component/NotificationPopup/NotificationPopup";
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 import AsynchronousAutocomplete from "../utilities/AsynchronousAutocomplete";
-import { searchByPage as searchStore } from "../Kho/KhoService";
 // import { saveAs } from 'file-saver';
 import { isThisSecond } from "date-fns/esm";
-// import PhieuNhapKhoDialog from "./PhieuNhapKhoDialog";
-import { searchByPage, exportToExcel } from "./BaoCaoNhapService";
+import { searchByPage as searchStore } from "../Kho/KhoService";
+import { searchByPage, exportToExcel } from "./BaoCaoTonService";
+import ChonKho from "./ChonKhoNhap";
 import {
   MuiPickersUtilsProvider,
   DateTimePicker,
@@ -103,7 +103,7 @@ function MaterialButton(props) {
   );
 }
 
-class BaoCaoNhap extends React.Component {
+class BaoCaoTon extends React.Component {
   state = {
     keyword: "",
     rowsPerPage: 10,
@@ -122,7 +122,6 @@ class BaoCaoNhap extends React.Component {
     toDate: moment().endOf("month"),
     fromDate: moment().startOf("month"),
     khoId: null,
-    kho: null
   };
   numSelected = 0;
   rowCount = 0;
@@ -356,11 +355,10 @@ class BaoCaoNhap extends React.Component {
       shouldOpenEditorDialog,
       shouldOpenConfirmationDeleteAllDialog,
       shouldOpenNotificationPopup,
-      kho
+      kho,
     } = this.state;
-    let SearchObject = { pageIndex: 1, pageSize: 100000 };
     let TitlePage = t("Báo cáo nhập kho");
-
+    let SearchObject = { pageIndex: 1, pageSize: 100000 };
     let columns = [
       {
         title: t("general.code"),
@@ -510,17 +508,6 @@ class BaoCaoNhap extends React.Component {
           </Grid>
           <Grid item xs={12}>
             <div>
-              {/* {shouldOpenEditorDialog && (
-                <PhieuNhapKhoDialog
-                  t={t}
-                  i18n={i18n}
-                  handleClose={this.handleDialogClose}
-                  open={shouldOpenEditorDialog}
-                  handleOKEditClose={this.handleOKEditClose}
-                  item={item}
-                />
-              )} */}
-
               {shouldOpenConfirmationDialog && (
                 <ConfirmationDialog
                   title={t("general.confirm")}
@@ -609,4 +596,4 @@ class BaoCaoNhap extends React.Component {
   }
 }
 
-export default BaoCaoNhap;
+export default BaoCaoTon;
