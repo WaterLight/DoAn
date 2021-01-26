@@ -35,6 +35,12 @@ import MultipleProduct from "./MultipleProduct";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Tooltip from "@material-ui/core/Tooltip";
 import { useTranslation, withTranslation, Trans } from "react-i18next";
+import DateFnsUtils from "@date-io/date-fns";
+import {
+  MuiPickersUtilsProvider,
+  DateTimePicker,
+  KeyboardDatePicker,
+} from "@material-ui/pickers";
 toast.configure({
   autoClose: 2000,
   draggable: false,
@@ -103,6 +109,7 @@ class PhieuNhapKhoDialog extends Component {
     code: "",
     description: "",
     type: "",
+    ngayNhap: new Date(),
     shouldOpenNotificationPopup: false,
     Notification: "",
     shouldOpenChonKho: false,
@@ -228,8 +235,13 @@ class PhieuNhapKhoDialog extends Component {
     });
     this.handleDialogCancel();
   };
+  handleDateChange = (date, name) => {
+    this.setState({
+      [name]: date,
+    });
+  };
   render() {
-    let { id, ma, ten, description, sanPhamPhieuNhap } = this.state;
+    let { id, ma, ten, description, sanPhamPhieuNhap, ngayNhap } = this.state;
 
     let { open, handleClose, handleOKEditClose, t, i18n } = this.props;
 
@@ -326,7 +338,7 @@ class PhieuNhapKhoDialog extends Component {
         <ValidatorForm ref="form" onSubmit={this.handleFormSubmit}>
           <DialogContent>
             <Grid className="" container spacing={2}>
-              <Grid item sm={12} xs={12}>
+              <Grid item sm={4} xs={12}>
                 <TextValidator
                   className="w-100 "
                   label={
@@ -344,7 +356,7 @@ class PhieuNhapKhoDialog extends Component {
                 />
               </Grid>
 
-              <Grid item sm={12} xs={12}>
+              <Grid item sm={4} xs={12}>
                 <TextValidator
                   className="w-100 "
                   label={
@@ -361,7 +373,25 @@ class PhieuNhapKhoDialog extends Component {
                   errorMessages={[t("general.required")]}
                 />
               </Grid>
-              <Grid item sm={12} xs={12}>
+              <Grid item sm={4} xs={12}>
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <KeyboardDatePicker
+                    margin="none"
+                    fullWidth
+                    id="date-picker-dialog mt-2"
+                    // style={{marginTop:'2px'}}
+                    label={t("Ngày nhập")}
+                    format="dd/MM/yyyy"
+                    value={ngayNhap}
+                    onChange={(date) => this.handleDateChange(date, "ngayNhap")}
+                    KeyboardButtonProps={{
+                      "aria-label": "change date",
+                    }}
+                    invalidDateMessage={t("general.invalidDateFormat")}
+                  />
+                </MuiPickersUtilsProvider>
+              </Grid>
+              <Grid item sm={6} xs={12}>
                 <Button
                   size="small"
                   style={{ float: "right" }}
@@ -408,7 +438,7 @@ class PhieuNhapKhoDialog extends Component {
                   />
                 )}
               </Grid>
-              <Grid item sm={12} xs={12}>
+              <Grid item sm={6} xs={12}>
                 <Button
                   size="small"
                   style={{ float: "right" }}
@@ -448,6 +478,19 @@ class PhieuNhapKhoDialog extends Component {
                     i18n={i18n}
                   />
                 )}
+
+                {this.state.shouldOpenMultipleDialog && (
+                  <MultipleProduct
+                    open={this.state.shouldOpenMultipleDialog}
+                    selected={this.state.sanPhamPhieuNhap}
+                    handleSelect={this.handleSelectSP}
+                    handleClose={this.handleDialogCancel}
+                    t={t}
+                    i18n={i18n}
+                  />
+                )}
+              </Grid>
+              <Grid item sm={5} xs="12">
                 <Button
                   className=" mt-10 mb-10"
                   variant="contained"
@@ -461,50 +504,40 @@ class PhieuNhapKhoDialog extends Component {
                 >
                   {t("general.select")}
                 </Button>
-                {this.state.shouldOpenMultipleDialog && (
-                  <MultipleProduct
-                    open={this.state.shouldOpenMultipleDialog}
-                    selected={this.state.sanPhamPhieuNhap}
-                    handleSelect={this.handleSelectSP}
-                    handleClose={this.handleDialogCancel}
-                    t={t}
-                    i18n={i18n}
-                  />
-                )}
-                <Grid item sm={12} xs="12" className="mt-10">
-                  <MaterialTable
-                    data={
-                      this.state.sanPhamPhieuNhap
-                        ? this.state.sanPhamPhieuNhap
-                        : []
-                    }
-                    columns={columns}
-                    options={{
-                      selection: false,
-                      actionsColumnIndex: 0,
-                      paging: false,
-                      search: false,
-                      rowStyle: (rowData) => ({
-                        backgroundColor:
-                          rowData.tableData.id % 2 === 1 ? "#EEE" : "#FFF",
-                      }),
-                      maxBodyHeight: "253px",
-                      minBodyHeight: "253px",
-                      headerStyle: {
-                        backgroundColor: "#358600",
-                        color: "#fff",
-                      },
-                      padding: "dense",
-                      toolbar: false,
-                    }}
-                    components={{
-                      Toolbar: (props) => <MTableToolbar {...props} />,
-                    }}
-                    onSelectionChange={(rows) => {
-                      this.data = rows;
-                    }}
-                  />
-                </Grid>
+              </Grid>
+              <Grid item sm={12} xs="12" className="mt-10">
+                <MaterialTable
+                  data={
+                    this.state.sanPhamPhieuNhap
+                      ? this.state.sanPhamPhieuNhap
+                      : []
+                  }
+                  columns={columns}
+                  options={{
+                    selection: false,
+                    actionsColumnIndex: 0,
+                    paging: false,
+                    search: false,
+                    rowStyle: (rowData) => ({
+                      backgroundColor:
+                        rowData.tableData.id % 2 === 1 ? "#EEE" : "#FFF",
+                    }),
+                    maxBodyHeight: "253px",
+                    minBodyHeight: "253px",
+                    headerStyle: {
+                      backgroundColor: "#358600",
+                      color: "#fff",
+                    },
+                    padding: "dense",
+                    toolbar: false,
+                  }}
+                  components={{
+                    Toolbar: (props) => <MTableToolbar {...props} />,
+                  }}
+                  onSelectionChange={(rows) => {
+                    this.data = rows;
+                  }}
+                />
               </Grid>
             </Grid>
           </DialogContent>

@@ -10,7 +10,6 @@ import {
   DialogContent,
   Icon,
   IconButton,
-
 } from "@material-ui/core";
 // import Paper from '@material-ui/core/Paper'
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
@@ -18,8 +17,9 @@ import Draggable from "react-draggable";
 import NotificationPopup from "../Component/NotificationPopup/NotificationPopup";
 import ChonKho from "./ChonKhoNhap";
 import ChonNhanVien from "./ChonNhanVien";
+import DateFnsUtils from "@date-io/date-fns";
 import {
-    saveItem,
+  saveItem,
   addItem,
   updateItem,
   checkCode,
@@ -34,6 +34,11 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import MultipleProduct from "./MultipleProduct";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
+import {
+  MuiPickersUtilsProvider,
+  DateTimePicker,
+  KeyboardDatePicker,
+} from "@material-ui/pickers";
 import Tooltip from "@material-ui/core/Tooltip";
 import { useTranslation, withTranslation, Trans } from "react-i18next";
 toast.configure({
@@ -108,21 +113,23 @@ class PhieuXuatKhoDialog extends Component {
     Notification: "",
     shouldOpenChonKho: false,
     ChonNhanVien: false,
-    agency:null,
-    user:null,
-    shouldOpenMultipleDialog : false,
+    agency: null,
+    user: null,
+    shouldOpenMultipleDialog: false,
+    ngayXuat: new Date(),
   };
 
   handleDialogClose = () => {
-    this.setState({ shouldOpenNotificationPopup: false,
-                    shouldOpenChonKho:false,
-                    shouldOpenChonNhanVien: false,
-                    shouldOpenMultipleDialog : false,
-                 });
+    this.setState({
+      shouldOpenNotificationPopup: false,
+      shouldOpenChonKho: false,
+      shouldOpenChonNhanVien: false,
+      shouldOpenMultipleDialog: false,
+    });
   };
   handleDialogCancel = () => {
     this.setState({
-      shouldOpenMultipleDialog : false,
+      shouldOpenMultipleDialog: false,
     });
   };
   handleChange = (event, source) => {
@@ -155,7 +162,7 @@ class PhieuXuatKhoDialog extends Component {
             this.props.handleOKEditClose();
           });
         } else {
-            saveItem({
+          saveItem({
             ...this.state,
           }).then(() => {
             toast.success(t("general.addSuccess"));
@@ -169,74 +176,76 @@ class PhieuXuatKhoDialog extends Component {
   componentWillMount() {
     //getUserById(this.props.uid).then(data => this.setState({ ...data.data }));
     let { open, handleClose, item } = this.props;
-    this.setState({...item});
+    this.setState({ ...item });
   }
-  handleSelectUser =(item)=>{
-      this.setState({kho:item ? item : null,shouldOpenChonKho: false, })
-  }
-  handleSelectAgency =(item) =>{
-    this.setState({nguoiXuat:item ? item : null,shouldOpenChonNhanVien: false, })
-  }
-  handleChangeSL  =(item,e) =>{
-    let {sanPhamPhieuXuat} = this.state
-    if(sanPhamPhieuXuat == null ){
-      sanPhamPhieuXuat =[] 
-      let p = {}
+  handleSelectUser = (item) => {
+    this.setState({ kho: item ? item : null, shouldOpenChonKho: false });
+  };
+  handleSelectAgency = (item) => {
+    this.setState({
+      nguoiXuat: item ? item : null,
+      shouldOpenChonNhanVien: false,
+    });
+  };
+  handleChangeSL = (item, e) => {
+    let { sanPhamPhieuXuat } = this.state;
+    if (sanPhamPhieuXuat == null) {
+      sanPhamPhieuXuat = [];
+      let p = {};
       p.sanPham = item.sanPham;
-      p.soluong = e.target.value
-      sanPhamPhieuXuat.push(p)
+      p.soluong = e.target.value;
+      sanPhamPhieuXuat.push(p);
     }
-    if(sanPhamPhieuXuat != null && sanPhamPhieuXuat.length > 0){
-      sanPhamPhieuXuat.forEach(el=>{
-        if(el.sanPham.id == item.sanPham.id){
+    if (sanPhamPhieuXuat != null && sanPhamPhieuXuat.length > 0) {
+      sanPhamPhieuXuat.forEach((el) => {
+        if (el.sanPham.id == item.sanPham.id) {
           // let p ={}
-          el.soLuong =e.target.value
+          el.soLuong = e.target.value;
         }
-      })
+      });
     }
-    this.setState({sanPhamPhieuXuat:sanPhamPhieuXuat},()=>{
-      console.log(this.state.sanPhamPhieuXuat)
-    })
-  }
+    this.setState({ sanPhamPhieuXuat: sanPhamPhieuXuat }, () => {
+      console.log(this.state.sanPhamPhieuXuat);
+    });
+  };
   //
-  handleChangeGia  =(item,e) =>{
-    let {sanPhamPhieuXuat} = this.state
-    if(sanPhamPhieuXuat == null ){
-      sanPhamPhieuXuat =[] 
-      let p = {}
+  handleChangeGia = (item, e) => {
+    let { sanPhamPhieuXuat } = this.state;
+    if (sanPhamPhieuXuat == null) {
+      sanPhamPhieuXuat = [];
+      let p = {};
       p.sanPham = item.sanPham;
-      p.gia = e.target.value
-      sanPhamPhieuXuat.push(p)
+      p.gia = e.target.value;
+      sanPhamPhieuXuat.push(p);
     }
-    if(sanPhamPhieuXuat != null && sanPhamPhieuXuat.length > 0){
-      sanPhamPhieuXuat.forEach(el=>{
-        if(el.sanPham.id == item.sanPham.id){
+    if (sanPhamPhieuXuat != null && sanPhamPhieuXuat.length > 0) {
+      sanPhamPhieuXuat.forEach((el) => {
+        if (el.sanPham.id == item.sanPham.id) {
           // let p ={}
-          el.gia =e.target.value
+          el.gia = e.target.value;
         }
-      })
+      });
     }
-    this.setState({sanPhamPhieuXuat:sanPhamPhieuXuat},()=>{
-      console.log(this.state.sanPhamPhieuXuat)
-    })
-  }
+    this.setState({ sanPhamPhieuXuat: sanPhamPhieuXuat }, () => {
+      console.log(this.state.sanPhamPhieuXuat);
+    });
+  };
   handleSelectSP = (item) => {
-    console.log(item)
+    console.log(item);
     let data = item.map((row) => ({ ...row, tableData: { checked: false } }));
-    this.setState({ sanPhamPhieuXuat: data },()=>{
-      console.log(this.state.sanPhamPhieuXuat)
+    this.setState({ sanPhamPhieuXuat: data }, () => {
+      console.log(this.state.sanPhamPhieuXuat);
     });
     this.handleDialogCancel();
   };
+  handleDateChange = (date, name) => {
+    this.setState({
+      [name]: date,
+    });
+  };
   render() {
-    let {
-      id,
-      ma,
-      ten,
-      description,
-      sanPhamPhieuXuat,
-    } = this.state;
-    
+    let { id, ma, ten, description, sanPhamPhieuXuat, ngayXuat } = this.state;
+
     let { open, handleClose, handleOKEditClose, t, i18n } = this.props;
 
     let columns = [
@@ -256,7 +265,10 @@ class PhieuXuatKhoDialog extends Component {
             item={rowData}
             onSelect={(rowData, method) => {
               if (method === 0) {
-                this.setState({shouldOpenLabTestPropertyEditDialog: true, item: rowData});
+                this.setState({
+                  shouldOpenLabTestPropertyEditDialog: true,
+                  item: rowData,
+                });
               } else if (method === 1) {
                 sanPhamPhieuXuat.map((pro, index) => {
                   if (pro.sanPham.maSP === rowData.sanPham.maSP) {
@@ -285,33 +297,32 @@ class PhieuXuatKhoDialog extends Component {
         title: t("Số lượng"),
         field: "code",
         align: "left",
-        render: (row) => 
-              <TextValidator
-                  className="w-100 "
-                  onChange={(e) =>this.handleChangeSL(row,e)}
-                  type="number"
-                  value={row.soLuong}
-                  validators={["required"]}
-                  errorMessages={[t("general.required")]}
-                />
-        
+        render: (row) => (
+          <TextValidator
+            className="w-100 "
+            onChange={(e) => this.handleChangeSL(row, e)}
+            type="number"
+            value={row.soLuong}
+            validators={["required"]}
+            errorMessages={[t("general.required")]}
+          />
+        ),
       },
       {
         title: t("Giá"),
         field: "code",
         align: "left",
-        render: (row) => 
-              <TextValidator
-                  className="w-100 "
-                  onChange={e=>this.handleChangeGia(row,e)}
-                  type="number"
-                  value={row.gia}
-                  validators={["required"]}
-                  errorMessages={[t("general.required")]}
-                />
-        
+        render: (row) => (
+          <TextValidator
+            className="w-100 "
+            onChange={(e) => this.handleChangeGia(row, e)}
+            type="number"
+            value={row.gia}
+            validators={["required"]}
+            errorMessages={[t("general.required")]}
+          />
+        ),
       },
-      
     ];
     return (
       <Dialog
@@ -329,8 +340,8 @@ class PhieuXuatKhoDialog extends Component {
 
         <ValidatorForm ref="form" onSubmit={this.handleFormSubmit}>
           <DialogContent>
-            <Grid className="" container spacing={2} >
-              <Grid item sm={12} xs={12}>
+            <Grid className="" container spacing={2}>
+              <Grid item sm={4} xs={12}>
                 <TextValidator
                   className="w-100 "
                   label={
@@ -348,7 +359,7 @@ class PhieuXuatKhoDialog extends Component {
                 />
               </Grid>
 
-              <Grid item sm={12} xs={12}>
+              <Grid item sm={4} xs={12}>
                 <TextValidator
                   className="w-100 "
                   label={
@@ -365,15 +376,33 @@ class PhieuXuatKhoDialog extends Component {
                   errorMessages={[t("general.required")]}
                 />
               </Grid>
-              <Grid item sm={12} xs={12}>
+              <Grid item sm={4} xs={12}>
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <KeyboardDatePicker
+                    margin="none"
+                    fullWidth
+                    id="date-picker-dialog mt-2"
+                    // style={{marginTop:'2px'}}
+                    label={t("Ngày xuất")}
+                    format="dd/MM/yyyy"
+                    value={ngayXuat}
+                    onChange={(date) => this.handleDateChange(date, "ngayXuat")}
+                    KeyboardButtonProps={{
+                      "aria-label": "change date",
+                    }}
+                    invalidDateMessage={t("general.invalidDateFormat")}
+                  />
+                </MuiPickersUtilsProvider>
+              </Grid>
+              <Grid item sm={6} xs={12}>
                 <Button
                   size="small"
                   style={{ float: "right" }}
                   className=" mt-16"
                   variant="contained"
                   color="primary"
-                  onClick={()=>{
-                      this.setState({shouldOpenChonNhanVien:true})
+                  onClick={() => {
+                    this.setState({ shouldOpenChonNhanVien: true });
                   }}
                 >
                   {t("general.select")}
@@ -391,9 +420,11 @@ class PhieuXuatKhoDialog extends Component {
                     </span>
                   }
                   // className="w-80"
-                  style ={{width: "80%"}}
+                  style={{ width: "80%" }}
                   value={
-                    this.state.nguoiXuat != null ? this.state.nguoiXuat.displayName : ""
+                    this.state.nguoiXuat != null
+                      ? this.state.nguoiXuat.displayName
+                      : ""
                   }
                 />
 
@@ -402,9 +433,7 @@ class PhieuXuatKhoDialog extends Component {
                     open={this.state.shouldOpenChonNhanVien}
                     handleSelect={this.handleSelectAgency}
                     selectedItem={
-                      this.state.nguoiXuat != null
-                        ? this.state.nguoiXuat
-                        : {}
+                      this.state.nguoiXuat != null ? this.state.nguoiXuat : {}
                     }
                     handleClose={this.handleDialogClose}
                     t={t}
@@ -412,15 +441,15 @@ class PhieuXuatKhoDialog extends Component {
                   />
                 )}
               </Grid>
-              <Grid item sm={12} xs={12}>
+              <Grid item sm={6} xs={12}>
                 <Button
                   size="small"
                   style={{ float: "right" }}
                   className=" mt-16"
                   variant="contained"
                   color="primary"
-                  onClick={()=>{
-                      this.setState({shouldOpenChonKho:true})
+                  onClick={() => {
+                    this.setState({ shouldOpenChonKho: true });
                   }}
                 >
                   {t("general.select")}
@@ -438,43 +467,41 @@ class PhieuXuatKhoDialog extends Component {
                     </span>
                   }
                   // className="w-80"
-                  style ={{width: "80%"}}
-                  value={
-                    this.state.kho != null ? this.state.kho.tenKho : ""
-                  }
+                  style={{ width: "80%" }}
+                  value={this.state.kho != null ? this.state.kho.tenKho : ""}
                 />
 
                 {this.state.shouldOpenChonKho && (
                   <ChonKho
                     open={this.state.shouldOpenChonKho}
                     handleSelect={this.handleSelectUser}
-                    selectedItem={
-                      this.state.kho != null 
-                        ? this.state.kho
-                        : {}
-                    }
+                    selectedItem={this.state.kho != null ? this.state.kho : {}}
                     handleClose={this.handleDialogClose}
                     t={t}
                     i18n={i18n}
                   />
                 )}
+              </Grid>
+              <Grid item sm={5} xs="12">
                 <Button
-                    className=" mt-10 mb-10"
-                    variant="contained"
-                    color="primary"
-                    onClick={() =>{
-                      if(this.state.kho == null ){
-                        toast.warning("Chưa chọn kho");
-                        return
-                      }
-                      this.setState({
-                        shouldOpenMultipleDialog: true,
-                        item: {},
-                      })
+                  className=" mt-10 mb-10"
+                  variant="contained"
+                  color="primary"
+                  onClick={() => {
+                    if (this.state.kho == null) {
+                      toast.warning("Chưa chọn kho");
+                      return;
                     }
-                  }
-                  >{t("general.select")}</Button>
-                {this.state.shouldOpenMultipleDialog && (
+                    this.setState({
+                      shouldOpenMultipleDialog: true,
+                      item: {},
+                    });
+                  }}
+                >
+                  {t("general.select")}
+                </Button>
+              </Grid>
+              {this.state.shouldOpenMultipleDialog && (
                 <MultipleProduct
                   open={this.state.shouldOpenMultipleDialog}
                   selected={this.state.sanPhamPhieuXuat}
@@ -482,39 +509,42 @@ class PhieuXuatKhoDialog extends Component {
                   handleClose={this.handleDialogCancel}
                   t={t}
                   i18n={i18n}
-                  khoId = {this.state.kho ? this.state.kho.id:""}
+                  khoId={this.state.kho ? this.state.kho.id : ""}
                 />
               )}
-                <Grid item sm={12} xs="12" className = "mt-10">
-                  <MaterialTable
-                    data={this.state.sanPhamPhieuXuat ? this.state.sanPhamPhieuXuat : []}
-                    columns={columns}
-                    options={{
-                      selection: false,
-                      actionsColumnIndex: 0,
-                      paging: false,
-                      search: false,
-                      rowStyle: (rowData) => ({
-                        backgroundColor:
-                          rowData.tableData.id % 2 === 1 ? "#EEE" : "#FFF",
-                      }),
-                      maxBodyHeight: "253px",
-                      minBodyHeight: "253px",
-                      headerStyle: {
-                        backgroundColor: "#358600",
-                        color: "#fff",
-                      },
-                      padding: "dense",
-                      toolbar: false,
-                    }}
-                    components={{
-                      Toolbar: (props) => <MTableToolbar {...props} />,
-                    }}
-                    onSelectionChange={(rows) => {
-                      this.data = rows;
-                    }}
-                  />
-                </Grid>
+              <Grid item sm={12} xs="12" className="mt-10">
+                <MaterialTable
+                  data={
+                    this.state.sanPhamPhieuXuat
+                      ? this.state.sanPhamPhieuXuat
+                      : []
+                  }
+                  columns={columns}
+                  options={{
+                    selection: false,
+                    actionsColumnIndex: 0,
+                    paging: false,
+                    search: false,
+                    rowStyle: (rowData) => ({
+                      backgroundColor:
+                        rowData.tableData.id % 2 === 1 ? "#EEE" : "#FFF",
+                    }),
+                    maxBodyHeight: "253px",
+                    minBodyHeight: "253px",
+                    headerStyle: {
+                      backgroundColor: "#358600",
+                      color: "#fff",
+                    },
+                    padding: "dense",
+                    toolbar: false,
+                  }}
+                  components={{
+                    Toolbar: (props) => <MTableToolbar {...props} />,
+                  }}
+                  onSelectionChange={(rows) => {
+                    this.data = rows;
+                  }}
+                />
               </Grid>
             </Grid>
           </DialogContent>

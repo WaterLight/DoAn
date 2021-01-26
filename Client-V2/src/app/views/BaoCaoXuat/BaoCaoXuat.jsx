@@ -10,6 +10,7 @@ import {
   Input,
   InputAdornment,
 } from "@material-ui/core";
+import moment from "moment";
 import MaterialTable, {
   MTableToolbar,
   Chip,
@@ -29,14 +30,14 @@ import NotificationPopup from "../Component/NotificationPopup/NotificationPopup"
 // import { saveAs } from 'file-saver';
 import { isThisSecond } from "date-fns/esm";
 // import PhieuNhapKhoDialog from "./PhieuNhapKhoDialog";
+import { searchByPage, exportToExcel } from "./BaoCaoXuatService";
 import {
-  searchByPage,
-  exportToExcel
-} from "./BaoCaoXuatService";
-import { MuiPickersUtilsProvider, DateTimePicker,
+  MuiPickersUtilsProvider,
+  DateTimePicker,
   KeyboardTimePicker,
-  KeyboardDatePicker, } from '@material-ui/pickers';
-  import DateFnsUtils from '@date-io/date-fns';
+  KeyboardDatePicker,
+} from "@material-ui/pickers";
+import DateFnsUtils from "@date-io/date-fns";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -115,8 +116,8 @@ class BaoCaoXuat extends React.Component {
     shouldOpenConfirmationDeleteListDialog: false,
     shouldOpenNotificationPopup: false,
     Notification: "",
-    toDate: new Date(),
-    fromDate: new Date()
+    toDate: moment().endOf("month"),
+    fromDate: moment().startOf("month"),
   };
   numSelected = 0;
   rowCount = 0;
@@ -153,8 +154,10 @@ class BaoCaoXuat extends React.Component {
       searchObject.keyword = this.state.keyword;
       searchObject.pageIndex = this.state.page + 1;
       searchObject.pageSize = this.state.rowsPerPage;
-      searchObject.fromDate = this.state.fromDate ? this.state.fromDate: new Date();
-      searchObject.toDate = this.state.toDate ? this.state.toDate: new Date();
+      searchObject.fromDate = this.state.fromDate
+        ? this.state.fromDate
+        : new Date();
+      searchObject.toDate = this.state.toDate ? this.state.toDate : new Date();
       searchByPage(searchObject)
         .then((res) => {
           this.setState({
@@ -167,10 +170,9 @@ class BaoCaoXuat extends React.Component {
     });
   }
   checkData = () => {
-    let {t} = this.props
+    let { t } = this.props;
     if (!this.data || this.data.length === 0) {
       toast.warning(t("general.noti_check_data"));
-      
     } else if (this.data.length === this.state.itemList.length) {
       this.setState({ shouldOpenConfirmationDeleteAllDialog: true });
     } else {
@@ -183,11 +185,13 @@ class BaoCaoXuat extends React.Component {
     searchObject.keyword = this.state.keyword;
     searchObject.pageIndex = this.state.page + 1;
     searchObject.pageSize = this.state.rowsPerPage;
-    searchObject.fromDate = this.state.fromDate ? this.state.fromDate: new Date();
-    searchObject.toDate = this.state.toDate ? this.state.toDate: new Date();
+    searchObject.fromDate = this.state.fromDate
+      ? this.state.fromDate
+      : new Date();
+    searchObject.toDate = this.state.toDate ? this.state.toDate : new Date();
     searchByPage(searchObject).then((res) => {
       this.setState({
-        itemList: [...res.data]
+        itemList: [...res.data],
       });
     });
   };
@@ -222,10 +226,6 @@ class BaoCaoXuat extends React.Component {
       shouldOpenConfirmationDialog: true,
     });
   };
-
- 
-
- 
 
   componentDidMount() {
     this.updatePageData();
@@ -281,8 +281,6 @@ class BaoCaoXuat extends React.Component {
     });
   };
 
-  
-
   handleDeleteAll = (event) => {
     //alert(this.data.length);
     this.handleDeleteList(this.data)
@@ -295,34 +293,37 @@ class BaoCaoXuat extends React.Component {
         console.log("loi");
       });
   };
-  handleChangeDate =(date, name)=>{
-    this.setState({[name]:date},()=>{
-      this.search()
+  handleChangeDate = (date, name) => {
+    this.setState({ [name]: date }, () => {
+      this.search();
     });
-  }
+  };
   exportToExcel = () => {
     const { t } = this.props;
     var searchObject = {};
     searchObject.keyword = this.state.keyword;
     searchObject.pageIndex = this.state.page + 1;
     searchObject.pageSize = this.state.rowsPerPage;
-    searchObject.fromDate = this.state.fromDate ? this.state.fromDate: new Date();
-    searchObject.toDate = this.state.toDate ? this.state.toDate: new Date();
-    if(this.state.itemList == null || this.state.itemList.length == 0){
-      toast.warn("Không có dữ liệu")
-      return
+    searchObject.fromDate = this.state.fromDate
+      ? this.state.fromDate
+      : new Date();
+    searchObject.toDate = this.state.toDate ? this.state.toDate : new Date();
+    if (this.state.itemList == null || this.state.itemList.length == 0) {
+      toast.warn("Không có dữ liệu");
+      return;
     }
-      exportToExcel(searchObject).then((res) => {
+    exportToExcel(searchObject)
+      .then((res) => {
         let blob = new Blob([res.data], {
           type:
-            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        })
-        saveAs(blob, 'BaoCaoNhap.xlsx')
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        });
+        saveAs(blob, "BaoCaoNhap.xlsx");
       })
       .catch((err) => {
         // console.log(err)
-      })
-  }
+      });
+  };
   render() {
     const { t, i18n } = this.props;
     let {
@@ -340,20 +341,28 @@ class BaoCaoXuat extends React.Component {
     let TitlePage = t("Báo cáo xuất kho");
 
     let columns = [
-      { 
-        title: t("general.code"), field: "ma", width: "150" 
+      {
+        title: t("general.code"),
+        field: "maSP",
+        width: "150",
       },
-      { 
-        title: t("general.name"), field: "tenSP", width: "150" 
+      {
+        title: t("general.name"),
+        field: "tenSP",
+        width: "150",
       },
-      { 
-        title: t("Kho"), field: "tenKho", width: "150" 
+      {
+        title: t("Kho"),
+        field: "tenKho",
+        width: "150",
       },
-      { 
-        title: t("Số lượng"), field: "soLuongNhap", width: "150" 
+      {
+        title: t("Số lượng"),
+        field: "soLuong",
+        width: "150",
       },
-      // { 
-      //   title: t("Người nhập"), field: "nguoiNhap.displayName", width: "150" 
+      // {
+      //   title: t("Người nhập"), field: "nguoiNhap.displayName", width: "150"
       // },
     ];
     return (
@@ -378,14 +387,14 @@ class BaoCaoXuat extends React.Component {
 
         <Grid container spacing={2} justify="space-between">
           <Grid item md={2} xs={12}>
-          <Button
-                className="mt-16 align-bottom"
-                variant="contained"
-                color="primary"
-                onClick={this.exportToExcel}
-                >
-                Xuất excle
-                </Button>
+            <Button
+              className="mt-16 align-bottom"
+              variant="contained"
+              color="primary"
+              onClick={this.exportToExcel}
+            >
+              Xuất excle
+            </Button>
             {/* <Button
               className="mb-16 mr-16 align-bottom"
               variant="contained"
@@ -408,77 +417,85 @@ class BaoCaoXuat extends React.Component {
             >
               {t("general.delete")}
             </Button> */}
-            </Grid>
-            <Grid item md ={3} sm={12} xs={12}>
-                <MuiPickersUtilsProvider utils={DateFnsUtils}>    
-                    <KeyboardDatePicker
-                      label = {<span ><span style={{color:"red"}}></span>Từ ngày</span>}
-                      className = "w-100"
-                      disableToolbar
-                      format="dd/MM/yyyy"
-                      margin="normal"
-                      id="date-picker-inline"
-                      name="fromDate"
-                      value={this.state.fromDate}
-                      onChange={(date) => this.handleChangeDate(date,"fromDate")}
-                      KeyboardButtonProps={{
-                        'aria-label': 'change date',
-                      }}
-                      inputVariant ="outlined"
-                      size ="small"
-                    />
-              </MuiPickersUtilsProvider>
-              </Grid>
-              <Grid item md ={3} sm={12} xs={12}>
-                <MuiPickersUtilsProvider utils={DateFnsUtils}>    
-                    <KeyboardDatePicker
-                      label = {<span ><span style={{color:"red"}}></span>Dến ngày</span>}
-                      className = "w-100"
-                      disableToolbar
-                      format="dd/MM/yyyy"
-                      margin="normal"
-                      id="date-picker-inline"
-                      name="toDate"
-                      value={this.state.toDate}
-                      onChange={(date) => this.handleChangeDate(date,"toDate")}
-                      KeyboardButtonProps={{
-                        'aria-label': 'change date',
-                      }}
-                      inputVariant ="outlined"
-                      size ="small"
-                    />
-              </MuiPickersUtilsProvider>
-              </Grid>
-            {shouldOpenNotificationPopup && (
-              <NotificationPopup
-                title={t("general.noti")}
-                open={shouldOpenNotificationPopup}
-                onYesClick={this.handleDialogClose}
-                text={t(this.state.Notification)}
-                agree={t("general.agree")}
+          </Grid>
+          <Grid item md={3} sm={12} xs={12}>
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <KeyboardDatePicker
+                label={
+                  <span>
+                    <span style={{ color: "red" }}></span>Từ ngày
+                  </span>
+                }
+                className="w-100"
+                disableToolbar
+                format="dd/MM/yyyy"
+                margin="normal"
+                id="date-picker-inline"
+                name="fromDate"
+                value={this.state.fromDate}
+                onChange={(date) => this.handleChangeDate(date, "fromDate")}
+                KeyboardButtonProps={{
+                  "aria-label": "change date",
+                }}
+                inputVariant="outlined"
+                size="small"
               />
-            )}
+            </MuiPickersUtilsProvider>
+          </Grid>
+          <Grid item md={3} sm={12} xs={12}>
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <KeyboardDatePicker
+                label={
+                  <span>
+                    <span style={{ color: "red" }}></span>Đến ngày
+                  </span>
+                }
+                className="w-100"
+                disableToolbar
+                format="dd/MM/yyyy"
+                margin="normal"
+                id="date-picker-inline"
+                name="toDate"
+                value={this.state.toDate}
+                onChange={(date) => this.handleChangeDate(date, "toDate")}
+                KeyboardButtonProps={{
+                  "aria-label": "change date",
+                }}
+                inputVariant="outlined"
+                size="small"
+              />
+            </MuiPickersUtilsProvider>
+          </Grid>
+          {shouldOpenNotificationPopup && (
+            <NotificationPopup
+              title={t("general.noti")}
+              open={shouldOpenNotificationPopup}
+              onYesClick={this.handleDialogClose}
+              text={t(this.state.Notification)}
+              agree={t("general.agree")}
+            />
+          )}
 
-            {shouldOpenConfirmationDeleteAllDialog && (
-              <ConfirmationDialog
-                open={shouldOpenConfirmationDeleteAllDialog}
-                onConfirmDialogClose={this.handleDialogClose}
-                onYesClick={this.handleDeleteAll}
-                text={t("general.deleteAllConfirm")}
-                agree={t("general.agree")}
-                cancel={t("general.cancel")}
-              />
-            )}
-            {this.state.shouldOpenConfirmationDeleteListDialog && (
-              <ConfirmationDialog
-                open={this.state.shouldOpenConfirmationDeleteListDialog}
-                onConfirmDialogClose={this.handleDialogClose}
-                onYesClick={this.handleDeleteAll}
-                text={t("general.deleteConfirm")}
-                agree={t("general.agree")}
-                cancel={t("general.cancel")}
-              />
-            )}
+          {shouldOpenConfirmationDeleteAllDialog && (
+            <ConfirmationDialog
+              open={shouldOpenConfirmationDeleteAllDialog}
+              onConfirmDialogClose={this.handleDialogClose}
+              onYesClick={this.handleDeleteAll}
+              text={t("general.deleteAllConfirm")}
+              agree={t("general.agree")}
+              cancel={t("general.cancel")}
+            />
+          )}
+          {this.state.shouldOpenConfirmationDeleteListDialog && (
+            <ConfirmationDialog
+              open={this.state.shouldOpenConfirmationDeleteListDialog}
+              onConfirmDialogClose={this.handleDialogClose}
+              onYesClick={this.handleDeleteAll}
+              text={t("general.deleteConfirm")}
+              agree={t("general.agree")}
+              cancel={t("general.cancel")}
+            />
+          )}
           <Grid item md={4} sm={12} xs={12}>
             <FormControl fullWidth>
               <Input
@@ -531,10 +548,10 @@ class BaoCaoXuat extends React.Component {
               data={itemList}
               columns={columns}
               //parentChildData={(row, rows) => rows.find(a => a.id === row.parentId)}
-              parentChildData={(row, rows) => {
-                var list = rows.find((a) => a.id === row.parentId);
-                return list;
-              }}
+              // parentChildData={(row, rows) => {
+              //   var list = rows.find((a) => a.id === row.parentId);
+              //   return list;
+              // }}
               localization={{
                 body: {
                   emptyDataSourceMessage: `${t(
