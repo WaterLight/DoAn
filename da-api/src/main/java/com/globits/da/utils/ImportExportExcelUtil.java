@@ -1,4 +1,5 @@
 package com.globits.da.utils;
+
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -29,6 +30,7 @@ import org.springframework.stereotype.Component;
 
 import com.globits.core.dto.DepartmentDto;
 import com.globits.da.dto.search.BaoCaoDto;
+
 @Component
 public class ImportExportExcelUtil {
 	private static Hashtable<String, Integer> hashStaffColumnConfig = new Hashtable<String, Integer>();
@@ -36,12 +38,12 @@ public class ImportExportExcelUtil {
 	private static DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 	private static DecimalFormat numberFormatter = new DecimalFormat("######################");
 	private static Hashtable<String, String> hashColumnPropertyConfig = new Hashtable<String, String>();
-	
+
 	private static void scanStaffColumnExcelIndex(Sheet datatypeSheet, int scanRowIndex) {
 		Row row = datatypeSheet.getRow(scanRowIndex);
 		int numberCell = row.getPhysicalNumberOfCells();
 
-		hashColumnPropertyConfig.put("staffCode".toLowerCase(),"staffCode");
+		hashColumnPropertyConfig.put("staffCode".toLowerCase(), "staffCode");
 		hashColumnPropertyConfig.put("firstName".toLowerCase(), "firstName");
 		hashColumnPropertyConfig.put("lastName".toLowerCase(), "lastName");
 		hashColumnPropertyConfig.put("displayName".toLowerCase(), "displayName");
@@ -54,26 +56,26 @@ public class ImportExportExcelUtil {
 		hashColumnPropertyConfig.put("password".toLowerCase(), "password");
 		hashColumnPropertyConfig.put("email".toLowerCase(), "email");
 		hashColumnPropertyConfig.put("BirthPlace".toLowerCase(), "BirthPlace");
-		
+
 		hashColumnPropertyConfig.put("departmentCode".toLowerCase(), "departmentCode");
 		hashColumnPropertyConfig.put("MaNgach".toLowerCase(), "MaNgach");
 		hashColumnPropertyConfig.put("IDCard".toLowerCase(), "IDCard");
-		
-		for(int i=0;i<numberCell;i++) {
+
+		for (int i = 0; i < numberCell; i++) {
 			Cell cell = row.getCell(i);
-			if(cell!=null && cell.getCellTypeEnum()==CellType.STRING) {
+			if (cell != null && cell.getCellTypeEnum() == CellType.STRING) {
 				String cellValue = cell.getStringCellValue();
-				if(cellValue!=null && cellValue.length()>0) {
+				if (cellValue != null && cellValue.length() > 0) {
 					cellValue = cellValue.toLowerCase().trim();
 					String propertyName = hashColumnPropertyConfig.get(cellValue);
-					if(propertyName!=null) {
-						hashStaffColumnConfig.put(propertyName,i);
+					if (propertyName != null) {
+						hashStaffColumnConfig.put(propertyName, i);
 					}
-				}	
+				}
 			}
 		}
 	}
-	
+
 	public static List<DepartmentDto> getListDepartmentFromInputStream(InputStream is) {
 		try {
 
@@ -87,7 +89,7 @@ public class ImportExportExcelUtil {
 			int rowIndex = 4;
 
 			hashDepartmentColumnConfig.put("code", 0);
-			
+
 			hashDepartmentColumnConfig.put("name", 1);
 
 			int num = datatypeSheet.getLastRowNum();
@@ -108,20 +110,20 @@ public class ImportExportExcelUtil {
 							department.setCode(code);
 						}
 					}
-				index = hashDepartmentColumnConfig.get("name");
-				if (index != null) {
-					currentCell = currentRow.getCell(index);// name
-					if (currentCell != null && currentCell.getStringCellValue() != null) {
-						String name = currentCell.getStringCellValue();
-						department.setName(name);
+					index = hashDepartmentColumnConfig.get("name");
+					if (index != null) {
+						currentCell = currentRow.getCell(index);// name
+						if (currentCell != null && currentCell.getStringCellValue() != null) {
+							String name = currentCell.getStringCellValue();
+							department.setName(name);
+						}
 					}
+					ret.add(department);
 				}
-				ret.add(department);
-			}
 				rowIndex++;
 			}
 			return ret;
-			
+
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -129,13 +131,11 @@ public class ImportExportExcelUtil {
 		}
 		return null;
 	}
-	
-	
-	public static ByteArrayResource exportBCNToExcelTable(List<BaoCaoDto> dataList) throws IOException{
+
+	public static ByteArrayResource exportBCNToExcelTable(List<BaoCaoDto> dataList) throws IOException {
 		XSSFWorkbook workbook = new XSSFWorkbook();
 		XSSFSheet sheet = workbook.createSheet("Sheet1");
 
-		
 		/* Tạo font */
 		XSSFFont fontBold = workbook.createFont();
 		fontBold.setBold(true); // set bold
@@ -157,59 +157,57 @@ public class ImportExportExcelUtil {
 		tableHeadCellStyle.setBorderTop(BorderStyle.THIN);
 		tableHeadCellStyle.setBorderLeft(BorderStyle.THIN);
 		tableHeadCellStyle.setBorderRight(BorderStyle.THIN);
-			
-		XSSFRow row  = sheet.createRow(0);
-		XSSFCell cell =null;
-		
+
+		XSSFRow row = sheet.createRow(0);
+		XSSFCell cell = null;
+
 		cell = row.createCell(0);
 		cell.setCellValue("STT");
 		cell.setCellStyle(tableHeadCellStyle);
-		
+
 		cell = row.createCell(1);
 		cell.setCellValue("Tên sản phẩm");
 		cell.setCellStyle(tableHeadCellStyle);
-		
+
 		cell = row.createCell(2);
 		cell.setCellValue("Tên kho");
 		cell.setCellStyle(tableHeadCellStyle);
-		
+
 		cell = row.createCell(3);
 		cell.setCellValue("Số lượng nhập");
 		cell.setCellStyle(tableHeadCellStyle);
-		
+
 //		cell = row.createCell(4);
 //		cell.setCellValue("Tên kho");
 //		cell.setCellStyle(tableHeadCellStyle);
-		
-		//Tạo các hàng cột dữ liệu
+
+		// Tạo các hàng cột dữ liệu
 		XSSFRow tableDataRow;
-		if(dataList != null && !dataList.isEmpty()) {
-			for(int i = 0; i < dataList.size(); i++) {
-				tableDataRow =  sheet.createRow(i + 1);
+		if (dataList != null && !dataList.isEmpty()) {
+			for (int i = 0; i < dataList.size(); i++) {
+				tableDataRow = sheet.createRow(i + 1);
 				BaoCaoDto data = dataList.get(i);
-				
-				
-				
-				tableDataRow.createCell(0).setCellValue(i+1);
+
+				tableDataRow.createCell(0).setCellValue(i + 1);
 				tableDataRow.createCell(1).setCellValue(data.getTenSP());
 				tableDataRow.createCell(2).setCellValue(data.getTenKho());
-				tableDataRow.createCell(2).setCellValue(data.getSoLuongNhap());
-				
+				tableDataRow.createCell(3).setCellValue(data.getSoLuong());
+
 				sheet.autoSizeColumn(i);
-				
+
 			}
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
-		    workbook.write(out);
-		    out.close();
-		    return new ByteArrayResource(out.toByteArray());
-		}	
+			workbook.write(out);
+			out.close();
+			return new ByteArrayResource(out.toByteArray());
+		}
 		return null;
 	}
-	public static ByteArrayResource exportBCXToExcelTable(List<BaoCaoDto> dataList) throws IOException{
+
+	public static ByteArrayResource exportBCXToExcelTable(List<BaoCaoDto> dataList) throws IOException {
 		XSSFWorkbook workbook = new XSSFWorkbook();
 		XSSFSheet sheet = workbook.createSheet("Sheet1");
 
-		
 		/* Tạo font */
 		XSSFFont fontBold = workbook.createFont();
 		fontBold.setBold(true); // set bold
@@ -231,54 +229,53 @@ public class ImportExportExcelUtil {
 		tableHeadCellStyle.setBorderTop(BorderStyle.THIN);
 		tableHeadCellStyle.setBorderLeft(BorderStyle.THIN);
 		tableHeadCellStyle.setBorderRight(BorderStyle.THIN);
-			
-		XSSFRow row  = sheet.createRow(0);
-		XSSFCell cell =null;
-		
+
+		XSSFRow row = sheet.createRow(0);
+		XSSFCell cell = null;
+
 		cell = row.createCell(0);
 		cell.setCellValue("STT");
 		cell.setCellStyle(tableHeadCellStyle);
-		
+
 		cell = row.createCell(1);
 		cell.setCellValue("Tên sản phẩm");
 		cell.setCellStyle(tableHeadCellStyle);
-		
+
 		cell = row.createCell(2);
 		cell.setCellValue("Tên kho");
 		cell.setCellStyle(tableHeadCellStyle);
-		
+
 		cell = row.createCell(3);
 		cell.setCellValue("Số lượng xuất");
 		cell.setCellStyle(tableHeadCellStyle);
-		
+
 //		cell = row.createCell(4);
 //		cell.setCellValue("Tên kho");
 //		cell.setCellStyle(tableHeadCellStyle);
-		
-		//Tạo các hàng cột dữ liệu
+
+		// Tạo các hàng cột dữ liệu
 		XSSFRow tableDataRow;
-		if(dataList != null && !dataList.isEmpty()) {
-			for(int i = 0; i < dataList.size(); i++) {
-				tableDataRow =  sheet.createRow(i + 1);
+		if (dataList != null && !dataList.isEmpty()) {
+			for (int i = 0; i < dataList.size(); i++) {
+				tableDataRow = sheet.createRow(i + 1);
 				BaoCaoDto data = dataList.get(i);
-				
-				
-				
-				tableDataRow.createCell(0).setCellValue(i+1);
+
+				tableDataRow.createCell(0).setCellValue(i + 1);
 				tableDataRow.createCell(1).setCellValue(data.getTenSP());
 				tableDataRow.createCell(2).setCellValue(data.getTenKho());
-				tableDataRow.createCell(2).setCellValue(data.getSoLuong());
-				
+				tableDataRow.createCell(3).setCellValue(data.getSoLuong());
+
 				sheet.autoSizeColumn(i);
-				
+
 			}
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
-		    workbook.write(out);
-		    out.close();
-		    return new ByteArrayResource(out.toByteArray());
-		}	
+			workbook.write(out);
+			out.close();
+			return new ByteArrayResource(out.toByteArray());
+		}
 		return null;
 	}
+
 	public static void main(String[] agrs) {
 //		try {
 //			

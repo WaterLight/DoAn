@@ -12,6 +12,10 @@ public class BaoCaoDto {
 	private Integer soLuong;
 	private Date ngayNhap;
 	private Integer soLuongNhap;
+	
+	//báo cáo đơn hàng
+	private Integer tongDonHang;
+	private Double tongTien;
 
 	public UUID getSanPhamId() {
 		return sanPhamId;
