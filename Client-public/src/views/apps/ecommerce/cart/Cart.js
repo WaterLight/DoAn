@@ -41,13 +41,80 @@ class Checkout extends React.Component {
   state = {
     activeStep: 0,
     user: null,
-    steps: [
+    steps:[],
+    currentUser:{},
+    saleOrder:{}
+  }
+  handleDeleteProductInCart = product => {
+    if (product && product.sanPham.id) {
+      let order = JSON.parse(window.localStorage.getItem("saleOrder")).sanPhamDonHang;
+      if (order != null && order.length > 0) {
+        for (let i = 0; i < order.length; i++) {
+          if (order[i].sanPham.id == product.sanPham.id) {
+            var removeIndex = order.map(function (item) { return item.id; }).indexOf(product.sanPham.id);
+            order.splice(removeIndex + 1, 1);
+            window.localStorage.setItem("saleOrder", JSON.stringify(order));
+          }
+        }
+      }
+    }
+  }
+  componentDidMount(){
+    let currentUser = JSON.parse(window.localStorage.getItem("currentUser"));
+    if(currentUser != null && currentUser.id != null){
+      this.setState({currentUser:currentUser});
+    }
+    let saleOrder = JSON.parse(window.localStorage.getItem("saleOrder"));
+    if(saleOrder != null && saleOrder.sanPhamDonHang != null && saleOrder.sanPhamDonHang.length >0){
+      this.setState({saleOrder:saleOrder});
+    }
+  }
+  componentWillUnmount(){
+  }
+  formatPrice = value => {
+    if (value) {
+      return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+    }
+  }
+  handleActiveStep = index => {
+    let {currentUser} = this.state.currentUser;
+    if (currentUser == null || currentUser.id == null) {
+      window.location.href = ConstantList.URL + "authentication/login";
+    }
+    this.setState({ activeStep: index })
+  }
+  handleChooseDefaultAddress = () => {
+    let {currentUser} = this.state.currentUser;
+    let order = JSON.parse(window.localStorage.getItem("saleOrder"));
+    if (currentUser != null && currentUser.id != null && order.sanPhamDonHang != null && order.sanPhamDonHang.length > 0) {
+      saveOrder(order).then((res) => {
+        if (res.status == 200) {
+          toast.info("Chúc mừng bạn đã đặt hàng thành công");
+        }else{
+          toast.error("Có lỗi xảy ra khi đặt hàng, vui lòng thử lại");
+        }
+      }).catch(err=>{
+        toast.error("Có lỗi xảy ra khi đặt hàng, vui lòng thử lại");
+        console.log(err)
+      })
+    }
+  }
+
+  onValidationError = errors => {
+    toast.error("Please Enter Valid Details", {
+      position: toast.POSITION.BOTTOM_RIGHT
+    })
+  }
+
+  render() {
+    const {activeStep, currentUser, saleOrder } = this.state;
+    let steps = [
       {
         title: <ShoppingCart size={22} />,
         content: (
           <div className="list-view product-checkout">
             <div className="checkout-items">
-              {JSON.parse(window.localStorage.getItem("saleOrder")) != null && JSON.parse(window.localStorage.getItem("saleOrder")).sanPhamDonHang != null && JSON.parse(window.localStorage.getItem("saleOrder")).sanPhamDonHang.length >= 0 && JSON.parse(window.localStorage.getItem("saleOrder")).sanPhamDonHang.map((item, i) => (
+              {saleOrder != null && saleOrder.sanPhamDonHang != null && saleOrder.sanPhamDonHang.length >= 0 && saleOrder.sanPhamDonHang.map((item, i) => (
                 <Card className="ecommerce-card" key={i}>
                   <div className="card-content">
                     <div className="item-img text-center">
@@ -130,15 +197,15 @@ class Checkout extends React.Component {
                   <div className="detail">
                     <div className="detail-title">Tổng tiền sản phẩm</div>
                     <div className="detail-amt">
-                      {JSON.parse(window.localStorage.getItem("saleOrder")) != null && JSON.parse(window.localStorage.getItem("saleOrder")).totalAmount != null ? (
-                        <span>{JSON.parse(window.localStorage.getItem("saleOrder")).totalAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} đ</span>
+                      {saleOrder != null && saleOrder.totalAmount != null ? (
+                        <span>{saleOrder.totalAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} đ</span>
                       ) : ("0đ")}
                     </div>
                   </div>
                   <div className="detail">
                     <div className="detail-title">Khuyến mãi</div>
-                    {JSON.parse(window.localStorage.getItem("saleOrder")) != null && JSON.parse(window.localStorage.getItem("saleOrder")).giamGia != null ? (
-                      <div className="detail-amt discount-amt">{JSON.parse(window.localStorage.getItem("saleOrder")).giamGia} %</div>
+                    {saleOrder != null && saleOrder.giamGia != null ? (
+                      <div className="detail-amt discount-amt">{saleOrder.giamGia} %</div>
                     ) : ("0%")}
                   </div>
                   {/* <div className="detail">
@@ -156,8 +223,8 @@ class Checkout extends React.Component {
                   <hr /> */}
                   <div className="detail">
                     <div className="detail-title detail-total">Tổng tiền thanh toán</div>
-                    {JSON.parse(window.localStorage.getItem("saleOrder")) != null && JSON.parse(window.localStorage.getItem("saleOrder")).tongGia != null ? (
-                      <span>{JSON.parse(window.localStorage.getItem("saleOrder")).tongGia.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} đ</span>
+                    {saleOrder != null && saleOrder.tongGia != null ? (
+                      <span>{saleOrder.tongGia.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} đ</span>
                     ) : ("0đ")}
                   </div>
                   <Button.Ripple
@@ -281,26 +348,23 @@ class Checkout extends React.Component {
               <Card>
                 <CardHeader>
                   <CardTitle>
-                    Người nhận hàng: {JSON.parse(window.localStorage.getItem("currentUser")) != null ? (
-                      <span>{JSON.parse(window.localStorage.getItem("currentUser")).displayName}</span>
+                    Người nhận hàng: {currentUser != null && currentUser.displayName != null ? (
+                      <span>{currentUser.displayName}</span>
                     ) : ("")
                     }
                   </CardTitle>
                 </CardHeader>
                 <CardBody>
-                  <p className="mb-0">{JSON.parse(window.localStorage.getItem("currentUser")) != null && JSON.parse(window.localStorage.getItem("currentUser")).person != null && JSON.parse(window.localStorage.getItem("currentUser")).person.phoneNumber != null ? (
-                    <span>Số điện thoại: {JSON.parse(window.localStorage.getItem("currentUser")).person.phoneNumber}</span>
+                  <p className="mb-0">{currentUser != null && currentUser.person != null && currentUser.person.phoneNumber != null ? (
+                    <span>Số điện thoại: {currentUser.person.phoneNumber}</span>
                   ) : ("")
                   }</p>
-                  <p className="mb-0">{JSON.parse(window.localStorage.getItem("currentUser")) != null && JSON.parse(window.localStorage.getItem("currentUser")).person != null && JSON.parse(window.localStorage.getItem("currentUser")).person.address != null ? (
-                    <span>Địa chỉ nhận hàng: {JSON.parse(window.localStorage.getItem("currentUser")).person.address}</span>
+                  <p className="mb-0">{currentUser != null && currentUser.person != null && currentUser.person.address[0] != null ? (
+                    <span>Địa chỉ nhận hàng: {currentUser.person.address[0].address}</span>
                   ) : ("")
                   }</p>
-                  {/* <p>UTC-5: Eastern Standard Time (EST) </p>
-                  <p>202-555-0140</p> */}
                   <hr />
                   <Button.Ripple
-                    // type="submit"
                     color="primary"
                     className="btn-block"
                     onClick={() => this.handleChooseDefaultAddress()}>
@@ -431,64 +495,12 @@ class Checkout extends React.Component {
         )
       }
     ]
-  }
-  handleDeleteProductInCart = product => {
-    if (product && product.sanPham.id) {
-      let order = JSON.parse(window.localStorage.getItem("saleOrder")).sanPhamDonHang;
-      if (order != null && order.length > 0) {
-        for (let i = 0; i < order.length; i++) {
-          if (order[i].sanPham.id == product.sanPham.id) {
-            var removeIndex = order.map(function (item) { return item.id; }).indexOf(product.sanPham.id);
-            order.splice(removeIndex + 1, 1);
-            window.localStorage.setItem("saleOrder", JSON.stringify(order));
-          }
-        }
-      }
-    }
-  }
-  formatPrice = value => {
-    if (value) {
-      return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-    }
-  }
-  handleActiveStep = index => {
-    let currentUser = JSON.parse(window.localStorage.getItem("currentUser"));
-    if (currentUser == null || currentUser.id == null) {
-      window.location.href = ConstantList.URL + "authentication/login";
-    }
-    this.setState({ activeStep: index })
-  }
-  handleChooseDefaultAddress = () => {
-    let currentUser = JSON.parse(window.localStorage.getItem("currentUser"));
-    let order = JSON.parse(window.localStorage.getItem("saleOrder"));
-    if (currentUser != null && currentUser.id != null && order.sanPhamDonHang != null && order.sanPhamDonHang.length > 0) {
-      saveOrder(order).then((res) => {
-        if (res.status == 200) {
-          toast.info("Chúc mừng bạn đã đặt hàng thành công");
-        }else{
-          toast.error("Có lỗi xảy ra khi đặt hàng, vui lòng thử lại");
-        }
-      }).catch(err=>{
-        toast.error("Có lỗi xảy ra khi đặt hàng, vui lòng thử lại");
-        console.log(err)
-      })
-    }
-  }
-
-  onValidationError = errors => {
-    toast.error("Please Enter Valid Details", {
-      position: toast.POSITION.BOTTOM_RIGHT
-    })
-  }
-
-  render() {
-    const { steps, activeStep } = this.state
     return (
       <React.Fragment>
         <Breacrumbs
-          breadCrumbTitle="Checkout"
-          breadCrumbParent="eCommerce"
-          breadCrumbActive="Checkout"
+          breadCrumbTitle="Đơn hàng"
+          breadCrumbParent="Xác nhận"
+          breadCrumbActive="Đặt hàng"
         />
         <div className="ecommerce-application">
           <Wizard

@@ -132,30 +132,32 @@ public class SanPhamServiceImpl extends GenericServiceImpl<SanPham, UUID> implem
 		if (dto == null) {
 			return null;
 		}
-
 		int pageIndex = dto.getPageIndex();
 		int pageSize = dto.getPageSize();
-
 		if (pageIndex > 0) {
 			pageIndex--;
 		} else {
 			pageIndex = 0;
 		}
-
 		String whereClause = "";
-
 		String orderBy = " ORDER BY entity.createDate DESC";
-
 		String sqlCount = "select count(entity.id) from SanPham as entity where (1=1)   ";
 		String sql = "select new com.globits.da.dto.SanPhamDto(entity) from SanPham as entity where (1=1)  ";
-
 		if (dto.getKeyword() != null && StringUtils.hasText(dto.getKeyword())) {
 			whereClause += " AND ( entity.maSP LIKE :text or entity.tenSP LIKE :text )";
 		}
 		if (dto.getDanhMucSanPhamId() != null) {
 			whereClause += " AND ( entity.danhMucSanPham.id  =: danhMucSanPhamId  )";
 		}
-
+		if (dto.getPriceMin() != null) {
+			whereClause += " AND ( entity.giaBanHienThoi  <=: priceMin )";
+		}
+		if (dto.getPriceMax() != null) {
+			whereClause += " AND ( entity.giaBanHienThoi  >=: priceMax )";
+		}
+		if (dto.getPriceMax() != null && dto.getPriceMin() != null) {
+			whereClause += " AND ( entity.giaBanHienThoi BETWEEN  :priceMin AND :priceMax )";
+		}
 		sql += whereClause + orderBy;
 		sqlCount += whereClause;
 
@@ -169,6 +171,14 @@ public class SanPhamServiceImpl extends GenericServiceImpl<SanPham, UUID> implem
 		if (dto.getDanhMucSanPhamId() != null) {
 			q.setParameter("danhMucSanPhamId", dto.getDanhMucSanPhamId());
 			qCount.setParameter("danhMucSanPhamId", dto.getDanhMucSanPhamId());
+		}
+		if(dto.getPriceMin() != null) {
+			q.setParameter("priceMin", dto.getPriceMin());
+			qCount.setParameter("priceMin", dto.getPriceMin());
+		}
+		if(dto.getPriceMax() != null) {
+			q.setParameter("priceMax", dto.getPriceMax());
+			qCount.setParameter("priceMax", dto.getPriceMax());
 		}
 		int startPosition = pageIndex * pageSize;
 		q.setFirstResult(startPosition);

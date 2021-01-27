@@ -31,9 +31,9 @@ class Shop extends React.Component {
     return (
       <React.Fragment>
         <Breacrumbs
-          breadCrumbTitle="Shop"
-          breadCrumbParent="eCommerce"
-          breadCrumbActive="Shop"
+          breadCrumbTitle="Cửa hàng"
+          breadCrumbParent="Danh sách sản phẩm"
+          breadCrumbActive="Sản phẩm"
         />
         <div className="ecommerce-application">
           <div
