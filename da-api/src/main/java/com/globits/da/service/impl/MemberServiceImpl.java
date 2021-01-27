@@ -45,8 +45,9 @@ import com.globits.security.dto.UserDto;
 import com.globits.security.repository.UserRepository;
 import com.globits.security.service.RoleService;
 import com.globits.security.service.UserService;
+
 @Service
-public class MemberServiceImpl extends GenericServiceImpl<Person, UUID> implements MemberService{
+public class MemberServiceImpl extends GenericServiceImpl<Person, UUID> implements MemberService {
 	@Autowired
 	UserService userService;
 	@Autowired
@@ -57,16 +58,17 @@ public class MemberServiceImpl extends GenericServiceImpl<Person, UUID> implemen
 	PersonRepository personRepository;
 	@Autowired
 	UserRepository userRepository;
-	
+
 	@Override
 	public RegisterDto registerUser(RegisterDto registerDto) {
-		ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+		ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder
+				.currentRequestAttributes();
 		HttpServletRequest request = attributes.getRequest();
-		String ipAddr= HttpUtils.getClientIpAddr(request);
+		String ipAddr = HttpUtils.getClientIpAddr(request);
 		LocalDateTime currentDate = LocalDateTime.now();
 		String currentUserName = "Unknown User";
 		RegisterDto result = new RegisterDto();
-		
+
 		if (registerDto != null && registerDto.getUserName() != null) {
 			// check userName tồn tại hay chưa
 			UserDto userDto = userService.findByUsername(registerDto.getUserName());
@@ -81,10 +83,17 @@ public class MemberServiceImpl extends GenericServiceImpl<Person, UUID> implemen
 				return result;
 			}
 			// check email tồn tại hay chưa
-			if(registerDto.getEmail() != null && registerDto.getEmail().length() > 0) {
+			if (registerDto.getEmail() != null && registerDto.getEmail().length() > 0) {
 				List<Person> pEmail = this.getPersonByEmail(registerDto.getEmail());
 				if (pEmail != null && pEmail.size() > 0) {
 					result.setHasEmail(true);
+					return result;
+				}
+			}
+			// check mật khẩu và xác nhận mật khẩu có khớp không
+			if (registerDto.getPassword() != null && registerDto.getConfirmPassword() != null) {
+				if (!registerDto.getPassword().equals(registerDto.getConfirmPassword())) {
+					result.setIsConfirmPassword(true);
 					return result;
 				}
 			}
@@ -103,7 +112,7 @@ public class MemberServiceImpl extends GenericServiceImpl<Person, UUID> implemen
 			Role userRole = roleService.findByName(Constants.ROLE_USER);
 			user.getRoles().add(userRole);
 			user = userRepository.save(user);
-			
+
 			Person person = new Person();
 			person.setDisplayName(registerDto.getDisplayName());
 			person.setEmail(registerDto.getEmail());
@@ -121,6 +130,7 @@ public class MemberServiceImpl extends GenericServiceImpl<Person, UUID> implemen
 		}
 		return null;
 	}
+
 	private List<Person> getPersonByPhoneNumber(String phoneNumber) {
 		String sql = "select p from Person p where p.phoneNumber =:phoneNumber ";
 		Query q = manager.createQuery(sql, Person.class);
@@ -128,7 +138,7 @@ public class MemberServiceImpl extends GenericServiceImpl<Person, UUID> implemen
 		List<Person> entities = q.getResultList();
 		return entities;
 	}
-	
+
 	private List<Person> getPersonByEmail(String email) {
 		String sql = "select p from Person p where (p.Email =:email OR p.user.email =:email ) ";
 		Query q = manager.createQuery(sql, Person.class);
