@@ -40,10 +40,12 @@ import com.globits.da.repository.DonHangRepository;
 import com.globits.da.repository.DonViTinhRepository;
 import com.globits.da.repository.KhoRepository;
 import com.globits.da.repository.NhanVienRepository;
+import com.globits.da.repository.PhieuNhapKhoRepository;
 import com.globits.da.repository.SanPhamDonHangRepository;
 import com.globits.da.repository.SanPhamRepository;
 import com.globits.da.service.DonHangService;
 import com.globits.da.service.KhoService;
+import com.globits.da.service.PhieuNhapKhoService;
 
 @Service
 public class DonHangServiceImpl extends GenericServiceImpl<DonHang, UUID> implements DonHangService {
@@ -57,7 +59,9 @@ public class DonHangServiceImpl extends GenericServiceImpl<DonHang, UUID> implem
 	private SanPhamRepository sanPhamRepository;
 	@Autowired
 	private DonViTinhRepository donViTinhRepository;
-	
+	@Autowired
+	private PhieuNhapKhoService phieuNhapKhoService;
+
 	@Override
 	public Page<DonHangDto> getPage(int pageSize, int pageIndex) {
 		Pageable pageable = PageRequest.of(pageIndex - 1, pageSize);
@@ -78,7 +82,7 @@ public class DonHangServiceImpl extends GenericServiceImpl<DonHang, UUID> implem
 				entity = new DonHang();
 			}
 			entity.setTen(dto.getTen());
-			entity.setMa(RandomStringUtils.random(9,true,true));
+			entity.setMa(RandomStringUtils.random(9, true, true));
 			entity.setNgayDatHang(new Date());
 			entity.setNgayGiaoHang(dto.getNgayGiaoHang());
 			entity.setTongGia(dto.getTongGia());
@@ -106,11 +110,11 @@ public class DonHangServiceImpl extends GenericServiceImpl<DonHang, UUID> implem
 					if (sanPhamDonHang == null) {
 						sanPhamDonHang = new SanPhamDonHang();
 					}
-					
+
 					SanPham sanPham = null;
-					if(sanPhamDonHangDto.getSanPham() != null && sanPhamDonHangDto.getSanPham().getId() != null) {
+					if (sanPhamDonHangDto.getSanPham() != null && sanPhamDonHangDto.getSanPham().getId() != null) {
 						sanPham = sanPhamRepository.getOne(sanPhamDonHangDto.getSanPham().getId());
-						if(sanPham == null) {
+						if (sanPham == null) {
 							return null;
 						}
 					}
@@ -121,9 +125,9 @@ public class DonHangServiceImpl extends GenericServiceImpl<DonHang, UUID> implem
 					sanPhamDonHang.setThanhTien(sanPhamDonHangDto.getThanhTien());
 					sanPhamDonHang.setTrietKhau(sanPhamDonHangDto.getTrietKhau());
 					DonViTinh donViTinh = null;
-					if(sanPhamDonHangDto.getDonViTinh() != null && sanPhamDonHangDto.getDonViTinh().getId() != null) {
+					if (sanPhamDonHangDto.getDonViTinh() != null && sanPhamDonHangDto.getDonViTinh().getId() != null) {
 						donViTinh = donViTinhRepository.getOne(sanPhamDonHangDto.getDonViTinh().getId());
-						if(donViTinh == null) {
+						if (donViTinh == null) {
 							return null;
 						}
 					}
@@ -132,7 +136,8 @@ public class DonHangServiceImpl extends GenericServiceImpl<DonHang, UUID> implem
 				}
 
 				if (entity.getSanPhamDonHang() == null) {
-					entity.setSanPhamDonHang(listSanPhamDonHang);;
+					entity.setSanPhamDonHang(listSanPhamDonHang);
+					;
 				} else {
 					entity.getSanPhamDonHang().clear();
 					entity.getSanPhamDonHang().addAll(listSanPhamDonHang);
@@ -244,7 +249,7 @@ public class DonHangServiceImpl extends GenericServiceImpl<DonHang, UUID> implem
 		if (dto.getFromDate() != null && dto.getToDate() != null) {
 			whereClause += " AND ( entity.ngayDatHang BETWEEN :fromDate and :toDate  )";
 		}
-		
+
 		sql += whereClause + orderBy;
 
 		Query q = manager.createQuery(sql, DonHangDto.class);
@@ -256,10 +261,99 @@ public class DonHangServiceImpl extends GenericServiceImpl<DonHang, UUID> implem
 			q.setParameter("fromDate", dto.getFromDate());
 			q.setParameter("toDate", dto.getToDate());
 		}
-		
+
 		List<DonHangDto> entities = q.getResultList();
 		List<BaoCaoDto> result = new ArrayList<BaoCaoDto>();
-		return result;
+		List<SanPhamDonHangDto> listSPDH = new ArrayList<SanPhamDonHangDto>();
+
+		if (entities == null || entities.size() == 0) {
+			return result;
+		}
+
+		for (DonHangDto dhDto : entities) {
+			if (dhDto.getSanPhamDonHang() != null && dhDto.getSanPhamDonHang().size() > 0) {
+				for (SanPhamDonHangDto spdhDto : dhDto.getSanPhamDonHang()) {
+					listSPDH.add(spdhDto);
+				}
+			}
+		}
+
+		if (listSPDH == null || listSPDH.size() == 0) {
+			return result;
+		}
+
+		for (SanPhamDonHangDto spdh : listSPDH) {
+			BaoCaoDto bcDto = new BaoCaoDto();
+			bcDto.setSanPhamId(spdh.getSanPham().getId());
+			bcDto.setTenSP(spdh.getSanPham().getTenSP());
+			bcDto.setMaSP(spdh.getSanPham().getMaSP());
+			bcDto.setSoLuongBan(0);
+			if(spdh.getSoLuong() != null) {
+				bcDto.setSoLuongBan(spdh.getSoLuong());
+			}
+			bcDto.setTongTienBan(0.0);
+			if(spdh.getDonGia() != null) {
+				bcDto.setTongTienBan(spdh.getDonGia());
+			}
+			if (result.size() == 0) {
+				result.add(bcDto);
+			} else {
+				for (BaoCaoDto bc : result) {
+					Boolean check = false;
+					if (bcDto.getSanPhamId().equals(bc.getSanPhamId())) {
+						bc.setSoLuongBan(bc.getSoLuongBan() + bcDto.getSoLuongBan());
+						bc.setTongTienBan(bc.getTongTienBan() + bcDto.getTongTienBan());
+						check = true;
+						break;
+					} else {
+						check = false;
+					}
+					if (!check) {
+						result.add(bcDto);
+						break;
+					}
+				}
+			}
+		}
+
+		List<BaoCaoDto> listPhieuNhap = phieuNhapKhoService.baoCao(dto);
+		List<BaoCaoDto> listPhieuNhapGroupBySPID = new ArrayList<BaoCaoDto>();
+		if (listPhieuNhap != null && listPhieuNhap.size() > 0) {
+			for (BaoCaoDto bcDto : listPhieuNhap) {
+				if (listPhieuNhapGroupBySPID.size() == 0) {
+					listPhieuNhapGroupBySPID.add(bcDto);
+				} else {
+					for (BaoCaoDto bc : listPhieuNhapGroupBySPID) {
+						Boolean check = false;
+						if (bc.getSanPhamId().equals(bcDto.getSanPhamId())) {
+							bc.setSoLuong(bc.getSoLuong() + bcDto.getSoLuong());
+							bc.setTongTienNhap(bc.getTongTienNhap() + bcDto.getTongTienNhap());
+							check = true;
+							break;
+						} else {
+							check = false;
+						}
+						if(!check) {
+							listPhieuNhapGroupBySPID.add(bcDto);
+							break;
+						}
+					}
+				}
+			}
+		}
+		
+		if(listPhieuNhapGroupBySPID.size() > 0) {
+			for (BaoCaoDto pn : listPhieuNhapGroupBySPID) {
+				for (BaoCaoDto bc : result) {
+					if(pn.getSanPhamId().equals(bc.getSanPhamId())) {
+						pn.setSoLuongBan(bc.getSoLuongBan());
+						pn.setTongTienBan(bc.getTongTienBan());
+					}
+				}
+			}
+		}
+
+		return listPhieuNhapGroupBySPID;
 	}
 
 }

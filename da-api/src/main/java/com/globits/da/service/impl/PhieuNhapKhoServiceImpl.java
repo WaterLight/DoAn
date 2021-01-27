@@ -280,6 +280,10 @@ public class PhieuNhapKhoServiceImpl extends GenericServiceImpl<PhieuNhapKho, UU
 				bc.setMaSP(spDto.getSanPham().getMaSP());
 				bc.setKhoId(spDto.getKho().getId());
 				bc.setTenKho(spDto.getKho().getTenKho());
+				bc.setTongTienNhap(0.0);
+				if(spDto.getGia() != null) {
+					bc.setTongTienNhap(spDto.getGia());
+				}
 				bc.setSoLuong(0);
 				if (spDto.getSoLuong() != null) {
 					bc.setSoLuong(spDto.getSoLuong());
@@ -292,6 +296,7 @@ public class PhieuNhapKhoServiceImpl extends GenericServiceImpl<PhieuNhapKho, UU
 					for (BaoCaoDto bcDto : result) {
 						if (bc.getSanPhamId().equals(bcDto.getSanPhamId()) && bc.getKhoId().equals(bcDto.getKhoId())) {
 							bcDto.setSoLuong(bcDto.getSoLuong() + bc.getSoLuong());
+							bcDto.setTongTienNhap(bcDto.getTongTienNhap() + bc.getTongTienNhap());
 							check = true;
 							break;
 						} else {

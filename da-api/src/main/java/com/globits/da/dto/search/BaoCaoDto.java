@@ -14,8 +14,9 @@ public class BaoCaoDto {
 	private Integer soLuongNhap;
 	
 	//báo cáo đơn hàng
-	private Integer tongDonHang;
-	private Double tongTien;
+	private Double tongTienNhap;
+	private Integer soLuongBan;
+	private Double tongTienBan;
 
 	public UUID getSanPhamId() {
 		return sanPhamId;
@@ -79,6 +80,30 @@ public class BaoCaoDto {
 
 	public void setMaSP(String maSP) {
 		this.maSP = maSP;
+	}
+
+	public Double getTongTienNhap() {
+		return tongTienNhap;
+	}
+
+	public void setTongTienNhap(Double tongTienNhap) {
+		this.tongTienNhap = tongTienNhap;
+	}
+
+	public Integer getSoLuongBan() {
+		return soLuongBan;
+	}
+
+	public void setSoLuongBan(Integer soLuongBan) {
+		this.soLuongBan = soLuongBan;
+	}
+
+	public Double getTongTienBan() {
+		return tongTienBan;
+	}
+
+	public void setTongTienBan(Double tongTienBan) {
+		this.tongTienBan = tongTienBan;
 	}
 
 }
