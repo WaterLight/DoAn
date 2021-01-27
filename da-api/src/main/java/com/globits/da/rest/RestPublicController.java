@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.globits.core.service.FileDescriptionService;
 import com.globits.da.dto.RegisterDto;
 import com.globits.da.dto.SanPhamDto;
+import com.globits.da.dto.SanPhamSizeDto;
 import com.globits.da.dto.search.SearchDto;
 import com.globits.da.service.MemberService;
 import com.globits.da.service.SanPhamService;
@@ -42,6 +43,11 @@ public class RestPublicController {
 	public ResponseEntity<Page<SanPhamDto>> getPage(@RequestBody SearchDto dto ) {
 		Page<SanPhamDto> results = sanPhamService.searchByPage(dto);
 		return new ResponseEntity<Page<SanPhamDto>>(results, HttpStatus.OK);
+	}
+	@RequestMapping(value = "/searchByPageGroupByName", method = RequestMethod.POST)
+	public ResponseEntity<Page<SanPhamSizeDto>> searchByPageGroupByName(@RequestBody SearchDto searchDto) {
+		Page<SanPhamSizeDto> page = this.sanPhamService.searchByPageGroupByName(searchDto);
+		return new ResponseEntity<Page<SanPhamSizeDto>>(page, HttpStatus.OK);
 	}
 	
 	@RequestMapping(path = "/getImage/{filename}/{type}", method = RequestMethod.GET)

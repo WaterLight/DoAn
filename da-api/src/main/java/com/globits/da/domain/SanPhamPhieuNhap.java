@@ -20,9 +20,16 @@ public class SanPhamPhieuNhap extends BaseObject{
 	private Integer soLuong;
 	@Column(name = "gia")
 	private Double gia;
+	@Column(name = "chiet_khau")
+	private Double chietKhau;
+	@Column(name = "thanh_tien")
+	private Double thanhTien;
 	@ManyToOne
 	@JoinColumn(name="phieu_nhap_kho_id")
 	private PhieuNhapKho phieuNhapKho;
+	@ManyToOne
+	@JoinColumn(name="size_id")
+	private ThuocTinhSanPham size;
 	
 	public SanPham getSanPham() {
 		return sanPham;
@@ -53,6 +60,24 @@ public class SanPhamPhieuNhap extends BaseObject{
 	}
 	public void setGia(Double gia) {
 		this.gia = gia;
+	}
+	public ThuocTinhSanPham getSize() {
+		return size;
+	}
+	public void setSize(ThuocTinhSanPham size) {
+		this.size = size;
+	}
+	public Double getChietKhau() {
+		return chietKhau;
+	}
+	public void setChietKhau(Double chietKhau) {
+		this.chietKhau = chietKhau;
+	}
+	public Double getThanhTien() {
+		return thanhTien;
+	}
+	public void setThanhTien(Double thanhTien) {
+		this.thanhTien = thanhTien;
 	}
 	
 }

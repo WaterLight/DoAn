@@ -1,5 +1,7 @@
 package com.globits.da.dto;
 
+import javax.persistence.Column;
+
 import com.globits.da.domain.SanPhamPhieuNhap;
 
 public class SanPhamPhieuNhapKhoDto extends BaseObjectDto{
@@ -7,7 +9,11 @@ public class SanPhamPhieuNhapKhoDto extends BaseObjectDto{
 	private KhoDto kho;
 	private Integer soLuong;
 	private Double gia;
+	private Double chietKhau;
+	private Double thanhTien;
 	private PhieuNhapKhoDto phieuNhapKho;
+	private ThuocTinhSanPhamDto size;
+	
 	public SanPhamDto getSanPham() {
 		return sanPham;
 	}
@@ -38,6 +44,25 @@ public class SanPhamPhieuNhapKhoDto extends BaseObjectDto{
 	public void setPhieuNhapKho(PhieuNhapKhoDto phieuNhapKho) {
 		this.phieuNhapKho = phieuNhapKho;
 	}
+	
+	public Double getChietKhau() {
+		return chietKhau;
+	}
+	public void setChietKhau(Double chietKhau) {
+		this.chietKhau = chietKhau;
+	}
+	public Double getThanhTien() {
+		return thanhTien;
+	}
+	public void setThanhTien(Double thanhTien) {
+		this.thanhTien = thanhTien;
+	}
+	public ThuocTinhSanPhamDto getSize() {
+		return size;
+	}
+	public void setSize(ThuocTinhSanPhamDto size) {
+		this.size = size;
+	}
 	public SanPhamPhieuNhapKhoDto() {
 		super();
 	}
@@ -53,6 +78,11 @@ public class SanPhamPhieuNhapKhoDto extends BaseObjectDto{
 			if(p.getPhieuNhapKho() != null) {
 				this.phieuNhapKho = new PhieuNhapKhoDto(p.getPhieuNhapKho(),true);
 			}
+			if(p.getSize() != null) {
+				this.size = new ThuocTinhSanPhamDto(p.getSize());
+			}
+			this.chietKhau = p.getChietKhau();
+			this.thanhTien = p.getThanhTien();
 			this.soLuong = p.getSoLuong();
 			this.gia = p.getGia();
 		}
