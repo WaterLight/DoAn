@@ -325,7 +325,7 @@ class DonHangEditorDialog extends Component {
         ),
       },
       {
-        title: t("Đơn giá"),
+        title: t("Tổng giá"),
         field: "code",
         align: "left",
         render: (row) => (
