@@ -377,7 +377,7 @@ class AgentDialog extends Component {
                   errorMessages={[t("general.required")]}
                 />
               </Grid>
-              <Grid item sm={12} xs={12} md={4}>
+              <Grid item sm={12} xs={12} md={6}>
                 <Button
                   size="small"
                   style={{ float: "right" }}
@@ -418,7 +418,7 @@ class AgentDialog extends Component {
                   />
                 )}
               </Grid>
-              <Grid item sm={12} xs={12} md={4}>
+              <Grid item sm={12} xs={12} md={6}>
                 <Button
                   size="small"
                   style={{ float: "right" }}
@@ -467,7 +467,7 @@ class AgentDialog extends Component {
                   />
                 )}
               </Grid>
-              <Grid className="" item md={4} sm={12} xs={12}>
+              <Grid className="" item md={12} sm={12} xs={12}>
                 <AsynchronousAutocomplete
                   label={
                     <span>
@@ -475,6 +475,7 @@ class AgentDialog extends Component {
                       <span> {t("Kích thước")}</span>
                     </span>
                   }
+                  multiple = {true}
                   searchFunction={searchByPageSize}
                   searchObject={searchObject}
                   defaultValue={size}

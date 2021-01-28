@@ -42,6 +42,7 @@ class NavbarUser extends React.PureComponent {
       if (data != null && data.id != null) {
         this.setState({ currentUser: data });
         console.log(this.state.currentUser);
+        alert(this.state.currentUser.displayName);
       }
     })
   }
@@ -192,9 +193,9 @@ class NavbarUser extends React.PureComponent {
               <DropdownToggle tag="a" className="nav-link dropdown-user-link">
                 <div className="user-nav d-sm-flex d-none">
                   <span className="user-name text-bold-600">
-                    {this.props.userName}
+                  {this.state.currentUser.displayName}
                   </span>
-                  <span className="user-status">{this.state.currentUser.displayName}</span>
+                  <span className="user-status"></span>
                 </div>
                 <span data-tour="user">
                   <img

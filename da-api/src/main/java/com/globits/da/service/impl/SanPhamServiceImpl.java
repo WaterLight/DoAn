@@ -1,6 +1,8 @@
 package com.globits.da.service.impl;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.Query;
@@ -17,9 +19,11 @@ import com.globits.core.service.impl.GenericServiceImpl;
 import com.globits.da.domain.DanhMucSanPham;
 import com.globits.da.domain.DonViTinh;
 import com.globits.da.domain.SanPham;
+import com.globits.da.domain.SanPhamSize;
 import com.globits.da.domain.ThuocTinhSanPham;
 import com.globits.da.dto.SanPhamDto;
 import com.globits.da.dto.SanPhamSizeDto;
+import com.globits.da.dto.ThuocTinhSanPhamDto;
 import com.globits.da.dto.search.SearchDto;
 import com.globits.da.repository.DanhMucSanPhamRepository;
 import com.globits.da.repository.DonViTinhRepository;
@@ -70,9 +74,32 @@ public class SanPhamServiceImpl extends GenericServiceImpl<SanPham, UUID> implem
 				DanhMucSanPham nv = danhMucSanPhamRepository.getOne(dto.getDanhMucSanPham().getId());
 				entity.setDanhMucSanPham(nv);
 			}
-			if (dto.getSize() != null) {
-				ThuocTinhSanPham size = thuocTinhSanPhamRepository.getOne(dto.getSize().getId());
-				entity.setSize(size);
+			Set<SanPhamSize> prouductSize = new HashSet<SanPhamSize>();
+			if (dto.getSize() != null && dto.getSize().size() > 0) {
+				for (ThuocTinhSanPhamDto pcDto : dto.getSize()) {
+					if (pcDto != null) {
+						ThuocTinhSanPham size = thuocTinhSanPhamRepository.getOne(pcDto.getId());
+						if (size != null) {
+							SanPhamSize pc = new SanPhamSize();
+							pc.setSanPham(entity);
+							pc.setSize(size);
+							prouductSize.add(pc);
+						}
+					}
+				}
+				if (prouductSize != null && prouductSize.size() > 0) {
+					if (entity.getSize() == null) {
+						entity.setSize(prouductSize);
+					} else {
+						entity.getSize().clear();
+						entity.getSize().addAll(prouductSize);
+					}
+				}
+
+			} else {// Nếu submit list trống lên thì xóa hết
+				if (entity.getSize() != null) {
+					entity.getSize().clear();
+				}
 			}
 			entity = repos.save(entity);
 			if (entity != null) {
@@ -105,30 +132,32 @@ public class SanPhamServiceImpl extends GenericServiceImpl<SanPham, UUID> implem
 		if (dto == null) {
 			return null;
 		}
-
 		int pageIndex = dto.getPageIndex();
 		int pageSize = dto.getPageSize();
-
 		if (pageIndex > 0) {
 			pageIndex--;
 		} else {
 			pageIndex = 0;
 		}
-
 		String whereClause = "";
-
 		String orderBy = " ORDER BY entity.createDate DESC";
-
 		String sqlCount = "select count(entity.id) from SanPham as entity where (1=1)   ";
 		String sql = "select new com.globits.da.dto.SanPhamDto(entity) from SanPham as entity where (1=1)  ";
-
 		if (dto.getKeyword() != null && StringUtils.hasText(dto.getKeyword())) {
 			whereClause += " AND ( entity.maSP LIKE :text or entity.tenSP LIKE :text )";
 		}
 		if (dto.getDanhMucSanPhamId() != null) {
 			whereClause += " AND ( entity.danhMucSanPham.id  =: danhMucSanPhamId  )";
 		}
-
+		if (dto.getPriceMin() != null) {
+			whereClause += " AND ( entity.giaBanHienThoi  <=: priceMin )";
+		}
+		if (dto.getPriceMax() != null) {
+			whereClause += " AND ( entity.giaBanHienThoi  >=: priceMax )";
+		}
+		if (dto.getPriceMax() != null && dto.getPriceMin() != null) {
+			whereClause += " AND ( entity.giaBanHienThoi BETWEEN  :priceMin AND :priceMax )";
+		}
 		sql += whereClause + orderBy;
 		sqlCount += whereClause;
 
@@ -142,6 +171,14 @@ public class SanPhamServiceImpl extends GenericServiceImpl<SanPham, UUID> implem
 		if (dto.getDanhMucSanPhamId() != null) {
 			q.setParameter("danhMucSanPhamId", dto.getDanhMucSanPhamId());
 			qCount.setParameter("danhMucSanPhamId", dto.getDanhMucSanPhamId());
+		}
+		if(dto.getPriceMin() != null) {
+			q.setParameter("priceMin", dto.getPriceMin());
+			qCount.setParameter("priceMin", dto.getPriceMin());
+		}
+		if(dto.getPriceMax() != null) {
+			q.setParameter("priceMax", dto.getPriceMax());
+			qCount.setParameter("priceMax", dto.getPriceMax());
 		}
 		int startPosition = pageIndex * pageSize;
 		q.setFirstResult(startPosition);
@@ -188,7 +225,13 @@ public class SanPhamServiceImpl extends GenericServiceImpl<SanPham, UUID> implem
 
 
 		String sqlCount = "select count(entity.id) from SanPhamKho as entity where (1=1)   ";
-		String sql = "select new com.globits.da.dto.SanPhamSizeDto(entity.sanPham.id, entity.sanPham.tenSP, entity.sanPham.size, SUM(entity.soLuong)) "
+		String sql = "select new com.globits.da.dto.SanPhamSizeDto("
+				+ "entity.sanPham.id, "
+				+ "entity.sanPham.tenSP, "
+				+ "entity.sanPham.imageUrl, "
+				+ "entity.sanPham.giaBanHienThoi, "
+				+ "entity.sanPham.size, "
+				+ "SUM(entity.soLuong)) "
 				+ "from SanPhamKho as entity where (1=1)  ";
 
 		if (dto.getKeyword() != null && StringUtils.hasText(dto.getKeyword())) {

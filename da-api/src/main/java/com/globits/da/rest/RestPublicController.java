@@ -20,9 +20,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import com.globits.core.service.FileDescriptionService;
+import com.globits.da.dto.DanhMucSanPhamDto;
 import com.globits.da.dto.RegisterDto;
 import com.globits.da.dto.SanPhamDto;
+import com.globits.da.dto.SanPhamSizeDto;
 import com.globits.da.dto.search.SearchDto;
+import com.globits.da.service.DanhMucSanPhamService;
 import com.globits.da.service.MemberService;
 import com.globits.da.service.SanPhamService;
 
@@ -36,12 +39,24 @@ public class RestPublicController {
 	@Autowired
 	SanPhamService sanPhamService;
 	@Autowired
+	DanhMucSanPhamService danhMucSanPhamService;
+	@Autowired
 	MemberService memberService; 
 	
 	@RequestMapping(value = "/getListProductByPage", method = RequestMethod.POST)
 	public ResponseEntity<Page<SanPhamDto>> getPage(@RequestBody SearchDto dto ) {
 		Page<SanPhamDto> results = sanPhamService.searchByPage(dto);
 		return new ResponseEntity<Page<SanPhamDto>>(results, HttpStatus.OK);
+	}
+	@RequestMapping(value = "/getListProductCategoryByPage", method = RequestMethod.POST)
+	public ResponseEntity<Page<DanhMucSanPhamDto>> getListProductCategoryByPage(@RequestBody SearchDto dto ) {
+		Page<DanhMucSanPhamDto> results = danhMucSanPhamService.searchByPage(dto);
+		return new ResponseEntity<Page<DanhMucSanPhamDto>>(results, HttpStatus.OK);
+	}
+	@RequestMapping(value = "/searchByPageGroupByName", method = RequestMethod.POST)
+	public ResponseEntity<Page<SanPhamSizeDto>> searchByPageGroupByName(@RequestBody SearchDto searchDto) {
+		Page<SanPhamSizeDto> page = this.sanPhamService.searchByPageGroupByName(searchDto);
+		return new ResponseEntity<Page<SanPhamSizeDto>>(page, HttpStatus.OK);
 	}
 	
 	@RequestMapping(path = "/getImage/{filename}/{type}", method = RequestMethod.GET)

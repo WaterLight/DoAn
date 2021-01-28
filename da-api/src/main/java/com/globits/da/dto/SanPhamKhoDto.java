@@ -1,11 +1,16 @@
 package com.globits.da.dto;
 
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
 import com.globits.da.domain.SanPhamKho;
+import com.globits.da.domain.ThuocTinhSanPham;
 
 public class SanPhamKhoDto extends BaseObjectDto{
 	private KhoDto kho;
 	private SanPhamDto sanPham;
 	private Integer soLuong;
+	private ThuocTinhSanPhamDto size;
 	public KhoDto getKho() {
 		return kho;
 	}
@@ -24,6 +29,13 @@ public class SanPhamKhoDto extends BaseObjectDto{
 	public void setSoLuong(Integer soLuong) {
 		this.soLuong = soLuong;
 	}
+	
+	public ThuocTinhSanPhamDto getSize() {
+		return size;
+	}
+	public void setSize(ThuocTinhSanPhamDto size) {
+		this.size = size;
+	}
 	public SanPhamKhoDto() {
 		super();
 	}
@@ -36,6 +48,9 @@ public class SanPhamKhoDto extends BaseObjectDto{
 			}
 			if(p.getSanPham() != null) {
 				this.sanPham = new SanPhamDto(p.getSanPham());
+			}
+			if(p.getSize() != null) {
+				this.size = new ThuocTinhSanPhamDto(p.getSize());
 			}
 		}
 	}
