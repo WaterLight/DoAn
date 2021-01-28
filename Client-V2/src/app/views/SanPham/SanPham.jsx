@@ -224,6 +224,7 @@ import {
         })
       }
       deleteItem(this.state.id).then(() => {
+        toast.info("Xoá thành công");
         this.updatePageData();
         this.handleDialogClose();
       }).catch(() => {
@@ -262,6 +263,8 @@ import {
       } else if (listAlert.length > 0) {
         toast.warning(t("RequirementType.deleted_unused"));
         // alert("Đã xoá các trạng thái chưa sử dụng");
+      } else {
+        toast.info("Xoá thành công");
       }
     }
      handleDeleteAll = (event) => {

@@ -135,8 +135,10 @@ class AgentDialog extends Component {
   };
   handleSelectAgency = (item) => {
     this.setState({
-      agency: item ? item : null,
+      donViTinh: item ? item : null,
       shouldOpenSelectAgencyPopup: false,
+    }, ()=> {
+      console.log(this.state.donViTinh)
     });
   };
   handleSelectDM = (item) => {
@@ -399,7 +401,7 @@ class AgentDialog extends Component {
                   }
                   style={{ width: "70%" }}
                   value={
-                    this.state.agency != null ? this.state.agency.name : ""
+                    this.state.donViTinh != null ? this.state.donViTinh.ten : ""
                   }
                 />
 
@@ -408,7 +410,7 @@ class AgentDialog extends Component {
                     open={this.state.shouldOpenSelectAgencyPopup}
                     handleSelect={this.handleSelectAgency}
                     selectedItem={
-                      this.state.agency != null ? this.state.agency : {}
+                      this.state.donViTinh != null ? this.state.donViTinh : {}
                     }
                     handleClose={this.handleDialogClose}
                     t={t}

@@ -280,7 +280,7 @@ import {
       console.log(this.state)
       const { t, i18n } = this.props;
       let { keyword, shouldOpenNotificationPopup } = this.state;
-      let TitlePage = t("Dơn Vị Tính");
+      let TitlePage = t("Đơn Vị Tính");
   
       let columns = [
         {
