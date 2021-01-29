@@ -11,15 +11,19 @@ import java.util.concurrent.ThreadLocalRandom;
 import javax.persistence.Query;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.globits.core.service.impl.GenericServiceImpl;
+import com.globits.da.Constants;
 import com.globits.da.domain.DonHang;
 import com.globits.da.domain.DonViTinh;
 import com.globits.da.domain.Kho;
@@ -28,6 +32,7 @@ import com.globits.da.domain.SanPham;
 import com.globits.da.domain.SanPhamDonHang;
 import com.globits.da.domain.SanPhamKho;
 import com.globits.da.domain.SanPhamPhieuXuat;
+import com.globits.da.domain.ThuocTinhSanPham;
 import com.globits.da.dto.DonHangDto;
 import com.globits.da.dto.KhoDto;
 import com.globits.da.dto.PhieuNhapKhoDto;
@@ -43,9 +48,11 @@ import com.globits.da.repository.NhanVienRepository;
 import com.globits.da.repository.PhieuNhapKhoRepository;
 import com.globits.da.repository.SanPhamDonHangRepository;
 import com.globits.da.repository.SanPhamRepository;
+import com.globits.da.repository.ThuocTinhSanPhamRepository;
 import com.globits.da.service.DonHangService;
 import com.globits.da.service.KhoService;
 import com.globits.da.service.PhieuNhapKhoService;
+import com.globits.security.domain.User;
 
 @Service
 public class DonHangServiceImpl extends GenericServiceImpl<DonHang, UUID> implements DonHangService {
@@ -61,6 +68,8 @@ public class DonHangServiceImpl extends GenericServiceImpl<DonHang, UUID> implem
 	private DonViTinhRepository donViTinhRepository;
 	@Autowired
 	private PhieuNhapKhoService phieuNhapKhoService;
+	@Autowired
+	private ThuocTinhSanPhamRepository sizeRepository;
 
 	@Override
 	public Page<DonHangDto> getPage(int pageSize, int pageIndex) {
@@ -71,6 +80,15 @@ public class DonHangServiceImpl extends GenericServiceImpl<DonHang, UUID> implem
 	@Override
 	public DonHangDto saveOrUpdate(UUID id, DonHangDto dto) {
 		if (dto != null) {
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+			User user = null;
+			LocalDateTime currentDate = LocalDateTime.now();
+			String currentUserName = "Unknown User";
+			boolean isNew = false;
+			if (authentication != null) {
+				user = (User) authentication.getPrincipal();
+				currentUserName = user.getUsername();
+			}
 			DonHang entity = null;
 			if (dto.getId() != null) {
 				if (dto.getId() != null && !dto.getId().equals(id)) {
@@ -79,16 +97,22 @@ public class DonHangServiceImpl extends GenericServiceImpl<DonHang, UUID> implem
 				entity = repos.getOne(dto.getId());
 			}
 			if (entity == null) {
+				isNew = true;
 				entity = new DonHang();
 			}
-			entity.setTen(dto.getTen());
-			entity.setMa(RandomStringUtils.random(9, true, true));
-			entity.setNgayDatHang(new Date());
+			entity.setTrangThai(dto.getTrangThai());
+			if(isNew == true) {
+				entity.setTrangThai(Constants.OrderStatus.newOrder.getValue());
+				if(user != null && user.getPerson() != null && user.getPerson().getDisplayName() != null) {
+					entity.setTen(user.getPerson().getDisplayName());
+				}
+				entity.setMa(RandomStringUtils.random(9, true, true));
+				entity.setNgayDatHang(new Date());
+			}
 			entity.setNgayGiaoHang(dto.getNgayGiaoHang());
 			entity.setTongGia(dto.getTongGia());
-			entity.setGiamGia(dto.getTongGia());
+			entity.setGiamGia(dto.getGiamGia());
 			entity.setThanhTien(dto.getThanhTien());
-			entity.setTrangThai(dto.getTrangThai());
 			entity.setGhiChu(dto.getGhiChu());
 			NhanVien nguoiBan = null;
 			if (dto.getNguoiBan() != null && dto.getNguoiBan().getId() != null) {
@@ -98,7 +122,6 @@ public class DonHangServiceImpl extends GenericServiceImpl<DonHang, UUID> implem
 				}
 			}
 			entity.setNguoiBan(nguoiBan);
-
 			if (dto.getSanPhamDonHang() != null && dto.getSanPhamDonHang().size() > 0) {
 				Set<SanPhamDonHang> listSanPhamDonHang = new HashSet<SanPhamDonHang>();
 				for (SanPhamDonHangDto sanPhamDonHangDto : dto.getSanPhamDonHang()) {
@@ -130,6 +153,14 @@ public class DonHangServiceImpl extends GenericServiceImpl<DonHang, UUID> implem
 						if (donViTinh == null) {
 							return null;
 						}
+					}
+					ThuocTinhSanPham size = null;
+					if (sanPhamDonHangDto.getSize() != null && sanPhamDonHangDto.getSize().getId() != null) {
+						size = sizeRepository.getOne(sanPhamDonHangDto.getSize().getId());
+						if (size == null) {
+							return null;
+						}
+						sanPhamDonHang.setSize(size);
 					}
 					sanPhamDonHang.setDonViTinh(donViTinh);
 					listSanPhamDonHang.add(sanPhamDonHang);
@@ -178,43 +209,47 @@ public class DonHangServiceImpl extends GenericServiceImpl<DonHang, UUID> implem
 		if (dto == null) {
 			return null;
 		}
-
 		int pageIndex = dto.getPageIndex();
 		int pageSize = dto.getPageSize();
-
 		if (pageIndex > 0) {
 			pageIndex--;
 		} else {
 			pageIndex = 0;
 		}
-
 		String whereClause = "";
-
 		String orderBy = " ORDER BY entity.createDate DESC";
-
 		String sqlCount = "select count(entity.id) from DonHang as entity where (1=1)   ";
 		String sql = "select new com.globits.da.dto.DonHangDto(entity) from DonHang as entity where (1=1)  ";
-
 		if (dto.getKeyword() != null && StringUtils.hasText(dto.getKeyword())) {
-			whereClause += " AND ( entity.name LIKE :text OR entity.ma LIKE :text )";
+			whereClause += " AND ( entity.ten LIKE :text OR entity.ma LIKE :text )";
 		}
-
+		if (dto.getDateOrder() != null) {
+			whereClause += " AND ( entity.ngayDatHang =: dateOrder)";
+		}
+		if (dto.getStatusOrder() >0 && dto.getStatusOrder() < 5) {
+			whereClause += " AND ( entity.trangThai =: statusOrder)";
+		}
 		sql += whereClause + orderBy;
 		sqlCount += whereClause;
-
 		Query q = manager.createQuery(sql, DonHangDto.class);
 		Query qCount = manager.createQuery(sqlCount);
-
 		if (dto.getKeyword() != null && StringUtils.hasText(dto.getKeyword())) {
 			q.setParameter("text", '%' + dto.getKeyword() + '%');
 			qCount.setParameter("text", '%' + dto.getKeyword() + '%');
+		}
+		if (dto.getDateOrder() != null) {
+			q.setParameter("dateOrder",  dto.getDateOrder());
+			qCount.setParameter("dateOrder", dto.getDateOrder());
+		}
+		if (dto.getStatusOrder() >0 && dto.getStatusOrder() < 5) {
+			q.setParameter("statusOrder",  dto.getStatusOrder());
+			qCount.setParameter("statusOrder", dto.getStatusOrder());
 		}
 		int startPosition = pageIndex * pageSize;
 		q.setFirstResult(startPosition);
 		q.setMaxResults(pageSize);
 		List<DonHangDto> entities = q.getResultList();
 		long count = (long) qCount.getSingleResult();
-
 		Pageable pageable = PageRequest.of(pageIndex, pageSize);
 		Page<DonHangDto> result = new PageImpl<DonHangDto>(entities, pageable, count);
 		return result;

@@ -19,7 +19,7 @@ export const navigations = [
         isVisible: true,
       },
       {
-        name: "Đơn Vi Tính",
+        name: "Đơn Vị Tính",
         path: ConstantList.ROOT_PATH + "directory/donvitinh",
         iconText: "S",
         isVisible: true,

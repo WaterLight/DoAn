@@ -41,13 +41,80 @@ class Checkout extends React.Component {
   state = {
     activeStep: 0,
     user: null,
-    steps: [
+    steps: [],
+    currentUser: {},
+    saleOrder: {}
+  }
+  handleDeleteProductInCart = product => {
+    if (product && product.sanPham.id) {
+      let order = JSON.parse(window.localStorage.getItem("saleOrder")).sanPhamDonHang;
+      if (order != null && order.length > 0) {
+        for (let i = 0; i < order.length; i++) {
+          if (order[i].sanPham.id == product.sanPham.id) {
+            var removeIndex = order.map(function (item) { return item.id; }).indexOf(product.sanPham.id);
+            order.splice(removeIndex + 1, 1);
+            window.localStorage.setItem("saleOrder", JSON.stringify(order));
+          }
+        }
+      }
+    }
+  }
+  componentDidMount() {
+    let currentUser = JSON.parse(window.localStorage.getItem("currentUser"));
+    if (currentUser != null && currentUser.id != null) {
+      this.setState({ currentUser: currentUser });
+    }
+    let saleOrder = JSON.parse(window.localStorage.getItem("saleOrder"));
+    if (saleOrder != null && saleOrder.sanPhamDonHang != null && saleOrder.sanPhamDonHang.length > 0) {
+      this.setState({ saleOrder: saleOrder });
+    }
+  }
+  componentWillUnmount() {
+  }
+  formatPrice = value => {
+    if (value) {
+      return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+    }
+  }
+  handleActiveStep = index => {
+    let { currentUser } = this.state;
+    if (currentUser == null || currentUser.id == null) {
+      window.location.href = ConstantList.URL + "authentication/login";
+    }
+    this.setState({ activeStep: index })
+  }
+  handleChooseDefaultAddress = () => {
+    let { currentUser } = this.state;
+    let order = JSON.parse(window.localStorage.getItem("saleOrder"));
+    if (currentUser != null && currentUser.id != null && order.sanPhamDonHang != null && order.sanPhamDonHang.length > 0) {
+      saveOrder(order).then((res) => {
+        if (res.status == 200) {
+          toast.info("Chúc mừng bạn đã đặt hàng thành công");
+        } else {
+          toast.error("Có lỗi xảy ra khi đặt hàng, vui lòng thử lại");
+        }
+      }).catch(err => {
+        toast.error("Có lỗi xảy ra khi đặt hàng, vui lòng thử lại");
+        console.log(err)
+      })
+    }
+  }
+
+  onValidationError = errors => {
+    toast.error("Please Enter Valid Details", {
+      position: toast.POSITION.BOTTOM_RIGHT
+    })
+  }
+
+  render() {
+    const { activeStep, currentUser, saleOrder } = this.state;
+    let steps = [
       {
         title: <ShoppingCart size={22} />,
         content: (
           <div className="list-view product-checkout">
             <div className="checkout-items">
-              {JSON.parse(window.localStorage.getItem("saleOrder")) != null && JSON.parse(window.localStorage.getItem("saleOrder")).sanPhamDonHang != null && JSON.parse(window.localStorage.getItem("saleOrder")).sanPhamDonHang.length >= 0 && JSON.parse(window.localStorage.getItem("saleOrder")).sanPhamDonHang.map((item, i) => (
+              {saleOrder != null && saleOrder.sanPhamDonHang != null && saleOrder.sanPhamDonHang.length >= 0 && saleOrder.sanPhamDonHang.map((item, i) => (
                 <Card className="ecommerce-card" key={i}>
                   <div className="card-content">
                     <div className="item-img text-center">
@@ -130,15 +197,15 @@ class Checkout extends React.Component {
                   <div className="detail">
                     <div className="detail-title">Tổng tiền sản phẩm</div>
                     <div className="detail-amt">
-                      {JSON.parse(window.localStorage.getItem("saleOrder")) != null && JSON.parse(window.localStorage.getItem("saleOrder")).totalAmount != null ? (
-                        <span>{JSON.parse(window.localStorage.getItem("saleOrder")).totalAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} đ</span>
+                      {saleOrder != null && saleOrder.totalAmount != null ? (
+                        <span>{saleOrder.totalAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} đ</span>
                       ) : ("0đ")}
                     </div>
                   </div>
                   <div className="detail">
                     <div className="detail-title">Khuyến mãi</div>
-                    {JSON.parse(window.localStorage.getItem("saleOrder")) != null && JSON.parse(window.localStorage.getItem("saleOrder")).giamGia != null ? (
-                      <div className="detail-amt discount-amt">{JSON.parse(window.localStorage.getItem("saleOrder")).giamGia} %</div>
+                    {saleOrder != null && saleOrder.giamGia != null ? (
+                      <div className="detail-amt discount-amt">{saleOrder.giamGia} %</div>
                     ) : ("0%")}
                   </div>
                   {/* <div className="detail">
@@ -156,8 +223,8 @@ class Checkout extends React.Component {
                   <hr /> */}
                   <div className="detail">
                     <div className="detail-title detail-total">Tổng tiền thanh toán</div>
-                    {JSON.parse(window.localStorage.getItem("saleOrder")) != null && JSON.parse(window.localStorage.getItem("saleOrder")).tongGia != null ? (
-                      <span>{JSON.parse(window.localStorage.getItem("saleOrder")).tongGia.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} đ</span>
+                    {saleOrder != null && saleOrder.tongGia != null ? (
+                      <span>{saleOrder.tongGia.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} đ</span>
                     ) : ("0đ")}
                   </div>
                   <Button.Ripple
@@ -281,26 +348,23 @@ class Checkout extends React.Component {
               <Card>
                 <CardHeader>
                   <CardTitle>
-                    Người nhận hàng: {JSON.parse(window.localStorage.getItem("currentUser")) != null ? (
-                      <span>{JSON.parse(window.localStorage.getItem("currentUser")).displayName}</span>
+                    Người nhận hàng: {currentUser != null && currentUser.displayName != null ? (
+                      <span>{currentUser.displayName}</span>
                     ) : ("")
                     }
                   </CardTitle>
                 </CardHeader>
                 <CardBody>
-                  <p className="mb-0">{JSON.parse(window.localStorage.getItem("currentUser")) != null && JSON.parse(window.localStorage.getItem("currentUser")).person != null && JSON.parse(window.localStorage.getItem("currentUser")).person.phoneNumber != null ? (
-                    <span>Số điện thoại: {JSON.parse(window.localStorage.getItem("currentUser")).person.phoneNumber}</span>
+                  <p className="mb-0">{currentUser != null && currentUser.person != null && currentUser.person.phoneNumber != null ? (
+                    <span>Số điện thoại: {currentUser.person.phoneNumber}</span>
                   ) : ("")
                   }</p>
-                  <p className="mb-0">{JSON.parse(window.localStorage.getItem("currentUser")) != null && JSON.parse(window.localStorage.getItem("currentUser")).person != null && JSON.parse(window.localStorage.getItem("currentUser")).person.address != null ? (
-                    <span>Địa chỉ nhận hàng: {JSON.parse(window.localStorage.getItem("currentUser")).person.address}</span>
+                  <p className="mb-0">{currentUser != null && currentUser.person != null && currentUser.person.address[0] != null ? (
+                    <span>Địa chỉ nhận hàng: {currentUser.person.address[0].address}</span>
                   ) : ("")
                   }</p>
-                  {/* <p>UTC-5: Eastern Standard Time (EST) </p>
-                  <p>202-555-0140</p> */}
                   <hr />
                   <Button.Ripple
-                    // type="submit"
                     color="primary"
                     className="btn-block"
                     onClick={() => this.handleChooseDefaultAddress()}>
@@ -319,26 +383,25 @@ class Checkout extends React.Component {
             <div className="payment-type">
               <Card>
                 <CardHeader className="flex-column align-items-start">
-                  <CardTitle>Payment options</CardTitle>
+                  <CardTitle>Hình thức thanh toán</CardTitle>
                   <p className="text-muted mt-25">
-                    Be sure to click on correct payment option
+                    Hãy chắc chắn khi lựa chọn hình thức thanh toán
                   </p>
                 </CardHeader>
                 <CardBody>
                   <div className="d-flex justify-content-between flex-wrap">
                     <div className="vx-radio-con vx-radio-primary">
-                      <input type="radio" name="bank" />
+                      {/* <input type="radio" name="bank" />
                       <span className="vx-radio">
                         <span className="vx-radio--border"></span>
                         <span className="vx-radio--circle"></span>
-                      </span>
-                      <img src={bankLogo} alt="img-placeholder" height="40" />
-                      <span>US Unlocked Debit Card 12XX XXXX XXXX 0000</span>
+                      </span> */}
+                      {/* <img src={bankLogo} alt="img-placeholder" height="40" /> */}
                     </div>
-                    <div className="card-holder-name mt-75">John Doe</div>
-                    <div className="card-expiration-date mt-75">11/2020</div>
+                    {/* <div className="card-holder-name mt-75">John Doe</div>
+                    <div className="card-expiration-date mt-75">11/2020</div> */}
                   </div>
-                  <div className="customer-cvv mt-1">
+                  {/* <div className="customer-cvv mt-1">
                     <div className="form-inline">
                       <Label for="cvv">Enter CVV:</Label>
                       <AvInput
@@ -353,12 +416,12 @@ class Checkout extends React.Component {
                         Continue{" "}
                       </Button>
                     </div>
-                  </div>
+                  </div> */}
                   <hr className="my-2" />
                   <ul className="other-payment-options list-unstyled">
                     <li className="py-25">
                       <Radio
-                        label="Credit / Debit / ATM Card"
+                        label="Thanh toán khi nhận hàng"
                         color="primary"
                         defaultChecked={false}
                         name="paymentType"
@@ -366,36 +429,16 @@ class Checkout extends React.Component {
                     </li>
                     <li className="py-25">
                       <Radio
-                        label="Net Banking"
+                        label="Thanh toán qua ngân hàng"
                         color="primary"
                         defaultChecked={false}
                         name="paymentType"
                       />
-                    </li>
-                    <li className="py-25">
-                      <Radio
-                        label="EMI (Easy Installment)"
-                        color="primary"
-                        defaultChecked={false}
-                        name="paymentType"
-                      />
-                    </li>
-                    <li className="py-25">
-                      <Radio
-                        label="Cash On Delivery"
-                        color="primary"
-                        defaultChecked={false}
-                        name="paymentType"
-                      />
+                      <img src={bankLogo} alt="img-placeholder" height="40" />
+                      <span>Thanh toán qua tài khoản ngân hàng: <span className="bold">069100386735</span> - ngân hàng VietCombank - Chủ tài khoản: <span className="bold">Dương Thị Huyền Trang</span> chi nhánh Tây Hà Nội hoặc số tài khoản <span className="bold">100002003535535</span> Ngân hàng Công Thương Việt Nam VietTinBank - chủ tài khoản: <span className="bold">Nguyễn Thanh Lâm</span> - chi nhánh Hà Nội</span>
                     </li>
                   </ul>
                   <hr />
-                  <div className="gift-card">
-                    <p>
-                      <PlusSquare size={22} />
-                      <span className="align-middle ml-25">Add Gift Card</span>
-                    </p>
-                  </div>
                 </CardBody>
               </Card>
             </div>
@@ -431,64 +474,12 @@ class Checkout extends React.Component {
         )
       }
     ]
-  }
-  handleDeleteProductInCart = product => {
-    if (product && product.sanPham.id) {
-      let order = JSON.parse(window.localStorage.getItem("saleOrder")).sanPhamDonHang;
-      if (order != null && order.length > 0) {
-        for (let i = 0; i < order.length; i++) {
-          if (order[i].sanPham.id == product.sanPham.id) {
-            var removeIndex = order.map(function (item) { return item.id; }).indexOf(product.sanPham.id);
-            order.splice(removeIndex + 1, 1);
-            window.localStorage.setItem("saleOrder", JSON.stringify(order));
-          }
-        }
-      }
-    }
-  }
-  formatPrice = value => {
-    if (value) {
-      return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-    }
-  }
-  handleActiveStep = index => {
-    let currentUser = JSON.parse(window.localStorage.getItem("currentUser"));
-    if (currentUser == null || currentUser.id == null) {
-      window.location.href = ConstantList.URL + "authentication/login";
-    }
-    this.setState({ activeStep: index })
-  }
-  handleChooseDefaultAddress = () => {
-    let currentUser = JSON.parse(window.localStorage.getItem("currentUser"));
-    let order = JSON.parse(window.localStorage.getItem("saleOrder"));
-    if (currentUser != null && currentUser.id != null && order.sanPhamDonHang != null && order.sanPhamDonHang.length > 0) {
-      saveOrder(order).then((res) => {
-        if (res.status == 200) {
-          toast.info("Chúc mừng bạn đã đặt hàng thành công");
-        }else{
-          toast.error("Có lỗi xảy ra khi đặt hàng, vui lòng thử lại");
-        }
-      }).catch(err=>{
-        toast.error("Có lỗi xảy ra khi đặt hàng, vui lòng thử lại");
-        console.log(err)
-      })
-    }
-  }
-
-  onValidationError = errors => {
-    toast.error("Please Enter Valid Details", {
-      position: toast.POSITION.BOTTOM_RIGHT
-    })
-  }
-
-  render() {
-    const { steps, activeStep } = this.state
     return (
       <React.Fragment>
         <Breacrumbs
-          breadCrumbTitle="Checkout"
-          breadCrumbParent="eCommerce"
-          breadCrumbActive="Checkout"
+          breadCrumbTitle="Đơn hàng"
+          breadCrumbParent="Xác nhận"
+          breadCrumbActive="Đặt hàng"
         />
         <div className="ecommerce-application">
           <Wizard

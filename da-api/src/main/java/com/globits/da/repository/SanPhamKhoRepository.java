@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.globits.da.domain.SanPhamKho;
 @Repository
 public interface SanPhamKhoRepository extends JpaRepository<SanPhamKho, UUID>{
-	@Query("select entity from SanPhamKho entity where entity.sanPham.id =?1 and entity.kho.id =?2 ")
-	List<SanPhamKho> getListSanPhamKho(UUID sanPhamID, UUID khoID);
+	@Query("select entity from SanPhamKho entity where entity.sanPham.id =?1 and entity.kho.id =?2 and entity.size.id =?3 ")
+	List<SanPhamKho> getListSanPhamKho(UUID sanPhamID, UUID khoID, UUID sizeId);
 
 }

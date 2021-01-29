@@ -39,6 +39,7 @@ public class DonHang extends BaseObject{
 	private String ghiChu;
 	@OneToMany(mappedBy = "donHang", cascade=CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval=true)
 	private Set<SanPhamDonHang> sanPhamDonHang;
+	
 	public String getTen() {
 		return ten;
 	}

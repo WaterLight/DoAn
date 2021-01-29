@@ -14,6 +14,7 @@ public class SanPhamDonHangDto extends BaseObjectDto {
 	private Double thanhTien;
 	private Double trietKhau;
 	private DonViTinhDto donViTinh;
+	private ThuocTinhSanPhamDto size;
 	
 	public SanPhamDto getSanPham() {
 		return sanPham;
@@ -58,6 +59,12 @@ public class SanPhamDonHangDto extends BaseObjectDto {
 		this.donViTinh = donViTinh;
 	}
 	
+	public ThuocTinhSanPhamDto getSize() {
+		return size;
+	}
+	public void setSize(ThuocTinhSanPhamDto size) {
+		this.size = size;
+	}
 	public SanPhamDonHangDto() {
 		super();
 	}
@@ -66,6 +73,9 @@ public class SanPhamDonHangDto extends BaseObjectDto {
 			this.setId(entity.getId());
 			if(entity.getSanPham() != null && entity.getSanPham().getId() != null) {
 				this.setSanPham(new SanPhamDto(entity.getSanPham()));
+			}
+			if(entity.getSize() != null && entity.getSize().getId() != null) {
+				this.setSize(new ThuocTinhSanPhamDto(entity.getSize()));
 			}
 //			if(entity.getDonHang() != null && entity.getDonHang().getId() != null) {
 //				this.setDonHang(new DonHangDto(entity.getDonHang()));

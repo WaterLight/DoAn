@@ -9,6 +9,9 @@ import {
   FormControl,
   Input,
   InputAdornment,
+  Select,
+  MenuItem,
+  InputLabel
 } from "@material-ui/core";
 import MaterialTable, {
   MTableToolbar,
@@ -37,6 +40,8 @@ import {
 import moment from "moment";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 
 toast.configure({
   autoClose: 2000,
@@ -113,12 +118,19 @@ class RealEstateSourceTable extends React.Component {
     shouldOpenConfirmationDeleteListDialog: false,
     shouldOpenNotificationPopup: false,
     Notification: "",
+    orderStatus: null,
+    listStatus: [
+      { id: 1, name: "Đơn hàng mới" },
+      { id: 2, name: "Đơn hàng đã xác nhận" },
+      { id: 3, name: "Đơn hàng đã thanh toán" },
+      { id: 4, name: "Đơn hàng đã hủy" }
+    ]
   };
   numSelected = 0;
   rowCount = 0;
 
   handleTextChange = (event) => {
-    this.setState({ keyword: event.target.value }, function () {});
+    this.setState({ keyword: event.target.value }, function () { });
   };
 
   handleKeyDownEnterSearch = (e) => {
@@ -178,10 +190,12 @@ class RealEstateSourceTable extends React.Component {
 
   updatePageData = () => {
     var searchObject = {};
+    if(this.state.orderStatus != null){
+      searchObject.statusOrder = this.state.orderStatus;
+    }
     searchObject.keyword = this.state.keyword;
     searchObject.pageIndex = this.state.page + 1;
     searchObject.pageSize = this.state.rowsPerPage;
-
     searchByPage(searchObject).then((res) => {
       this.setState({
         itemList: [...res.data.content],
@@ -343,6 +357,14 @@ class RealEstateSourceTable extends React.Component {
         console.log("loi");
       });
   };
+  handleSelectStatus = (value, status) => {
+    if (status != null && status.id != null) {
+      this.setState({ orderStatus: status.id })
+    }else{
+      this.setState({ orderStatus: null })
+    }
+    this.updatePageData();
+  }
 
   render() {
     const { t, i18n } = this.props;
@@ -357,6 +379,8 @@ class RealEstateSourceTable extends React.Component {
       shouldOpenEditorDialog,
       shouldOpenConfirmationDeleteAllDialog,
       shouldOpenNotificationPopup,
+      listStatus,
+      orderStatus
     } = this.state;
     let TitlePage = t("Đơn Hàng");
 
@@ -417,10 +441,10 @@ class RealEstateSourceTable extends React.Component {
         width: "150",
         render: (rowData) =>
           rowData.ngayDatHang ? (
-            <span>{moment(rowData.ngayDatHang).format("DD/MM/YYYY")}</span>
+            <span> {moment(rowData.ngayDatHang).format('DD/MM/YYYY hh:mm')}</span>
           ) : (
-            ""
-          ),
+              ""
+            ),
       },
       {
         title: t("Ngày giao hàng"),
@@ -428,10 +452,10 @@ class RealEstateSourceTable extends React.Component {
         width: "150",
         render: (rowData) =>
           rowData.ngayGiaoHang ? (
-            <span>{moment(rowData.ngayGiaoHang).format("DD/MM/YYYY")}</span>
+            <span>{moment(rowData.ngayGiaoHang).format("DD/MM/YYYY HH:MM")}</span>
           ) : (
-            ""
-          ),
+              ""
+            ),
       },
       {
         title: t("Tổng giá"),
@@ -449,14 +473,15 @@ class RealEstateSourceTable extends React.Component {
         width: "150",
       },
       {
-        title: t("Tổng giá"),
-        field: "tongGia",
+        title: "Trạng thái",
         width: "150",
-      },
-      {
-        title: t("Trạng thái"),
-        field: "trangThai",
-        width: "150",
+        render: rowData => {
+          if (rowData.trangThai === 1) return 'Đơn hàng mới';
+          else if (rowData.trangThai === 2) return 'Đơn hàng đã xác nhận';
+          else if (rowData.trangThai === 3) return 'Đơn hàng đã thanh toán';
+          else if (rowData.trangThai === 4) return 'Đơn hàng đã hủy';
+          else return "";
+        }
       },
       {
         title: t("Người bán"),
@@ -492,7 +517,7 @@ class RealEstateSourceTable extends React.Component {
 
         <Grid container spacing={2} justify="space-between">
           <Grid item md={3} xs={12}>
-            <Button
+            {/* <Button
               className="mb-16 mr-16 align-bottom"
               variant="contained"
               color="primary"
@@ -504,7 +529,7 @@ class RealEstateSourceTable extends React.Component {
               }}
             >
               {t("general.add")}
-            </Button>
+            </Button> */}
             <Button
               className="mb-16 mr-36 align-bottom"
               variant="contained"
@@ -546,6 +571,25 @@ class RealEstateSourceTable extends React.Component {
                 cancel={t("general.cancel")}
               />
             )}
+          </Grid>
+          <Grid item md={4} sm={12} xs={12}>
+              <Autocomplete
+              size="small"
+              id="combo-box"
+              options={listStatus}
+              className="flex-end w-80 mb-10"
+              getOptionLabel={option => option.name}
+              onChange={this.handleSelectStatus}
+              value={orderStatus ? orderStatus :null}
+              defaultValue = {orderStatus ? orderStatus :null}
+              renderInput={params => (
+                <TextField
+                  {...params}
+                  label="Lọc theo trạng thái"
+                  variant="outlined"
+                />
+              )}
+            />
           </Grid>
           <Grid item md={4} sm={12} xs={12}>
             <FormControl fullWidth>
@@ -647,8 +691,7 @@ class RealEstateSourceTable extends React.Component {
               component="div"
               labelRowsPerPage={t("general.rows_per_page")}
               labelDisplayedRows={({ from, to, count }) =>
-                `${from}-${to} ${t("general.of")} ${
-                  count !== -1 ? count : `more than ${to}`
+                `${from}-${to} ${t("general.of")} ${count !== -1 ? count : `more than ${to}`
                 }`
               }
               count={totalElements}
@@ -664,8 +707,8 @@ class RealEstateSourceTable extends React.Component {
               onChangeRowsPerPage={this.setRowsPerPage}
             />
           </Grid>
-        </Grid>
-      </div>
+        </Grid >
+      </div >
     );
   }
 }

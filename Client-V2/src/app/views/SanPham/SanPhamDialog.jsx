@@ -135,8 +135,10 @@ class AgentDialog extends Component {
   };
   handleSelectAgency = (item) => {
     this.setState({
-      agency: item ? item : null,
+      donViTinh: item ? item : null,
       shouldOpenSelectAgencyPopup: false,
+    }, ()=> {
+      console.log(this.state.donViTinh)
     });
   };
   handleSelectDM = (item) => {
@@ -378,7 +380,7 @@ class AgentDialog extends Component {
                   errorMessages={[t("general.required")]}
                 />
               </Grid>
-              <Grid item sm={12} xs={12} md={4}>
+              <Grid item sm={12} xs={12} md={6}>
                 <Button
                   size="small"
                   style={{ float: "right" }}
@@ -402,7 +404,7 @@ class AgentDialog extends Component {
                   }
                   style={{ width: "70%" }}
                   value={
-                    this.state.agency != null ? this.state.agency.name : ""
+                    this.state.donViTinh != null ? this.state.donViTinh.ten : ""
                   }
                 />
 
@@ -411,7 +413,7 @@ class AgentDialog extends Component {
                     open={this.state.shouldOpenSelectAgencyPopup}
                     handleSelect={this.handleSelectAgency}
                     selectedItem={
-                      this.state.agency != null ? this.state.agency : {}
+                      this.state.donViTinh != null ? this.state.donViTinh : {}
                     }
                     handleClose={this.handleDialogClose}
                     t={t}
@@ -419,7 +421,7 @@ class AgentDialog extends Component {
                   />
                 )}
               </Grid>
-              <Grid item sm={12} xs={12} md={4}>
+              <Grid item sm={12} xs={12} md={6}>
                 <Button
                   size="small"
                   style={{ float: "right" }}
@@ -468,7 +470,7 @@ class AgentDialog extends Component {
                   />
                 )}
               </Grid>
-              <Grid className="" item md={4} sm={12} xs={12}>
+              <Grid className="" item md={12} sm={12} xs={12}>
                 <AsynchronousAutocomplete
                   label={
                     <span>
@@ -476,6 +478,7 @@ class AgentDialog extends Component {
                       <span> {t("Kích thước")}</span>
                     </span>
                   }
+                  multiple = {true}
                   searchFunction={searchByPageSize}
                   searchObject={searchObject}
                   defaultValue={size}

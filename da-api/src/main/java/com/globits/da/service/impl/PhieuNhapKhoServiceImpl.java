@@ -22,6 +22,7 @@ import com.globits.da.domain.NhanVien;
 import com.globits.da.domain.PhieuNhapKho;
 import com.globits.da.domain.SanPhamKho;
 import com.globits.da.domain.SanPhamPhieuNhap;
+import com.globits.da.domain.ThuocTinhSanPham;
 import com.globits.da.dto.PhieuNhapKhoDto;
 import com.globits.da.dto.SanPhamPhieuNhapKhoDto;
 import com.globits.da.dto.search.BaoCaoDto;
@@ -32,6 +33,7 @@ import com.globits.da.repository.PhieuNhapKhoRepository;
 import com.globits.da.repository.SanPhamKhoRepository;
 import com.globits.da.repository.SanPhamPhieuNhapRepository;
 import com.globits.da.repository.SanPhamRepository;
+import com.globits.da.repository.ThuocTinhSanPhamRepository;
 import com.globits.da.service.PhieuNhapKhoService;
 import com.globits.da.service.PhieuXuatKhoService;
 
@@ -52,6 +54,8 @@ public class PhieuNhapKhoServiceImpl extends GenericServiceImpl<PhieuNhapKho, UU
 	SanPhamKhoRepository sanPhamKhoRepository;
 	@Autowired
 	PhieuXuatKhoService phieuXuatKhoService;
+	@Autowired
+	ThuocTinhSanPhamRepository sizeRepository;
 
 	@Override
 	public Page<PhieuNhapKhoDto> getPage(int pageSize, int pageIndex) {
@@ -85,43 +89,40 @@ public class PhieuNhapKhoServiceImpl extends GenericServiceImpl<PhieuNhapKho, UU
 			}
 			entity.setKho(kho);
 			entity.setNguoiNhan(nv);
-			//
 			if (dto.getSanPhamPhieuNhap() != null && dto.getSanPhamPhieuNhap().size() > 0) {
 				Set<SanPhamPhieuNhap> listSanPhamPhieuNhap = new HashSet<SanPhamPhieuNhap>();
 				for (SanPhamPhieuNhapKhoDto sanPhamPhieuNhaplDto : dto.getSanPhamPhieuNhap()) {
 					SanPhamPhieuNhap sanPhamPhieuNhap = null;
 					SanPhamKho sanPhamKho = null;
+					ThuocTinhSanPham size = null;
+					if (sanPhamPhieuNhaplDto.getSize() != null && sanPhamPhieuNhaplDto.getSize().getId() != null) {
+						size = sizeRepository.getOne(sanPhamPhieuNhaplDto.getSize().getId());
+					}
 					if (sanPhamPhieuNhaplDto.getId() != null) {
 						sanPhamPhieuNhap = sanPhamPhieuNhapRepository.getOne(sanPhamPhieuNhaplDto.getId());
 					}
-
 					if (sanPhamPhieuNhap == null) {
 						sanPhamPhieuNhap = new SanPhamPhieuNhap();
 					}
-
-					if (sanPhamPhieuNhaplDto.getSanPham() != null) {
-						sanPhamPhieuNhap
-								.setSanPham(sanPhamRepository.getOne(sanPhamPhieuNhaplDto.getSanPham().getId()));
+					if (size != null && sanPhamPhieuNhaplDto.getSanPham() != null && sanPhamPhieuNhaplDto.getSize() != null) {
+						sanPhamPhieuNhap.setSanPham(sanPhamRepository.getOne(sanPhamPhieuNhaplDto.getSanPham().getId()));
 						if (kho != null && kho.getId() != null) {
-							List<SanPhamKho> listData = sanPhamKhoRepository
-									.getListSanPhamKho(sanPhamPhieuNhaplDto.getSanPham().getId(), kho.getId());
+							List<SanPhamKho> listData = sanPhamKhoRepository.getListSanPhamKho(sanPhamPhieuNhaplDto.getSanPham().getId(), kho.getId(),sanPhamPhieuNhaplDto.getSize().getId());
 							if (listData != null && listData.size() > 0) {
 								sanPhamKho = listData.get(0);
 								if (sanPhamKho != null) {
 									if (sanPhamKho.getSoLuong() != null) {
-										sanPhamKho.setSoLuong(
-												sanPhamPhieuNhaplDto.getSoLuong() + sanPhamKho.getSoLuong());
+										sanPhamKho.setSoLuong(sanPhamPhieuNhaplDto.getSoLuong() + sanPhamKho.getSoLuong());
 									} else {
 										sanPhamKho.setSoLuong(sanPhamPhieuNhaplDto.getSoLuong());
 									}
 								}
-
 							}
 							if (sanPhamKho == null) {
 								sanPhamKho = new SanPhamKho();
-								sanPhamKho.setSanPham(
-										sanPhamRepository.getOne(sanPhamPhieuNhaplDto.getSanPham().getId()));
+								sanPhamKho.setSanPham(sanPhamRepository.getOne(sanPhamPhieuNhaplDto.getSanPham().getId()));
 								sanPhamKho.setKho(kho);
+								sanPhamKho.setSize(size);
 								sanPhamKho.setSoLuong(sanPhamPhieuNhaplDto.getSoLuong());
 							}
 						}
@@ -132,7 +133,6 @@ public class PhieuNhapKhoServiceImpl extends GenericServiceImpl<PhieuNhapKho, UU
 					}
 					sanPhamPhieuNhap.setKho(kho);
 					sanPhamPhieuNhap.setSoLuong(sanPhamPhieuNhaplDto.getSoLuong());
-
 					sanPhamPhieuNhap.setGia(sanPhamPhieuNhaplDto.getGia());
 					sanPhamPhieuNhap.setPhieuNhapKho(entity);
 					listSanPhamPhieuNhap.add(sanPhamPhieuNhap);
