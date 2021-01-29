@@ -137,6 +137,8 @@ class AgentDialog extends Component {
     this.setState({
       donViTinh: item ? item : null,
       shouldOpenSelectAgencyPopup: false,
+    }, ()=> {
+      console.log(this.state.donViTinh)
     });
   };
   handleSelectDM = (item) => {
