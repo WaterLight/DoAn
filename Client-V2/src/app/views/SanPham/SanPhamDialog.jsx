@@ -204,6 +204,7 @@ class AgentDialog extends Component {
     });
     const formData = new FormData();
     formData.append("uploadfile", file.file);
+    // debugger
     if (file) {
       uploadImage(formData).then(({ data }) => {
         this.setState({ imageUrl: data.name });
@@ -234,6 +235,8 @@ class AgentDialog extends Component {
       noteAvatarImage,
       size
     } = this.state;
+
+    console.log(imageUrl);
     let { open, handleClose, handleOKEditClose, t, i18n } = this.props;
     let searchObject = { keyword: "", pageIndex: 0, pageSize: 10000, thuocTinhSanPhamType: ConstantList.THUOCTINHSANPHAM_TYPE.size };
     let isEmpty = files.length === 0;
