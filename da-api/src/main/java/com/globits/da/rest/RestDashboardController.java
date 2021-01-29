@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.globits.da.Constants;
 import com.globits.da.dto.AnalyticsDto;
 import com.globits.da.dto.search.AnalyticsSearchDto;
 import com.globits.da.service.DashboardService;
@@ -20,7 +21,7 @@ public class RestDashboardController {
 	@Autowired
 	DashboardService dashboardService;
 
-//	@Secured({Constants.ASSET_ADMIN, Constants.ASSET_MANAGER, Constants.ASSET_USER, Constants.ROLE_USER})
+	@Secured({ Constants.ROLE_STAFF, Constants.ROLE_ADMIN, Constants.ROLE_USER })
 	@RequestMapping(value="analytics", method = RequestMethod.GET)
 	public ResponseEntity<AnalyticsDto> analytics(AnalyticsSearchDto dto) {
 		AnalyticsDto result = this.dashboardService.getAnalytics(dto);

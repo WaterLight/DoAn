@@ -3,6 +3,13 @@ import localStorageService from "./localStorageService";
 import ConstantList from "../../../../configs/appConfig";
 import UserService from "./UserService";
 import { history } from "../../../../history";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+toast.configure({
+  autoClose: 2000,
+  draggable: false,
+  limit: 3,
+});
 const config = {
   headers: {
     'Content-Type': 'application/x-www-form-urlencoded',
@@ -36,18 +43,34 @@ class JwtAuthService {
       this.setLoginUser(res.data);
     });
   };
-  async registerMember(displayName, userName, password,phoneNumber,email,address ) {
+  async registerMember(displayName, userName, password,confirmPassword, phoneNumber, address) {
     let requestBody = {};
     requestBody.displayName = displayName;
     requestBody.userName = userName;
     requestBody.password = password;
+    requestBody.confirmPassword = confirmPassword;
     requestBody.phoneNumber = phoneNumber;
-    requestBody.email = email;
+    // requestBody.email = email;
     requestBody.address = address;
     const res = await axios.post(ConstantList.API_ENPOINT + '/public/user/register', requestBody).then(response => {
-      // var dateObj = new Date(Date.now() + response.data.expires_in * 1000);
-      // localStorageService.setItem("token_expire_time", dateObj);
-      // this.setSession(response.data.access_token);
+      if (response.data != null) {
+        if (response.data.isConfirmPassword == true) {
+          toast.warning("Mật khẩu xác nhận và mật khẩu không trùng khớp");
+          return;
+        }
+        if (response.data.hasEmail == true) {
+          toast.warning("Địa chỉ email đã được đăng ký");
+          return;
+        }
+        if (response.data.hasPhoneNumber == true) {
+          toast.warning("Số điện thoại đã được đăng ký");
+          return;
+        }
+        if (response.data.hasUserName == true) {
+          toast.warning("Tên đăng nhập đã tồn tại");
+          return;
+        }
+      }
     });
     history.push(ConstantList.LOGIN_PAGE);
   };

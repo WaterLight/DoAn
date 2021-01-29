@@ -10,6 +10,9 @@ import {
   DialogContent,
   Icon,
   IconButton,
+  InputLabel,
+  Select,
+  MenuItem
 } from "@material-ui/core";
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 import {
@@ -25,6 +28,7 @@ import "react-toastify/dist/ReactToastify.css";
 import SelectNhanVienPopup from "./SelectNhanVienPopup";
 import {
   MuiPickersUtilsProvider,
+  KeyboardDateTimePicker,
   DateTimePicker,
   KeyboardDatePicker,
 } from "@material-ui/pickers";
@@ -117,7 +121,12 @@ class DonHangEditorDialog extends Component {
     shouldOpenSelectAgencyPopup: false,
     shouldOpenMultipleDialog: false,
   };
-
+  listStatus =[
+    {id:1, name:"Đơn hàng mới"},
+    {id:2, name:"Đơn hàng đã xác nhận"},
+    {id:3, name:"Đơn hàng đã thanh toán"},
+    {id:4, name:"Đơn hàng đã hủy"}
+  ]
   handleChange = (event, source) => {
     event.persist();
     if (source === "switch") {
@@ -137,10 +146,10 @@ class DonHangEditorDialog extends Component {
         ...this.state,
       }).then((response) => {
         if (response.data && response.status == 200) {
-          toast.info(t("Store.noti.updateSuccess"));
+          toast.info("Cập nhật thành công thông tin đơn hàng");
           this.props.handleOKEditClose();
         } else {
-          toast.error(t("Store.noti.addFail"));
+          toast.error("Có lỗi xảy ra khi cập nhật thông tin đơn hàng");
         }
       });
     } else {
@@ -148,10 +157,10 @@ class DonHangEditorDialog extends Component {
         ...this.state,
       }).then((response) => {
         if (response.data && response.status == 200) {
-          toast.info(t("Store.noti.addSuccess"));
+          toast.info("Tạo mới thành công đơn hàng");
           this.props.handleOKEditClose();
         } else {
-          toast.error(t("Store.noti.addFail"));
+          toast.error("Có lỗi xảy ra khi tạo mới đơn hàng");
         }
       });
     }
@@ -310,6 +319,11 @@ class DonHangEditorDialog extends Component {
         width: "300",
       },
       {
+        title: "Size",
+        field: "size.ma",
+        width: "300",
+      },
+      {
         title: t("Số lượng"),
         field: "code",
         align: "left",
@@ -325,7 +339,7 @@ class DonHangEditorDialog extends Component {
         ),
       },
       {
-        title: t("Đơn giá"),
+        title: t("Tổng giá"),
         field: "code",
         align: "left",
         render: (row) => (
@@ -385,7 +399,7 @@ class DonHangEditorDialog extends Component {
               </Grid>
               <Grid item md={3} sm={12} xs={12}>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                  <KeyboardDatePicker
+                  <KeyboardDateTimePicker
                     fullWidth
                     margin="none"
                     id="mui-pickers-date"
@@ -399,7 +413,7 @@ class DonHangEditorDialog extends Component {
                     inputVariant="standard"
                     type="text"
                     autoOk={false}
-                    format="dd/MM/yyyy"
+                    format="dd/MM/yyyy hh:mm"
                     name={"ngayDatHang"}
                     value={ngayDatHang}
                     invalidDateMessage={t("general.invalidDateFormat")}
@@ -411,7 +425,7 @@ class DonHangEditorDialog extends Component {
               </Grid>
               <Grid item md={3} sm={12} xs={12}>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                  <KeyboardDatePicker
+                  <KeyboardDateTimePicker
                     fullWidth
                     margin="none"
                     id="mui-pickers-date"
@@ -425,7 +439,7 @@ class DonHangEditorDialog extends Component {
                     inputVariant="standard"
                     type="text"
                     autoOk={false}
-                    format="dd/MM/yyyy"
+                    format="dd/MM/yyyy hh:mm"
                     name={"ngayGiaoHang"}
                     value={ngayGiaoHang}
                     // invalidDateMessage={t("general.invalidDateFormat")}
@@ -488,21 +502,22 @@ class DonHangEditorDialog extends Component {
                 />
               </Grid>
               <Grid item md={3} sm={12} xs={12}>
-                <TextValidator
-                  className="w-100 mb-16"
-                  label={
-                    <span>
-                      <span style={{ color: "red" }}>*</span>
-                      {t("Trạng thái")}
-                    </span>
-                  }
-                  onChange={this.handleChange}
-                  type="number"
-                  name="trangThai"
-                  value={trangThai}
-                  validators={["required"]}
-                  errorMessages={t("general.required")}
-                />
+                <FormControl fullWidth={true}
+                  size="small">
+                  <InputLabel htmlFor="gender-simple">{<span className="font"><span style={{ color: "red" }}>*</span>Trạng thái</span>}</InputLabel>
+                  <Select
+                    value={trangThai}
+                    onChange={trangThai => this.handleChange(trangThai, "trangThai")}
+                    inputProps={{
+                      name: "trangThai",
+                      id: "trangThai-simple"
+                    }}
+                  >
+                    {this.listStatus.map(item => {
+                      return <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>;
+                    })}
+                  </Select>
+                </FormControl>
               </Grid>
               <Grid item sm={6} xs={12}>
                 <Button

@@ -19,8 +19,8 @@ export function loginWithEmailAndPassword({ username, password }) {
     });
 }
 
-export function registerMember({ displayName, userName, password,phoneNumber,email,address }) {
-  jwtAuthService.registerMember(displayName, userName, password,phoneNumber,email,address ).then(user => {
+export function registerMember({ displayName, userName, password,confirmPassword, phoneNumber,address }) {
+  jwtAuthService.registerMember(displayName, userName, password,confirmPassword, phoneNumber,address ).then(user => {
     setUserData(user);
     history.push({
       pathname: ConstantList.ROOT_PATH + "/home"

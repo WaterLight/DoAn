@@ -51,7 +51,12 @@ class RealEstateSourceDialog extends Component {
     shouldOpenNotificationPopup: false,
     Notification: "",
   };
-
+  listStatus =[
+    {id:1, name:"Đơn hàng mới"},
+    {id:2, name:"Đơn hàng đã xác nhận"},
+    {id:3, name:"Đơn hàng đã thanh toán"},
+    {id:4, name:"Đơn hàng đã hủy"}
+  ]
   handleDialogClose = () => {
     this.setState({ shouldOpenNotificationPopup: false });
   };

@@ -1,5 +1,6 @@
 package com.globits.da.domain;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -33,9 +34,8 @@ public class SanPham extends BaseObject{
 	@ManyToOne
 	@JoinColumn(name="danh_muc_san_pham_id")
 	private DanhMucSanPham danhMucSanPham;
-	@ManyToOne
-	@JoinColumn(name="thuoc_tinh_san_pham_id")
-	private ThuocTinhSanPham size;
+	@OneToMany(mappedBy = "sanPham", cascade=CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval=true)
+	private Set<SanPhamSize> size = new HashSet<SanPhamSize>();
 	
 	public String getTenSP() {
 		return tenSP;
@@ -85,11 +85,10 @@ public class SanPham extends BaseObject{
 	public void setDanhMucSanPham(DanhMucSanPham danhMucSanPham) {
 		this.danhMucSanPham = danhMucSanPham;
 	}
-	public ThuocTinhSanPham getSize() {
+	public Set<SanPhamSize> getSize() {
 		return size;
 	}
-	public void setSize(ThuocTinhSanPham size) {
+	public void setSize(Set<SanPhamSize> size) {
 		this.size = size;
 	}
-	
 }

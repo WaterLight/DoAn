@@ -10,7 +10,7 @@ import {
   Input,
   Label
 } from "reactstrap"
-import { Phone, Lock, Check, Facebook, Twitter, GitHub } from "react-feather"
+import { Phone,Key, Lock, Check, Facebook, Twitter, GitHub } from "react-feather"
 import { history } from "../../../../history"
 import Checkbox from "../../../../components/@vuexy/checkbox/CheckboxesVuexy"
 import googleSvg from "../../../../assets/img/svg/google.svg"
@@ -112,7 +112,7 @@ class Login extends React.Component {
                       <FormGroup className="form-label-group position-relative has-icon-left">
                         <Input
                           type="text"
-                          placeholder="Phone"
+                          placeholder="Tên đăng nhập"
                           value={this.state.username}
                           onChange={e => this.setState({ username: e.target.value })}
                           validators={["required"]}
@@ -121,13 +121,14 @@ class Login extends React.Component {
                           ]}
                         />
                         <div className="form-control-position">
-                          <Phone size={15} />
+                          <Key size={15} />
                         </div>
+                        <Label>Tên đăng nhập</Label>
                       </FormGroup>
                       <FormGroup className="form-label-group position-relative has-icon-left">
                         <Input
                           type="password"
-                          placeholder="Password"
+                          placeholder="Mật khẩu"
                           value={this.state.password}
                           onChange={e => this.setState({ password: e.target.value })}
                           validators={["required"]}
@@ -138,7 +139,7 @@ class Login extends React.Component {
                         <div className="form-control-position">
                           <Lock size={15} />
                         </div>
-                        <Label>Password</Label>
+                        <Label>Mật khẩu</Label>
                       </FormGroup>
                       <FormGroup className="d-flex justify-content-between align-items-center">
                         <Checkbox

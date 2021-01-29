@@ -12,18 +12,6 @@ export const navigations = [
     path: "",
     isVisible: true,
     children: [
-      // {
-      //   name: "directory.real_state",
-      //   path: ConstantList.ROOT_PATH+"directory/apartment",
-      //   iconText: "S",
-      //   isVisible:true,
-      // },
-      // {
-      //   name: "Dashboard.AdministrativeUnit",
-      //   path: ConstantList.ROOT_PATH+"dashboard/AdministrativeUnits",
-      //   iconText: "S",
-      //   isVisible:true,
-      // },
       {
         name: "Danh Sách Sản Phẩm",
         path: ConstantList.ROOT_PATH + "directory/sanpham",
@@ -31,7 +19,7 @@ export const navigations = [
         isVisible: true,
       },
       {
-        name: "Đơn Vi Tính",
+        name: "Đơn Vị Tính",
         path: ConstantList.ROOT_PATH + "directory/donvitinh",
         iconText: "S",
         isVisible: true,
@@ -73,6 +61,20 @@ export const navigations = [
         isVisible: true,
       },
       {
+        name: "Danh Mục Sản Phẩm",
+        path: ConstantList.ROOT_PATH + "directory/DanhMucSanPham",
+        iconText: "S",
+        isVisible: true,
+      },
+    ],
+  },
+  {
+    name: "Báo cáo",
+    icon: "dashboard",
+    path: "",
+    isVisible: true,
+    children: [
+      {
         name: "Báo Cáo Nhập",
         path: ConstantList.ROOT_PATH + "directory/BaoCaoNhap",
         iconText: "S",
@@ -85,41 +87,17 @@ export const navigations = [
         isVisible: true,
       },
       {
-        name: "Danh Mục Sản Phẩm",
-        path: ConstantList.ROOT_PATH + "directory/DanhMucSanPham",
+        name: "Báo Cáo Tồn",
+        path: ConstantList.ROOT_PATH + "directory/BaoCaoTon",
         iconText: "S",
         isVisible: true,
       },
-      // {
-      //   name: "directory.project",
-      //   path: ConstantList.ROOT_PATH+"directory/project",
-      //   iconText: "S",
-      //   isVisible:true,
-      // },
-      // {
-      //   name: "directory.building",
-      //   path: ConstantList.ROOT_PATH+"directory/building",
-      //   iconText: "S",
-      //   isVisible:true,
-      // },
-      // {
-      //   name: "directory.stateType",
-      //   path: ConstantList.ROOT_PATH+"directory/statetype",
-      //   iconText: "S",
-      //   isVisible:true,
-      // },
-      // {
-      //   name: "directory.RequirementType",
-      //   path: ConstantList.ROOT_PATH+"directory/requirementType",
-      //   iconText: "S",
-      //   isVisible:true,
-      // },
-      // {
-      //   name: "directory.ownertype",
-      //   path: ConstantList.ROOT_PATH+"directory/ownertype",
-      //   iconText: "S",
-      //   isVisible:true,
-      // }
+      {
+        name: "Báo Cáo Đơn Hàng",
+        path: ConstantList.ROOT_PATH + "directory/BaoCaoDonHang",
+        iconText: "S",
+        isVisible: true,
+      },
     ],
   },
   ,

@@ -19,7 +19,6 @@ public class DonHangDto extends BaseObjectDto {
 	private Double thanhTien;
 	private Integer trangThai;
 	private String ghiChu;
-	
 	private NhanVienDto nguoiBan;
 	private Set<SanPhamDonHangDto> sanPhamDonHang;
 	

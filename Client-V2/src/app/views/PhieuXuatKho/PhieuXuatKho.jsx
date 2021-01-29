@@ -16,6 +16,7 @@ import MaterialTable, {
   MTableBody,
   MTableHeader,
 } from "material-table";
+import moment from "moment";
 import { Breadcrumb, ConfirmationDialog } from "egret";
 import { useTranslation, withTranslation, Trans } from "react-i18next";
 import shortid from "shortid";

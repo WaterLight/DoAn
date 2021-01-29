@@ -9,9 +9,6 @@ import {
   FormControl,
   Input,
   InputAdornment,
-  Select,
-  MenuItem,
-  InputLabel
 } from "@material-ui/core";
 import MaterialTable, {
   MTableToolbar,
@@ -19,6 +16,7 @@ import MaterialTable, {
   MTableBody,
   MTableHeader,
 } from "material-table";
+import moment from "moment";
 import { Breadcrumb, ConfirmationDialog } from "egret";
 import { useTranslation, withTranslation, Trans } from "react-i18next";
 import shortid from "shortid";
@@ -29,19 +27,22 @@ import SearchIcon from "@material-ui/icons/Search";
 import Tooltip from "@material-ui/core/Tooltip";
 import { Link } from "react-router-dom";
 import NotificationPopup from "../Component/NotificationPopup/NotificationPopup";
+import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
+import AsynchronousAutocomplete from "../utilities/AsynchronousAutocomplete";
+// import { saveAs } from 'file-saver';
 import { isThisSecond } from "date-fns/esm";
-import RealEstateSourceDialog from "./DonHangEditorDialog";
+import { searchByPage as searchStore } from "../Kho/KhoService";
+import { searchByPage, exportToExcel } from "./BaoCaoTonService";
+import ChonKho from "./ChonKhoNhap";
 import {
-  getAllSource,
-  getSourceById,
-  deleteSource,
-  searchByPage,
-} from "./DonHangService";
-import moment from "moment";
+  MuiPickersUtilsProvider,
+  DateTimePicker,
+  KeyboardTimePicker,
+  KeyboardDatePicker,
+} from "@material-ui/pickers";
+import DateFnsUtils from "@date-io/date-fns";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 
 toast.configure({
   autoClose: 2000,
@@ -102,7 +103,7 @@ function MaterialButton(props) {
   );
 }
 
-class RealEstateSourceTable extends React.Component {
+class BaoCaoTon extends React.Component {
   state = {
     keyword: "",
     rowsPerPage: 10,
@@ -118,19 +119,15 @@ class RealEstateSourceTable extends React.Component {
     shouldOpenConfirmationDeleteListDialog: false,
     shouldOpenNotificationPopup: false,
     Notification: "",
-    orderStatus: null,
-    listStatus: [
-      { id: 1, name: "Đơn hàng mới" },
-      { id: 2, name: "Đơn hàng đã xác nhận" },
-      { id: 3, name: "Đơn hàng đã thanh toán" },
-      { id: 4, name: "Đơn hàng đã hủy" }
-    ]
+    toDate: moment().endOf("month"),
+    fromDate: moment().startOf("month"),
+    khoId: null,
   };
   numSelected = 0;
   rowCount = 0;
 
   handleTextChange = (event) => {
-    this.setState({ keyword: event.target.value }, function () { });
+    this.setState({ keyword: event.target.value }, function () {});
   };
 
   handleKeyDownEnterSearch = (e) => {
@@ -161,11 +158,14 @@ class RealEstateSourceTable extends React.Component {
       searchObject.keyword = this.state.keyword;
       searchObject.pageIndex = this.state.page + 1;
       searchObject.pageSize = this.state.rowsPerPage;
+      searchObject.fromDate = this.state.fromDate
+        ? this.state.fromDate
+        : new Date();
+      searchObject.toDate = this.state.toDate ? this.state.toDate : new Date();
       searchByPage(searchObject)
         .then((res) => {
           this.setState({
-            itemList: [...res.data.content],
-            totalElements: res.data.totalElements,
+            itemList: [...res.data],
           });
         })
         .catch((err) => {
@@ -177,10 +177,6 @@ class RealEstateSourceTable extends React.Component {
     let { t } = this.props;
     if (!this.data || this.data.length === 0) {
       toast.warning(t("general.noti_check_data"));
-      // this.setState({
-      //   shouldOpenNotificationPopup: true,
-      //   Notification: "general.noti_check_data",
-      // });
     } else if (this.data.length === this.state.itemList.length) {
       this.setState({ shouldOpenConfirmationDeleteAllDialog: true });
     } else {
@@ -190,16 +186,19 @@ class RealEstateSourceTable extends React.Component {
 
   updatePageData = () => {
     var searchObject = {};
-    if(this.state.orderStatus != null){
-      searchObject.statusOrder = this.state.orderStatus;
+    if (this.state.khoId) {
+      searchObject.khoId = this.state.khoId;
     }
     searchObject.keyword = this.state.keyword;
     searchObject.pageIndex = this.state.page + 1;
     searchObject.pageSize = this.state.rowsPerPage;
+    searchObject.fromDate = this.state.fromDate
+      ? this.state.fromDate
+      : new Date();
+    searchObject.toDate = this.state.toDate ? this.state.toDate : new Date();
     searchByPage(searchObject).then((res) => {
       this.setState({
-        itemList: [...res.data.content],
-        totalElements: res.data.totalElements,
+        itemList: [...res.data],
       });
     });
   };
@@ -233,40 +232,6 @@ class RealEstateSourceTable extends React.Component {
       id,
       shouldOpenConfirmationDialog: true,
     });
-  };
-
-  handleEditMaintainRequestStatus = (item) => {
-    getSourceById(item.id).then((result) => {
-      this.setState({
-        item: result.data,
-        shouldOpenEditorDialog: true,
-      });
-    });
-  };
-
-  handleConfirmationResponse = () => {
-    var { t } = this.props;
-    console.log(this.state.id);
-    console.log(this.state.itemList[this.state.itemList.length - 1].id);
-    if (
-      this.state.itemList.length % this.state.rowsPerPage === 1 &&
-      this.state.itemList.length > 1 &&
-      this.state.id === this.state.itemList[this.state.itemList.length - 1].id
-    ) {
-      var page = this.state.page - 1;
-      this.setState({
-        page: page,
-      });
-    }
-    deleteSource(this.state.id)
-      .then((res) => {
-        toast.success(t("general.deleteSuccess"));
-        this.handleDialogClose();
-        this.updatePageData();
-      })
-      .catch(() => {
-        toast.warning(t("source.warning-delete"));
-      });
   };
 
   componentDidMount() {
@@ -323,28 +288,6 @@ class RealEstateSourceTable extends React.Component {
     });
   };
 
-  async handleDeleteList(list) {
-    let listAlert = [];
-    var { t } = this.props;
-    for (var i = 0; i < list.length; i++) {
-      // deleteItem(list[i].id)
-      try {
-        await deleteSource(list[i].id);
-      } catch (error) {
-        listAlert.push(list[i].name);
-      }
-    }
-    // toast.success(t("general.deleteSuccess"));
-    this.handleDialogClose();
-    if (listAlert.length === list.length) {
-      toast.warning(t("source.use_all"));
-      // alert("Các trạng thái đều đã sử dụng");
-    } else if (listAlert.length > 0) {
-      toast.warning(t("source.deleted_unused"));
-      // alert("Đã xoá các trạng thái chưa sử dụng");
-    }
-  }
-
   handleDeleteAll = (event) => {
     //alert(this.data.length);
     this.handleDeleteList(this.data)
@@ -357,15 +300,48 @@ class RealEstateSourceTable extends React.Component {
         console.log("loi");
       });
   };
-  handleSelectStatus = (value, status) => {
-    if (status != null && status.id != null) {
-      this.setState({ orderStatus: status.id })
-    }else{
-      this.setState({ orderStatus: null })
+  handleChangeDate = (date, name) => {
+    this.setState({ [name]: date }, () => {
+      this.search();
+    });
+  };
+  exportToExcel = () => {
+    const { t } = this.props;
+    var searchObject = {};
+    searchObject.keyword = this.state.keyword;
+    searchObject.pageIndex = this.state.page + 1;
+    searchObject.pageSize = this.state.rowsPerPage;
+    searchObject.fromDate = this.state.fromDate
+      ? this.state.fromDate
+      : new Date();
+    searchObject.toDate = this.state.toDate ? this.state.toDate : new Date();
+    if (this.state.itemList == null || this.state.itemList.length == 0) {
+      toast.warn("Không có dữ liệu");
+      return;
     }
-    this.updatePageData();
-  }
-
+    exportToExcel(searchObject)
+      .then((res) => {
+        let blob = new Blob([res.data], {
+          type:
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        });
+        saveAs(blob, "BaoCaoNhap.xlsx");
+      })
+      .catch((err) => {
+        // console.log(err)
+      });
+  };
+  selectKho = (item) => {
+    if (item && Object.keys(item).length > 0) {
+      this.setState({ khoId: item.id, kho: item }, () => {
+        this.updatePageData();
+      });
+    } else {
+      this.setState({ khoId: null, kho: null }, () => {
+        this.updatePageData();
+      });
+    }
+  };
   render() {
     const { t, i18n } = this.props;
     let {
@@ -379,122 +355,35 @@ class RealEstateSourceTable extends React.Component {
       shouldOpenEditorDialog,
       shouldOpenConfirmationDeleteAllDialog,
       shouldOpenNotificationPopup,
-      listStatus,
-      orderStatus
+      kho,
     } = this.state;
-    let TitlePage = t("Đơn Hàng");
-
+    let TitlePage = t("Báo cáo nhập kho");
+    let SearchObject = { pageIndex: 1, pageSize: 100000 };
     let columns = [
       {
-        title: t("general.action"),
-        field: "custom",
-        align: "left",
-        width: "120px",
-        headerStyle: {
-          padding: "0px",
-        },
-        cellStyle: {
-          padding: "0px",
-        },
-        render: (rowData) => (
-          <MaterialButton
-            item={rowData}
-            onSelect={(rowData, method) => {
-              if (method === 0) {
-                getSourceById(rowData.id)
-                  .then(({ data }) => {
-                    console.log(data);
-                    if (data === null) {
-                      data = {};
-                    }
-                    this.setState({
-                      item: data,
-                      shouldOpenEditorDialog: true,
-                    });
-                  })
-                  .catch((err) => {
-                    console.log("loi");
-                  });
-              } else if (method === 1) {
-                this.handleDelete(rowData.id);
-              } else {
-                alert("Call Selected Here:" + rowData.id);
-              }
-            }}
-          />
-        ),
+        title: t("general.code"),
+        field: "maSP",
+        width: "150",
       },
       {
         title: t("general.name"),
-        field: "ten",
-        align: "left",
+        field: "tenSP",
         width: "150",
       },
       {
-        title: t("general.code"),
-        field: "ma",
+        title: t("Kho"),
+        field: "tenKho",
         width: "150",
       },
       {
-        title: t("Ngày đặt hàng"),
-        field: "ngayDatHang",
-        width: "150",
-        render: (rowData) =>
-          rowData.ngayDatHang ? (
-            <span> {moment(rowData.ngayDatHang).format('DD/MM/YYYY hh:mm')}</span>
-          ) : (
-              ""
-            ),
-      },
-      {
-        title: t("Ngày giao hàng"),
-        field: "ngayGiaoHang",
-        width: "150",
-        render: (rowData) =>
-          rowData.ngayGiaoHang ? (
-            <span>{moment(rowData.ngayGiaoHang).format("DD/MM/YYYY HH:MM")}</span>
-          ) : (
-              ""
-            ),
-      },
-      {
-        title: t("Tổng giá"),
-        field: "tongGia",
-        width: "150",
-      },
-      {
-        title: t("Giảm giá"),
-        field: "giamGia",
-        width: "150",
-      },
-      {
-        title: t("Thành tiền"),
-        field: "thanhTien",
-        width: "150",
-      },
-      {
-        title: "Trạng thái",
-        width: "150",
-        render: rowData => {
-          if (rowData.trangThai === 1) return 'Đơn hàng mới';
-          else if (rowData.trangThai === 2) return 'Đơn hàng đã xác nhận';
-          else if (rowData.trangThai === 3) return 'Đơn hàng đã thanh toán';
-          else if (rowData.trangThai === 4) return 'Đơn hàng đã hủy';
-          else return "";
-        }
-      },
-      {
-        title: t("Người bán"),
-        field: "nguoiBan.displayName",
+        title: t("Số lượng"),
+        field: "soLuong",
         width: "150",
       },
       // {
-      //   title: t("Ghi chú"),
-      //   field: "ghiChu",
-      //   width: "150",
+      //   title: t("Người nhập"), field: "nguoiNhap.displayName", width: "150"
       // },
     ];
-
     return (
       <div className="m-sm-30">
         <Helmet>
@@ -508,7 +397,7 @@ class RealEstateSourceTable extends React.Component {
             routeSegments={[
               {
                 name: t("Dashboard.category"),
-                path: "/directory/source",
+                path: "/list/maintain_request_status",
               },
               { name: TitlePage },
             ]}
@@ -516,116 +405,109 @@ class RealEstateSourceTable extends React.Component {
         </div>
 
         <Grid container spacing={2} justify="space-between">
-          <Grid item md={3} xs={12}>
-            {/* <Button
-              className="mb-16 mr-16 align-bottom"
-              variant="contained"
-              color="primary"
-              onClick={() => {
-                this.handleEditItem({
-                  startDate: new Date(),
-                  endDate: new Date(),
-                });
-              }}
-            >
-              {t("general.add")}
-            </Button> */}
+          <Grid item md={2} xs={12}>
             <Button
-              className="mb-16 mr-36 align-bottom"
+              className="mt-16 align-bottom"
               variant="contained"
               color="primary"
-              // onClick={() => this.setState({ shouldOpenConfirmationDeleteAllDialog: true })}
-              onClick={() => this.checkData()}
+              onClick={this.exportToExcel}
             >
-              {t("general.delete")}
+              Xuất excel
             </Button>
-
-            {shouldOpenNotificationPopup && (
-              <NotificationPopup
-                title={t("general.noti")}
-                open={shouldOpenNotificationPopup}
-                // onConfirmDialogClose={this.handleDialogClose}
-                onYesClick={this.handleDialogClose}
-                text={t(this.state.Notification)}
-                agree={t("general.agree")}
-              />
-            )}
-
-            {shouldOpenConfirmationDeleteAllDialog && (
-              <ConfirmationDialog
-                open={shouldOpenConfirmationDeleteAllDialog}
-                onConfirmDialogClose={this.handleDialogClose}
-                onYesClick={this.handleDeleteAll}
-                text={t("general.deleteAllConfirm")}
-                agree={t("general.agree")}
-                cancel={t("general.cancel")}
-              />
-            )}
-            {this.state.shouldOpenConfirmationDeleteListDialog && (
-              <ConfirmationDialog
-                open={this.state.shouldOpenConfirmationDeleteListDialog}
-                onConfirmDialogClose={this.handleDialogClose}
-                onYesClick={this.handleDeleteAll}
-                text={t("general.deleteConfirm")}
-                agree={t("general.agree")}
-                cancel={t("general.cancel")}
-              />
-            )}
           </Grid>
-          <Grid item md={4} sm={12} xs={12}>
-              <Autocomplete
-              size="small"
-              id="combo-box"
-              options={listStatus}
-              className="flex-end w-80 mb-10"
-              getOptionLabel={option => option.name}
-              onChange={this.handleSelectStatus}
-              value={orderStatus ? orderStatus :null}
-              defaultValue = {orderStatus ? orderStatus :null}
-              renderInput={params => (
-                <TextField
-                  {...params}
-                  label="Lọc theo trạng thái"
-                  variant="outlined"
-                />
-              )}
-            />
-          </Grid>
-          <Grid item md={4} sm={12} xs={12}>
-            <FormControl fullWidth>
-              <Input
-                className="search_box w-100"
-                onChange={this.handleTextChange}
-                onKeyDown={this.handleKeyDownEnterSearch}
-                placeholder={t("general.enterKeyword")}
-                id="search_box"
-                startAdornment={
-                  <InputAdornment>
-                    <Link>
-                      {" "}
-                      <SearchIcon
-                        onClick={() => this.search(keyword)}
-                        style={{ position: "absolute", top: "0", right: "0" }}
-                      />
-                    </Link>
-                  </InputAdornment>
+          <Grid item md={3} sm={12} xs={12}>
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <KeyboardDatePicker
+                label={
+                  <span>
+                    <span style={{ color: "red" }}></span>Từ ngày
+                  </span>
                 }
+                className="w-100"
+                disableToolbar
+                format="dd/MM/yyyy"
+                margin="normal"
+                id="date-picker-inline"
+                name="fromDate"
+                value={this.state.fromDate}
+                onChange={(date) => this.handleChangeDate(date, "fromDate")}
+                KeyboardButtonProps={{
+                  "aria-label": "change date",
+                }}
+                inputVariant="outlined"
+                size="small"
               />
-            </FormControl>
+            </MuiPickersUtilsProvider>
+          </Grid>
+          <Grid item md={3} sm={12} xs={12}>
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <KeyboardDatePicker
+                label={
+                  <span>
+                    <span style={{ color: "red" }}></span>Đến ngày
+                  </span>
+                }
+                className="w-100"
+                disableToolbar
+                format="dd/MM/yyyy"
+                margin="normal"
+                id="date-picker-inline"
+                name="toDate"
+                value={this.state.toDate}
+                onChange={(date) => this.handleChangeDate(date, "toDate")}
+                KeyboardButtonProps={{
+                  "aria-label": "change date",
+                }}
+                inputVariant="outlined"
+                size="small"
+              />
+            </MuiPickersUtilsProvider>
+          </Grid>
+          {shouldOpenNotificationPopup && (
+            <NotificationPopup
+              title={t("general.noti")}
+              open={shouldOpenNotificationPopup}
+              onYesClick={this.handleDialogClose}
+              text={t(this.state.Notification)}
+              agree={t("general.agree")}
+            />
+          )}
+
+          {shouldOpenConfirmationDeleteAllDialog && (
+            <ConfirmationDialog
+              open={shouldOpenConfirmationDeleteAllDialog}
+              onConfirmDialogClose={this.handleDialogClose}
+              onYesClick={this.handleDeleteAll}
+              text={t("general.deleteAllConfirm")}
+              agree={t("general.agree")}
+              cancel={t("general.cancel")}
+            />
+          )}
+          {this.state.shouldOpenConfirmationDeleteListDialog && (
+            <ConfirmationDialog
+              open={this.state.shouldOpenConfirmationDeleteListDialog}
+              onConfirmDialogClose={this.handleDialogClose}
+              onYesClick={this.handleDeleteAll}
+              text={t("general.deleteConfirm")}
+              agree={t("general.agree")}
+              cancel={t("general.cancel")}
+            />
+          )}
+          <Grid item md={4} sm={12} xs={12}>
+            <ValidatorForm>
+              <AsynchronousAutocomplete
+                label={t("Chọn kho")}
+                searchFunction={searchStore}
+                searchObject={SearchObject}
+                defaultValue={kho}
+                displayLable={"tenKho"}
+                value={kho}
+                onSelect={this.selectKho}
+              />
+            </ValidatorForm>
           </Grid>
           <Grid item xs={12}>
             <div>
-              {shouldOpenEditorDialog && (
-                <RealEstateSourceDialog
-                  t={t}
-                  i18n={i18n}
-                  handleClose={this.handleDialogClose}
-                  open={shouldOpenEditorDialog}
-                  handleOKEditClose={this.handleOKEditClose}
-                  item={item}
-                />
-              )}
-
               {shouldOpenConfirmationDialog && (
                 <ConfirmationDialog
                   title={t("general.confirm")}
@@ -643,10 +525,10 @@ class RealEstateSourceTable extends React.Component {
               data={itemList}
               columns={columns}
               //parentChildData={(row, rows) => rows.find(a => a.id === row.parentId)}
-              parentChildData={(row, rows) => {
-                var list = rows.find((a) => a.id === row.parentId);
-                return list;
-              }}
+              // parentChildData={(row, rows) => {
+              //   var list = rows.find((a) => a.id === row.parentId);
+              //   return list;
+              // }}
               localization={{
                 body: {
                   emptyDataSourceMessage: `${t(
@@ -659,7 +541,7 @@ class RealEstateSourceTable extends React.Component {
                 },
               }}
               options={{
-                selection: true,
+                selection: false,
                 actionsColumnIndex: -1,
                 paging: false,
                 search: false,
@@ -691,7 +573,8 @@ class RealEstateSourceTable extends React.Component {
               component="div"
               labelRowsPerPage={t("general.rows_per_page")}
               labelDisplayedRows={({ from, to, count }) =>
-                `${from}-${to} ${t("general.of")} ${count !== -1 ? count : `more than ${to}`
+                `${from}-${to} ${t("general.of")} ${
+                  count !== -1 ? count : `more than ${to}`
                 }`
               }
               count={totalElements}
@@ -707,10 +590,10 @@ class RealEstateSourceTable extends React.Component {
               onChangeRowsPerPage={this.setRowsPerPage}
             />
           </Grid>
-        </Grid >
-      </div >
+        </Grid>
+      </div>
     );
   }
 }
 
-export default RealEstateSourceTable;
+export default BaoCaoTon;
