@@ -1,10 +1,14 @@
 package com.globits.da.domain;
 
+import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 import com.globits.core.domain.BaseObject;
 
+@Entity
+@Table(name = "tbl_su_kien_va_danh_muc_san_pham")
 public class SuKienVaDanhMucSanPham extends BaseObject {
 	/**
 	 * 

@@ -4,7 +4,7 @@ import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import MaterialTable, { MTableToolbar, Chip, MTableBody, MTableHeader } from 'material-table';
 import { useTranslation, withTranslation, Trans } from 'react-i18next';
-import { searchByPage } from "../../Product/ProductService";
+import { searchByPage } from "../../SanPham/SanPhamService";
 import SearchIcon from '@material-ui/icons/Search';
 import { Link } from "react-router-dom";
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";

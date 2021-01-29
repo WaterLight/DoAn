@@ -8,7 +8,7 @@ import com.globits.da.domain.SuKien;
 import com.globits.da.domain.SuKienVaDanhMucSanPham;
 import com.globits.da.domain.SuKienVaSanPham;
 
-public class SuKienDto extends BaseObjectDto {
+public class SuKienDto extends com.globits.core.dto.BaseObjectDto {
 	
 	private String tieuDe;
 	private String tieuDePhu;
@@ -125,6 +125,7 @@ public class SuKienDto extends BaseObjectDto {
 
 	public SuKienDto(SuKien entity) {
 		if (entity != null) {
+			this.id = entity.getId();
 			this.tieuDe = entity.getTieuDe();
 			this.tieuDePhu = entity.getTieuDePhu();
 			this.tomTat = entity.getTomTat();
@@ -157,6 +158,7 @@ public class SuKienDto extends BaseObjectDto {
 
 	public SuKienDto(SuKien entity, boolean simple) {
 		if (entity != null) {
+			this.id = entity.getId();
 			this.tieuDe = entity.getTieuDe();
 			this.tieuDePhu = entity.getTieuDePhu();
 			this.tomTat = entity.getTomTat();

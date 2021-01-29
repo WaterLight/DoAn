@@ -33,6 +33,7 @@ public class SuKienVaDanhMucSanPhamDto extends com.globits.core.dto.BaseObjectDt
 	}
 	public SuKienVaDanhMucSanPhamDto(SuKienVaDanhMucSanPham entity, boolean simple) {
 		if (entity != null) {
+			this.id = entity.getId();
 			if (entity.getSuKien() != null) {
 				this.suKien = new SuKienDto(entity.getSuKien(), false);
 			}
