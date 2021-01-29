@@ -22,6 +22,7 @@ import com.globits.da.domain.NhanVien;
 import com.globits.da.domain.PhieuXuatKho;
 import com.globits.da.domain.SanPhamKho;
 import com.globits.da.domain.SanPhamPhieuXuat;
+import com.globits.da.domain.ThuocTinhSanPham;
 import com.globits.da.dto.PhieuNhapKhoDto;
 import com.globits.da.dto.PhieuXuatKhoDto;
 import com.globits.da.dto.SanPhamPhieuNhapKhoDto;
@@ -34,6 +35,7 @@ import com.globits.da.repository.PhieuXuatKhoRepository;
 import com.globits.da.repository.SanPhamKhoRepository;
 import com.globits.da.repository.SanPhamPhieuXuatRepository;
 import com.globits.da.repository.SanPhamRepository;
+import com.globits.da.repository.ThuocTinhSanPhamRepository;
 import com.globits.da.service.PhieuXuatKhoService;
 
 @Service
@@ -51,6 +53,8 @@ public class PhieuXuatKhoServiceImpl extends GenericServiceImpl<PhieuXuatKho, UU
 	NhanVienRepository nhanVienRepository;
 	@Autowired
 	SanPhamKhoRepository sanPhamKhoRepository;
+	@Autowired
+	ThuocTinhSanPhamRepository sizeRepository;
 
 	@Override
 	public Page<PhieuXuatKhoDto> getPage(int pageSize, int pageIndex) {
@@ -84,25 +88,27 @@ public class PhieuXuatKhoServiceImpl extends GenericServiceImpl<PhieuXuatKho, UU
 			}
 			entity.setKho(kho);
 			entity.setNguoiXuat(nv);
-			//
 			if (dto.getSanPhamPhieuXuat() != null && dto.getSanPhamPhieuXuat().size() > 0) {
 				Set<SanPhamPhieuXuat> listSanPhamPhieuXuat = new HashSet<SanPhamPhieuXuat>();
 				for (SanPhamPhieuXuatDto sanPhamPhieuXuatlDto : dto.getSanPhamPhieuXuat()) {
 					SanPhamPhieuXuat sanPhamPhieuXuat = null;
+					ThuocTinhSanPham size = null;
+					if (sanPhamPhieuXuatlDto.getSize() != null && sanPhamPhieuXuatlDto.getSize().getId() != null) {
+						size = sizeRepository.getOne(sanPhamPhieuXuatlDto.getSize().getId());
+						if(size == null || size.getId() != null) {
+							return null;
+						}
+					}
 					if (sanPhamPhieuXuatlDto.getId() != null) {
 						sanPhamPhieuXuat = sanPhamPhieuXuatRepository.getOne(sanPhamPhieuXuatlDto.getId());
 					}
-
 					if (sanPhamPhieuXuat == null) {
 						sanPhamPhieuXuat = new SanPhamPhieuXuat();
 					}
-
 					if (sanPhamPhieuXuatlDto.getSanPham() != null) {
-						sanPhamPhieuXuat
-								.setSanPham(sanPhamRepository.getOne(sanPhamPhieuXuatlDto.getSanPham().getId()));
+						sanPhamPhieuXuat.setSanPham(sanPhamRepository.getOne(sanPhamPhieuXuatlDto.getSanPham().getId()));
 						if (kho != null && kho.getId() != null) {
-							List<SanPhamKho> listData = sanPhamKhoRepository
-									.getListSanPhamKho(sanPhamPhieuXuatlDto.getSanPham().getId(), kho.getId());
+							List<SanPhamKho> listData = sanPhamKhoRepository.getListSanPhamKho(sanPhamPhieuXuatlDto.getSanPham().getId(), kho.getId(), sanPhamPhieuXuatlDto.getSize().getId());
 							if (listData != null && listData.size() > 0) {
 								SanPhamKho sanPhamKho = listData.get(0);
 								if (sanPhamKho == null) {
@@ -116,7 +122,7 @@ public class PhieuXuatKhoServiceImpl extends GenericServiceImpl<PhieuXuatKho, UU
 					}
 					sanPhamPhieuXuat.setSoLuong(sanPhamPhieuXuatlDto.getSoLuong());
 					sanPhamPhieuXuat.setPhieu(entity);
-					;
+					sanPhamPhieuXuat.setSize(size);
 					listSanPhamPhieuXuat.add(sanPhamPhieuXuat);
 				}
 

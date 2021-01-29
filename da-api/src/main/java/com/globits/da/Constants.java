@@ -18,4 +18,18 @@ public final class Constants {
 			return value;
 		}
 	}
+	public static enum OrderStatus{
+		newOrder(1),// đơn hàng mới
+		confirmOrder(2),// đơn hàng đã xác nhận
+		cancelOrder(3),// đơn hàng đã hủy
+		paymentOrder(4);// đơn hàng đã thanh toán
+		
+		private Integer value;
+		private OrderStatus(Integer value) {
+		    this.value = value;
+		}
+		public Integer getValue() {
+			return value;
+		}
+	}
 }

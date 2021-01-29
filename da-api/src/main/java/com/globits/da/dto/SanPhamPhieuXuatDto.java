@@ -8,6 +8,8 @@ public class SanPhamPhieuXuatDto extends BaseObjectDto{
 	private SanPhamDto sanPham;
 	private PhieuXuatKhoDto phieu;
 	private Integer soLuong;
+	private ThuocTinhSanPhamDto size;
+	
 	public SanPhamDto getSanPham() {
 		return sanPham;
 	}
@@ -26,6 +28,12 @@ public class SanPhamPhieuXuatDto extends BaseObjectDto{
 	public void setSoLuong(Integer soLuong) {
 		this.soLuong = soLuong;
 	}
+	public ThuocTinhSanPhamDto getSize() {
+		return size;
+	}
+	public void setSize(ThuocTinhSanPhamDto size) {
+		this.size = size;
+	}
 	public SanPhamPhieuXuatDto() {
 		super();
 	}
@@ -37,6 +45,9 @@ public class SanPhamPhieuXuatDto extends BaseObjectDto{
 			}
 			if(p.getPhieu() != null) {
 				this.phieu= new PhieuXuatKhoDto(p.getPhieu(),true);
+			}
+			if(p.getSize() != null) {
+				this.size= new ThuocTinhSanPhamDto(p.getSize());
 			}
 			this.soLuong = p.getSoLuong();
 		}

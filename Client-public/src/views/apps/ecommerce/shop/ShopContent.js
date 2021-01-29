@@ -25,12 +25,13 @@ import {
   Menu
 } from "react-feather"
 import { Link } from "react-router-dom"
-import { searchByPage } from "./ShopService"
+import { searchByPage, getProductById } from "./ShopService"
 import "../../../../assets/scss/plugins/forms/react-select/_react-select.scss"
 import ConstantList from "../../../../configs/appConfig";
 import imageDefault from "../../../../assets/img/pages/eCommerce/nike7.jfif"
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Radio from "../../../../components/@vuexy/radio/RadioVuexy"
 
 const sortOptions = [
   {
@@ -48,10 +49,10 @@ const sortOptions = [
 ]
 
 class ShopContent extends React.Component {
-  constructor(){
+  constructor() {
     super();
     window.CallOutSideComponent = this;
-}
+  }
   state = {
     inCart: [],
     inWishlist: [],
@@ -71,23 +72,31 @@ class ShopContent extends React.Component {
   }
 
   handleAddToCart = product => {
-    toast.info("Thêm thành công " + product.tenSP + " vào giỏ hàng của bạn!");
     if (product && product.id) {
+      let {productSize} = this.state; 
       let sanPhamDonHangDto = {};
       sanPhamDonHangDto.sanPham = product;
       sanPhamDonHangDto.soLuong = 1;//tạm fix là 1 sản phẩm
-      sanPhamDonHangDto.donGia = product.giaBanHienThoi
+      sanPhamDonHangDto.donGia = product.giaBanHienThoi;
       sanPhamDonHangDto.trietKhau = product.giamGia / 100;
       sanPhamDonHangDto.thanhTien = sanPhamDonHangDto.soLuong * sanPhamDonHangDto.donGia * (1 - sanPhamDonHangDto.trietKhau);
+      if(productSize != null && product.id == productSize.product.id && productSize.size != null){
+        sanPhamDonHangDto.size = productSize.size;
+      }else{
+        toast.warning("Bạn chưa chọn size cho sản phẩm " + product.tenSP + ".");
+      }
       this.state.saleOrder.sanPhamDonHang.push(sanPhamDonHangDto);
       this.state.saleOrder.totalAmount += product.giaBanHienThoi;
       if (product.giamGia != 0 && product.giamGia != null) {
         this.state.saleOrder.giamGia += product.giamGia;
         this.state.saleOrder.tongGia += product.giaBanHienThoi * (100 - product.giamGia) / 100;
+        this.state.saleOrder.thanhTien = this.state.saleOrder.tongGia;
       } else {
         this.state.saleOrder.tongGia += product.giaBanHienThoi;
+        this.state.saleOrder.thanhTien = this.state.saleOrder.tongGia;
       }
       this.setState({ inCart: product.id });
+      toast.info("Thêm thành công " + product.tenSP + " vào giỏ hàng của bạn!");
       window.localStorage.setItem("saleOrder", JSON.stringify(this.state.saleOrder));
     }
   }
@@ -103,7 +112,7 @@ class ShopContent extends React.Component {
   componentWillUnmount() {
 
   }
-  search = ()=> {
+  search = () => {
     this.setState({ page: 0 }, function () {
       var searchObject = {};
       searchObject.keyword = this.state.keyword;
@@ -114,8 +123,8 @@ class ShopContent extends React.Component {
       }).catch(err => { console.log(err) });
     });
   }
-  filterProduct = (dto) =>{
-    if(dto != null){
+  filterProduct = (dto) => {
+    if (dto != null) {
       var searchObject = {};
       searchObject.danhMucSanPhamId = dto.danhMucSanPhamId;
       searchObject.priceMin = dto.priceMin;
@@ -124,7 +133,14 @@ class ShopContent extends React.Component {
       searchObject.pageSize = dto.pageSize;
       searchByPage(searchObject).then(res => {
         this.setState({ data: [...res.data.content], totalElements: res.data.totalElements })
-      }).catch(err => { console.log(err) }); 
+      }).catch(err => { toast.error("Có lỗi xảy ra khi tải danh sách sản phẩm") });
+    }
+  }
+  getProductDetail = (productId) => {
+    if (productId != null) {
+      getProductById(productId).then(res => {
+        this.setState({ product: [...res.data.content] })
+      }).catch(err => { toast.error("Có lỗi xảy ra khi tải thông tin sản phẩm") });
     }
   }
   handleWishlist = i => {
@@ -140,14 +156,34 @@ class ShopContent extends React.Component {
       return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
     }
   }
-
+  selectProductSize = (product, size) => {
+    if(size != null && product != null){
+      let productSize = {};
+      productSize.size = size;
+      productSize.product = product;
+      this.setState({productSize:productSize});
+    }
+  }
   render() {
+
     let renderProducts = this.state.data.map((product, i) => {
+      let renderProductSizes = product.size.map((ps, j) => {
+        return (
+          <Radio
+            onClick={() => this.selectProductSize(product, ps)}
+            key={j}
+            label={ps.ma}
+            defaultChecked={false}
+            name="shopRadio"
+            className="py-25 pd-5"
+          />
+        )
+      })
       return (
         <Card className="ecommerce-card" key={i}>
           <div className="card-content">
             <div className="item-img text-center">
-              <Link to="/ecommerce/product-detail">
+              <Link onClick={() => this.getProductDetail(product.id)}>
                 {product.imageUrl ? (
                   <img
                     className="img-fluid"
@@ -168,7 +204,6 @@ class ShopContent extends React.Component {
               <div className="item-wrapper">
                 <div className="item-rating">
                   <Badge color="primary" className="badge-md">
-                    <span className="mr-50 align-middle">4</span>
                     <Star size={14} />
                   </Badge>
                 </div>
@@ -176,24 +211,28 @@ class ShopContent extends React.Component {
                   <h6 className="item-price">{this.formatPrice(product.giaBanHienThoi)} đ</h6>
                 </div>
               </div>
-              <div className="item-name">
-                <Link to="/ecommerce/product-detail">
+              <div className="item-wrapper">
+                <Link onClick={() => this.getProductDetail(product.id)}>
                   {" "}
-                  <span>{product.tenSP}</span>
+                  <span className="item-name">{product.tenSP}</span>
                 </Link>
-                <p className="item-company">
-                  By <span className="company-name">{product.by}</span>
+                <p className="product-price">
+                  Còn lại: <span className="company-name">{product.soLuongDangCo}</span>
                 </p>
               </div>
+              <div className="item-wrapper">
+                <ul className="list-unstyled categories-list size-list">
+                  {renderProductSizes}
+                </ul>
+              </div>
               <div className="item-desc">
-                <p className="item-description" v-model="product.baiViet">{product.baiViet}</p>
+                <p className="item-description">{product.baiViet}</p>
               </div>
             </CardBody>
             <div className="item-options text-center">
               <div className="item-wrapper">
                 <div className="item-rating">
                   <Badge color="primary" className="badge-md">
-                    <span className="mr-50 align-middle">4</span>
                     <Star size={14} />
                   </Badge>
                 </div>
@@ -286,7 +325,7 @@ class ShopContent extends React.Component {
               <FormGroup className="position-relative">
                 <Input
                   className="search-product"
-                  placeholder="Search Here..."
+                  placeholder="Tìm kiếm sản phẩm..."
                 />
                 <div className="form-control-position">
                   <Search size={22} />

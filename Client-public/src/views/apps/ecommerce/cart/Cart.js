@@ -41,9 +41,9 @@ class Checkout extends React.Component {
   state = {
     activeStep: 0,
     user: null,
-    steps:[],
-    currentUser:{},
-    saleOrder:{}
+    steps: [],
+    currentUser: {},
+    saleOrder: {}
   }
   handleDeleteProductInCart = product => {
     if (product && product.sanPham.id) {
@@ -59,17 +59,17 @@ class Checkout extends React.Component {
       }
     }
   }
-  componentDidMount(){
+  componentDidMount() {
     let currentUser = JSON.parse(window.localStorage.getItem("currentUser"));
-    if(currentUser != null && currentUser.id != null){
-      this.setState({currentUser:currentUser});
+    if (currentUser != null && currentUser.id != null) {
+      this.setState({ currentUser: currentUser });
     }
     let saleOrder = JSON.parse(window.localStorage.getItem("saleOrder"));
-    if(saleOrder != null && saleOrder.sanPhamDonHang != null && saleOrder.sanPhamDonHang.length >0){
-      this.setState({saleOrder:saleOrder});
+    if (saleOrder != null && saleOrder.sanPhamDonHang != null && saleOrder.sanPhamDonHang.length > 0) {
+      this.setState({ saleOrder: saleOrder });
     }
   }
-  componentWillUnmount(){
+  componentWillUnmount() {
   }
   formatPrice = value => {
     if (value) {
@@ -77,23 +77,23 @@ class Checkout extends React.Component {
     }
   }
   handleActiveStep = index => {
-    let {currentUser} = this.state.currentUser;
+    let { currentUser } = this.state;
     if (currentUser == null || currentUser.id == null) {
       window.location.href = ConstantList.URL + "authentication/login";
     }
     this.setState({ activeStep: index })
   }
   handleChooseDefaultAddress = () => {
-    let {currentUser} = this.state.currentUser;
+    let { currentUser } = this.state;
     let order = JSON.parse(window.localStorage.getItem("saleOrder"));
     if (currentUser != null && currentUser.id != null && order.sanPhamDonHang != null && order.sanPhamDonHang.length > 0) {
       saveOrder(order).then((res) => {
         if (res.status == 200) {
           toast.info("Chúc mừng bạn đã đặt hàng thành công");
-        }else{
+        } else {
           toast.error("Có lỗi xảy ra khi đặt hàng, vui lòng thử lại");
         }
-      }).catch(err=>{
+      }).catch(err => {
         toast.error("Có lỗi xảy ra khi đặt hàng, vui lòng thử lại");
         console.log(err)
       })
@@ -107,7 +107,7 @@ class Checkout extends React.Component {
   }
 
   render() {
-    const {activeStep, currentUser, saleOrder } = this.state;
+    const { activeStep, currentUser, saleOrder } = this.state;
     let steps = [
       {
         title: <ShoppingCart size={22} />,
@@ -383,26 +383,25 @@ class Checkout extends React.Component {
             <div className="payment-type">
               <Card>
                 <CardHeader className="flex-column align-items-start">
-                  <CardTitle>Payment options</CardTitle>
+                  <CardTitle>Hình thức thanh toán</CardTitle>
                   <p className="text-muted mt-25">
-                    Be sure to click on correct payment option
+                    Hãy chắc chắn khi lựa chọn hình thức thanh toán
                   </p>
                 </CardHeader>
                 <CardBody>
                   <div className="d-flex justify-content-between flex-wrap">
                     <div className="vx-radio-con vx-radio-primary">
-                      <input type="radio" name="bank" />
+                      {/* <input type="radio" name="bank" />
                       <span className="vx-radio">
                         <span className="vx-radio--border"></span>
                         <span className="vx-radio--circle"></span>
-                      </span>
-                      <img src={bankLogo} alt="img-placeholder" height="40" />
-                      <span>US Unlocked Debit Card 12XX XXXX XXXX 0000</span>
+                      </span> */}
+                      {/* <img src={bankLogo} alt="img-placeholder" height="40" /> */}
                     </div>
-                    <div className="card-holder-name mt-75">John Doe</div>
-                    <div className="card-expiration-date mt-75">11/2020</div>
+                    {/* <div className="card-holder-name mt-75">John Doe</div>
+                    <div className="card-expiration-date mt-75">11/2020</div> */}
                   </div>
-                  <div className="customer-cvv mt-1">
+                  {/* <div className="customer-cvv mt-1">
                     <div className="form-inline">
                       <Label for="cvv">Enter CVV:</Label>
                       <AvInput
@@ -417,12 +416,12 @@ class Checkout extends React.Component {
                         Continue{" "}
                       </Button>
                     </div>
-                  </div>
+                  </div> */}
                   <hr className="my-2" />
                   <ul className="other-payment-options list-unstyled">
                     <li className="py-25">
                       <Radio
-                        label="Credit / Debit / ATM Card"
+                        label="Thanh toán khi nhận hàng"
                         color="primary"
                         defaultChecked={false}
                         name="paymentType"
@@ -430,36 +429,16 @@ class Checkout extends React.Component {
                     </li>
                     <li className="py-25">
                       <Radio
-                        label="Net Banking"
+                        label="Thanh toán qua ngân hàng"
                         color="primary"
                         defaultChecked={false}
                         name="paymentType"
                       />
-                    </li>
-                    <li className="py-25">
-                      <Radio
-                        label="EMI (Easy Installment)"
-                        color="primary"
-                        defaultChecked={false}
-                        name="paymentType"
-                      />
-                    </li>
-                    <li className="py-25">
-                      <Radio
-                        label="Cash On Delivery"
-                        color="primary"
-                        defaultChecked={false}
-                        name="paymentType"
-                      />
+                      <img src={bankLogo} alt="img-placeholder" height="40" />
+                      <span>Thanh toán qua tài khoản ngân hàng: <span className="bold">069100386735</span> - ngân hàng VietCombank - Chủ tài khoản: <span className="bold">Dương Thị Huyền Trang</span> chi nhánh Tây Hà Nội hoặc số tài khoản <span className="bold">100002003535535</span> Ngân hàng Công Thương Việt Nam VietTinBank - chủ tài khoản: <span className="bold">Nguyễn Thanh Lâm</span> - chi nhánh Hà Nội</span>
                     </li>
                   </ul>
                   <hr />
-                  <div className="gift-card">
-                    <p>
-                      <PlusSquare size={22} />
-                      <span className="align-middle ml-25">Add Gift Card</span>
-                    </p>
-                  </div>
                 </CardBody>
               </Card>
             </div>

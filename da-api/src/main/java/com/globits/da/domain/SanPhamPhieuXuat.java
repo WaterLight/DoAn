@@ -18,6 +18,9 @@ public class SanPhamPhieuXuat extends BaseObject{
 	private PhieuXuatKho phieu;
 	@Column(name = "soLuong")
 	private Integer soLuong;
+	@ManyToOne
+	@JoinColumn(name="size_id")
+	private ThuocTinhSanPham size;
 	
 	public SanPham getSanPham() {
 		return sanPham;
@@ -37,5 +40,10 @@ public class SanPhamPhieuXuat extends BaseObject{
 	public void setSoLuong(Integer soLuong) {
 		this.soLuong = soLuong;
 	}
-	
+	public ThuocTinhSanPham getSize() {
+		return size;
+	}
+	public void setSize(ThuocTinhSanPham size) {
+		this.size = size;
+	}
 }

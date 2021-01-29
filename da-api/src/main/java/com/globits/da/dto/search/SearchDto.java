@@ -16,6 +16,8 @@ public class SearchDto {
 	private Integer thuocTinhSanPhamType;
 	private Double priceMin;
 	private Double priceMax;
+	private Date dateOrder;
+	private int statusOrder;
 	
 	public UUID getId() {
 		return id;
@@ -89,4 +91,17 @@ public class SearchDto {
 	public void setPriceMax(Double priceMax) {
 		this.priceMax = priceMax;
 	}
+	public Date getDateOrder() {
+		return dateOrder;
+	}
+	public void setDateOrder(Date dateOrder) {
+		this.dateOrder = dateOrder;
+	}
+	public int getStatusOrder() {
+		return statusOrder;
+	}
+	public void setStatusOrder(int statusOrder) {
+		this.statusOrder = statusOrder;
+	}
+	
 }

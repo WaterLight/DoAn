@@ -149,14 +149,14 @@ public class SanPhamServiceImpl extends GenericServiceImpl<SanPham, UUID> implem
 		if (dto.getDanhMucSanPhamId() != null) {
 			whereClause += " AND ( entity.danhMucSanPham.id  =: danhMucSanPhamId  )";
 		}
-		if (dto.getPriceMin() != null) {
-			whereClause += " AND ( entity.giaBanHienThoi  <=: priceMin )";
+		if (dto.getPriceMax() == null && dto.getPriceMin() != null) {
+			whereClause += " AND ( entity.giaBanHienThoi  <: priceMin ) ";
 		}
-		if (dto.getPriceMax() != null) {
-			whereClause += " AND ( entity.giaBanHienThoi  >=: priceMax )";
+		if (dto.getPriceMax() != null && dto.getPriceMin() == null) {
+			whereClause += " AND ( entity.giaBanHienThoi  >: priceMax ) ";
 		}
 		if (dto.getPriceMax() != null && dto.getPriceMin() != null) {
-			whereClause += " AND ( entity.giaBanHienThoi BETWEEN  :priceMin AND :priceMax )";
+			whereClause += " AND ( entity.giaBanHienThoi >:priceMin ) AND (entity.giaBanHienThoi <:priceMax ) ";
 		}
 		sql += whereClause + orderBy;
 		sqlCount += whereClause;

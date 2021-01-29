@@ -28,6 +28,10 @@ public class SanPhamDonHang extends BaseObject{
 	@ManyToOne
 	@JoinColumn(name="don_vi_tinh_id")
 	private DonViTinh donViTinh;
+	@ManyToOne
+	@JoinColumn(name="size_id")
+	private ThuocTinhSanPham size;
+	
 	public SanPham getSanPham() {
 		return sanPham;
 	}
@@ -70,6 +74,10 @@ public class SanPhamDonHang extends BaseObject{
 	public void setDonViTinh(DonViTinh donViTinh) {
 		this.donViTinh = donViTinh;
 	}
-	
-	
+	public ThuocTinhSanPham getSize() {
+		return size;
+	}
+	public void setSize(ThuocTinhSanPham size) {
+		this.size = size;
+	}
 }

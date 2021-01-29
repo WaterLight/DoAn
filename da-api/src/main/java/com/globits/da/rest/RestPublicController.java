@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -42,6 +43,12 @@ public class RestPublicController {
 	DanhMucSanPhamService danhMucSanPhamService;
 	@Autowired
 	MemberService memberService; 
+	
+	@RequestMapping(value = "getProductById/{id}", method = RequestMethod.GET)
+	public ResponseEntity<SanPhamDto> getList(@PathVariable UUID id) {
+		SanPhamDto result = sanPhamService.getCertificate(id);
+		return new ResponseEntity<SanPhamDto>(result, HttpStatus.OK);
+	}
 	
 	@RequestMapping(value = "/getListProductByPage", method = RequestMethod.POST)
 	public ResponseEntity<Page<SanPhamDto>> getPage(@RequestBody SearchDto dto ) {

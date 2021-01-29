@@ -70,8 +70,7 @@ class ShopSidebar extends React.Component {
           className="py-25"
         />
       )
-    }
-    )
+    })
     return (
       <React.Fragment>
         <h6 className="filter-heading d-none d-lg-block">Danh mục sản phẩm</h6>
