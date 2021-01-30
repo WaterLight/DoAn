@@ -236,11 +236,11 @@ class ShopContent extends React.Component {
                 </div>
                 <div className="item-wrapper">
                   <ul className="list-unstyled categories-list size-list">
-                    {renderProductSizes}
+                    <span className="size-product">Size:</span> {renderProductSizes}
                   </ul>
                 </div>
                 <div className="item-desc">
-                  <p className="item-description">{this.promatterContent(product.baiViet)}</p>
+                  <p className="item-description">{product.shortContent}</p>
                 </div>
               </CardBody>
               <div className="item-options text-center">

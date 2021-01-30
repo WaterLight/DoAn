@@ -4,7 +4,7 @@ import {
   Button,
   Grid,
   DialogActions,
-  FormControl,
+  TextField,
   Paper,
   DialogTitle,
   DialogContent,
@@ -36,6 +36,11 @@ import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Tooltip from "@material-ui/core/Tooltip";
 import { useTranslation, withTranslation, Trans } from "react-i18next";
 import DateFnsUtils from "@date-io/date-fns";
+import { searchByPage as searchByPageSize } from '../ThuocTinhSanPham/ThuocTinhSanPhamService'
+import AsynchronousAutocomplete from "../utilities/AsynchronousAutocomplete";
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import ConstantList from "../../appConfig";
+
 import {
   MuiPickersUtilsProvider,
   DateTimePicker,
@@ -206,12 +211,39 @@ class PhieuNhapKhoDialog extends Component {
     }
     this.setState({ sanPhamPhieuNhap: sanPhamPhieuNhap });
   };
+  selectSize = (product, productSize) => {
+    let { sanPhamPhieuNhap } = this.state;
+    if (sanPhamPhieuNhap == null) {
+      sanPhamPhieuNhap = [];
+      let p = {};
+      let size = {};
+      size  = product.size.find(s => s.ten === productSize.target.outerText);
+      p.sanPham = product;
+      p.size = size;
+      sanPhamPhieuNhap.push(p);
+    }
+    if (sanPhamPhieuNhap != null && sanPhamPhieuNhap.length > 0) {
+      sanPhamPhieuNhap.forEach((el) => {
+        if (el.sanPham.id == product.id) {
+          let size = {};
+          size  = product.size.find(s => s.ten === productSize.target.outerText);
+          el.size = size;
+        }
+      });
+    }
+    console.log(sanPhamPhieuNhap);
+    this.setState({ sanPhamPhieuNhap: sanPhamPhieuNhap });
+  }
   //
   handleChangeGia = (item, e) => {
     let { sanPhamPhieuNhap } = this.state;
     if (sanPhamPhieuNhap == null) {
       sanPhamPhieuNhap = [];
       let p = {};
+      // let gia = new Number(e.target.value.replace('.',''));
+      // alert(gia);
+      // let giaNumber = gia.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+      // alert(giaNumber);
       p.sanPham = item;
       p.gia = e.target.value;
       sanPhamPhieuNhap.push(p);
@@ -219,7 +251,10 @@ class PhieuNhapKhoDialog extends Component {
     if (sanPhamPhieuNhap != null && sanPhamPhieuNhap.length > 0) {
       sanPhamPhieuNhap.forEach((el) => {
         if (el.sanPham.id == item.sanPham.id) {
-          // let p ={}
+          // let gia = new Number(e.target.value.replace('.',''));
+          // alert(gia);
+          // let giaNumber = gia.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+          // alert(giaNumber);
           el.gia = e.target.value;
         }
       });
@@ -229,11 +264,13 @@ class PhieuNhapKhoDialog extends Component {
     });
   };
   handleSelectSP = (item) => {
-    let data = item.map((row) => ({ ...row, tableData: { checked: false } }));
-    this.setState({ sanPhamPhieuNhap: data }, () => {
-      console.log(this.state.sanPhamPhieuNhap);
-    });
-    this.handleDialogCancel();
+    if (item != null && item.length > 0) {
+      let data = item.map((row) => ({ ...row, tableData: { checked: false } }));
+      this.setState({ sanPhamPhieuNhap: data }, () => {
+        console.log(this.state.sanPhamPhieuNhap);
+      });
+      this.handleDialogCancel();
+    }
   };
   handleDateChange = (date, name) => {
     this.setState({
@@ -242,9 +279,8 @@ class PhieuNhapKhoDialog extends Component {
   };
   render() {
     let { id, ma, ten, description, sanPhamPhieuNhap, ngayNhap } = this.state;
-
+    let searchObject = { keyword: "", pageIndex: 0, pageSize: 10000, thuocTinhSanPhamType: ConstantList.THUOCTINHSANPHAM_TYPE.size };
     let { open, handleClose, handleOKEditClose, t, i18n } = this.props;
-
     let columns = [
       {
         title: t("general.action"),
@@ -268,7 +304,7 @@ class PhieuNhapKhoDialog extends Component {
                 });
               } else if (method === 1) {
                 sanPhamPhieuNhap.map((pro, index) => {
-                  if (pro.sanPham.maSP === rowData.sanPham.maSP) {
+                  if (pro.sanPham != null && rowData.sanPham != null && pro.sanPham.maSP === rowData.sanPham.maSP) {
                     sanPhamPhieuNhap.splice(index, 1);
                   }
                 });
@@ -294,9 +330,10 @@ class PhieuNhapKhoDialog extends Component {
         title: t("Số lượng"),
         field: "code",
         align: "left",
+        width: "40",
         render: (row) => (
           <TextValidator
-            className="w-100 "
+            className="w-60"
             onChange={(e) => this.handleChangeSL(row, e)}
             type="number"
             value={row.soLuong}
@@ -306,20 +343,46 @@ class PhieuNhapKhoDialog extends Component {
         ),
       },
       {
+        title: "Size",
+        field: "size",
+        align: "left",
+        width: "300",
+        render: (row) => (
+          (row != null && row.sanPham != null && row.sanPham.size.length > 0) &&
+          <Autocomplete
+            size="small"
+            id="combo-box"
+            options={row.sanPham.size}
+            className="flex-end w-120"
+            getOptionLabel={option => option.ten}
+            onChange={(size)=>this.selectSize(row.sanPham, size)}
+            value={row.size}
+            defaultValue ={row.size}
+            renderInput={params => (
+              <TextField
+                {...params}
+              />
+            )}
+          />
+        )
+      },
+      {
         title: t("Giá"),
         field: "code",
         align: "left",
         render: (row) => (
           <TextValidator
-            className="w-100 "
+            className="w-100"
             onChange={(e) => this.handleChangeGia(row, e)}
             type="number"
             value={row.gia}
+            min={0}
+            maxLength={20}
             validators={["required"]}
             errorMessages={[t("general.required")]}
           />
-        ),
-      },
+        )
+      }
     ];
     return (
       <Dialog

@@ -13,6 +13,7 @@ import com.globits.da.domain.ThuocTinhSanPham;
 public class SanPhamDto extends BaseObjectDto{
 	private String tenSP;
 	private String maSP;
+	private String shortContent;
 	private Double giaBanHienThoi;
 	private Date ngayCapNhat;
 	private Date ngayTao;
@@ -110,6 +111,12 @@ public class SanPhamDto extends BaseObjectDto{
 	public void setSize(Set<ThuocTinhSanPhamDto> size) {
 		this.size = size;
 	}
+	public String getShortContent() {
+		return shortContent;
+	}
+	public void setShortContent(String shortContent) {
+		this.shortContent = shortContent;
+	}
 	public SanPhamDto() {
 		super();
 	}
@@ -129,6 +136,7 @@ public class SanPhamDto extends BaseObjectDto{
 				this.tenSP = e.getTenSP();
 				this.baiViet = e.getBaiViet();
 				this.imageUrl = e.getImageUrl();
+				this.shortContent = e.getShortConent();
 				if(e.getDonViTinh() != null) {
 					this.donViTinh = new DonViTinhDto(e.getDonViTinh());
 				}
@@ -150,6 +158,7 @@ public class SanPhamDto extends BaseObjectDto{
 		this.tenSP = e.getTenSP();
 		this.baiViet = e.getBaiViet();
 		this.imageUrl = e.getImageUrl();
+		this.shortContent = e.getShortConent();
 		if(e.getDonViTinh() != null) {
 			this.donViTinh = new DonViTinhDto(e.getDonViTinh());
 		}
@@ -178,6 +187,7 @@ public class SanPhamDto extends BaseObjectDto{
 		this.tenSP = e.getTenSP();
 		this.baiViet = e.getBaiViet();
 		this.imageUrl = e.getImageUrl();
+		this.shortContent = e.getShortConent();
 		if(e.getDonViTinh() != null) {
 			this.donViTinh = new DonViTinhDto(e.getDonViTinh());
 		}

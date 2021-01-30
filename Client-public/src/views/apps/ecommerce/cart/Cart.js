@@ -43,7 +43,8 @@ class Checkout extends React.Component {
     user: null,
     steps: [],
     currentUser: {},
-    saleOrder: {}
+    saleOrder: {},
+    soLuong: 1
   }
   handleDeleteProductInCart = product => {
     if (product && product.sanPham.id) {
@@ -105,9 +106,13 @@ class Checkout extends React.Component {
       position: toast.POSITION.BOTTOM_RIGHT
     })
   }
+  handleChangeNumberOfProduct = (item, soLuong) => {
+    debugger
+    alert(item + soLuong);
+  }
 
   render() {
-    const { activeStep, currentUser, saleOrder } = this.state;
+    const { activeStep, currentUser, saleOrder, soLuong } = this.state;
     let steps = [
       {
         title: <ShoppingCart size={22} />,
@@ -135,18 +140,18 @@ class Checkout extends React.Component {
                     </div>
                     <CardBody>
                       <div className="item-name">
-                        <span>{item.sanPham.tenSP} - <span>Giá: {item.sanPham.giaBanHienThoi.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} đ</span> </span>
+                        <span>Sản phẩm: {item.sanPham.tenSP} - <span>Giá: {item.sanPham.giaBanHienThoi.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} đ</span> </span>
                         <p className="item-company">
-                          {/* By <span className="company-name">{item.by}</span> */}
+                          Size <span className="company-name">{item.size ? item.size.ma : ""}</span>
                         </p>
                         <div className="item-quantity mt-60">
                           <p className="quantity-title">Số lượng</p>
-                          <NumericInput
-                            min={0}
-                            max={10}
-                            value={1}
-                            mobile
-                            style={mobileStyle}
+                          <Input
+                            min={1}
+                            max={100}
+                            type="number"
+                            value = {soLuong}
+                            onChange={(item, soLuong) => this.handleChangeNumberOfProduct(item, soLuong)}
                           />
                         </div>
                         {/* <p className="delivery-date">{item.deliveryBy}</p>
