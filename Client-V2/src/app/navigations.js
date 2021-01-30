@@ -66,6 +66,12 @@ export const navigations = [
         iconText: "S",
         isVisible: true,
       },
+      {
+        name: "Sự kiện",
+        path: ConstantList.ROOT_PATH + "directory/sukien",
+        iconText: "E",
+        isVisible: true,
+      }
     ],
   },
   {
