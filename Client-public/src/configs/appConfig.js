@@ -1,6 +1,8 @@
+const APPLICATION_PATH = "/shoesport";
+
 module.exports = Object.freeze({
-    ROOT_PATH : "/shoesport",
+    ROOT_PATH : APPLICATION_PATH,
     API_ENPOINT: "http://localhost:8083/da",
-    URL: "http://localhost:3000/shoesport/" ,
-    LOGIN_PAGE:"http://localhost:3000/shoesport/authentication/login"
+    URL: APPLICATION_PATH + "/home",
+    LOGIN_PAGE:APPLICATION_PATH + "/authentication/login"
 })

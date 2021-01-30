@@ -128,7 +128,7 @@ public class SanPhamServiceImpl extends GenericServiceImpl<SanPham, UUID> implem
 	}
 
 	@Override
-	public Page<SanPhamDto> searchByPage(SearchDto dto) {
+	public Page<SanPhamDto> searchByPagePublic(SearchDto dto) {
 		if (dto == null) {
 			return null;
 		}
@@ -142,7 +142,7 @@ public class SanPhamServiceImpl extends GenericServiceImpl<SanPham, UUID> implem
 		String whereClause = "";
 		String orderBy = " ORDER BY entity.createDate DESC";
 		String sqlCount = "select count(entity.id) from SanPham as entity where (1=1)   ";
-		String sql = "select new com.globits.da.dto.SanPhamDto(entity) from SanPham as entity where (1=1)  ";
+		String sql = "select new com.globits.da.dto.SanPhamDto(entity, 1) from SanPham as entity JOIN SanPhamKho spk ON spk.sanPham.id = entity.id and spk.soLuong > 0";
 		if (dto.getKeyword() != null && StringUtils.hasText(dto.getKeyword())) {
 			whereClause += " AND ( entity.maSP LIKE :text or entity.tenSP LIKE :text )";
 		}
@@ -150,10 +150,10 @@ public class SanPhamServiceImpl extends GenericServiceImpl<SanPham, UUID> implem
 			whereClause += " AND ( entity.danhMucSanPham.id  =: danhMucSanPhamId  )";
 		}
 		if (dto.getPriceMax() == null && dto.getPriceMin() != null) {
-			whereClause += " AND ( entity.giaBanHienThoi  <: priceMin ) ";
+			whereClause += " AND ( entity.giaBanHienThoi  <=: priceMin ) ";
 		}
 		if (dto.getPriceMax() != null && dto.getPriceMin() == null) {
-			whereClause += " AND ( entity.giaBanHienThoi  >: priceMax ) ";
+			whereClause += " AND ( entity.giaBanHienThoi  >=: priceMax ) ";
 		}
 		if (dto.getPriceMax() != null && dto.getPriceMin() != null) {
 			whereClause += " AND ( entity.giaBanHienThoi >:priceMin ) AND (entity.giaBanHienThoi <:priceMax ) ";
@@ -191,6 +191,70 @@ public class SanPhamServiceImpl extends GenericServiceImpl<SanPham, UUID> implem
 		return result;
 	}
 
+	@Override
+	public Page<SanPhamDto> searchByPageAdmin(SearchDto dto) {
+		if (dto == null) {
+			return null;
+		}
+		int pageIndex = dto.getPageIndex();
+		int pageSize = dto.getPageSize();
+		if (pageIndex > 0) {
+			pageIndex--;
+		} else {
+			pageIndex = 0;
+		}
+		String whereClause = "";
+		String orderBy = " ORDER BY entity.createDate DESC";
+		String sqlCount = "select count(entity.id) from SanPham as entity where (1=1)   ";
+		String sql = "select new com.globits.da.dto.SanPhamDto(entity) from SanPham as entity where (1=1)";
+		if (dto.getKeyword() != null && StringUtils.hasText(dto.getKeyword())) {
+			whereClause += " AND ( entity.maSP LIKE :text or entity.tenSP LIKE :text )";
+		}
+		if (dto.getDanhMucSanPhamId() != null) {
+			whereClause += " AND ( entity.danhMucSanPham.id  =: danhMucSanPhamId  )";
+		}
+		if (dto.getPriceMax() == null && dto.getPriceMin() != null) {
+			whereClause += " AND ( entity.giaBanHienThoi  <=: priceMin ) ";
+		}
+		if (dto.getPriceMax() != null && dto.getPriceMin() == null) {
+			whereClause += " AND ( entity.giaBanHienThoi  >=: priceMax ) ";
+		}
+		if (dto.getPriceMax() != null && dto.getPriceMin() != null) {
+			whereClause += " AND ( entity.giaBanHienThoi >:priceMin ) AND (entity.giaBanHienThoi <:priceMax ) ";
+		}
+		sql += whereClause + orderBy;
+		sqlCount += whereClause;
+
+		Query q = manager.createQuery(sql, SanPhamDto.class);
+		Query qCount = manager.createQuery(sqlCount);
+
+		if (dto.getKeyword() != null && StringUtils.hasText(dto.getKeyword())) {
+			q.setParameter("text", '%' + dto.getKeyword() + '%');
+			qCount.setParameter("text", '%' + dto.getKeyword() + '%');
+		}
+		if (dto.getDanhMucSanPhamId() != null) {
+			q.setParameter("danhMucSanPhamId", dto.getDanhMucSanPhamId());
+			qCount.setParameter("danhMucSanPhamId", dto.getDanhMucSanPhamId());
+		}
+		if(dto.getPriceMin() != null) {
+			q.setParameter("priceMin", dto.getPriceMin());
+			qCount.setParameter("priceMin", dto.getPriceMin());
+		}
+		if(dto.getPriceMax() != null) {
+			q.setParameter("priceMax", dto.getPriceMax());
+			qCount.setParameter("priceMax", dto.getPriceMax());
+		}
+		int startPosition = pageIndex * pageSize;
+		q.setFirstResult(startPosition);
+		q.setMaxResults(pageSize);
+		List<SanPhamDto> entities = q.getResultList();
+		long count = (long) qCount.getSingleResult();
+
+		Pageable pageable = PageRequest.of(pageIndex, pageSize);
+		Page<SanPhamDto> result = new PageImpl<SanPhamDto>(entities, pageable, count);
+		return result;
+	}
+	
 	@Override
 	public Boolean checkCode(UUID id, String code) {
 		if (code != null && StringUtils.hasText(code)) {

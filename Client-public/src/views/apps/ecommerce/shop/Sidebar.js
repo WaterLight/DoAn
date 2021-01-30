@@ -120,7 +120,7 @@ class ShopSidebar extends React.Component {
                 <li>
                   <Radio
                     onClick = {()=> this.filter(null,1000000,1)}
-                    label="> 1.000.000 đ"
+                    label=">= 1.000.000 đ"
                     defaultChecked={false}
                     name="shopRadio"
                     className="py-25"

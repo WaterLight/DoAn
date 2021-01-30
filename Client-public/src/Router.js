@@ -8,7 +8,8 @@ import ConstantsList from './configs/appConfig';
 // Route-based code splitting
 const shop = lazy(() => import("./views/apps/ecommerce/shop/Shop"))
 const home = lazy(() => import("./views/pages/Home"))
-const page2 = lazy(() => import("./views/pages/Page2"))
+const event = lazy(() => import("./views/pages/Event"))
+const about = lazy(() => import("./views/pages/About"))
 const login = lazy(() => import("./views/pages/authentication/login/Login"))
 const registerMember = lazy(() => import("./views/pages/authentication/login/RegisterMember"))
 const productDetail = lazy(() => import("./views/apps/ecommerce/detail/Detail"))
@@ -65,9 +66,12 @@ class AppRouter extends React.Component {
             component={shop} 
           />
           <AppRoute
-            path={ConstantsList.ROOT_PATH +"/page2"}
-            component={page2}
-            fullLayout
+            path={ConstantsList.ROOT_PATH +"/event"}
+            component={event}
+          />
+           <AppRoute
+            path={ConstantsList.ROOT_PATH +"/about"}
+            component={about}
           />
           <AppRoute
             path={ConstantsList.ROOT_PATH +"/home"}

@@ -64,7 +64,7 @@ public class RestSanPhamController {
 	@Secured({ Constants.ROLE_STAFF, Constants.ROLE_ADMIN, Constants.ROLE_USER })
 	@RequestMapping(value = "/searchByPage", method = RequestMethod.POST)
 	public ResponseEntity<Page<SanPhamDto>> searchByPage(@RequestBody SearchDto searchDto) {
-		Page<SanPhamDto> page = this.sanPhamService.searchByPage(searchDto);
+		Page<SanPhamDto> page = this.sanPhamService.searchByPageAdmin(searchDto);
 		return new ResponseEntity<Page<SanPhamDto>>(page, HttpStatus.OK);
 	}
 

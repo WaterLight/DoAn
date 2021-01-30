@@ -17,7 +17,8 @@ public interface SanPhamService extends GenericService<SanPham, UUID>{
 	public SanPhamDto saveOrUpdate(UUID id,SanPhamDto dto);
 	public Boolean deleteKho(UUID id);
 	public SanPhamDto getCertificate(UUID id);
-	Page<SanPhamDto> searchByPage(SearchDto dto);
+	Page<SanPhamDto> searchByPageAdmin(SearchDto dto);
+	Page<SanPhamDto> searchByPagePublic(SearchDto dto);
 	Boolean checkCode (UUID id,String code);
 	public Boolean deleteCheckById(UUID id);
 	

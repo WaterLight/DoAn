@@ -67,7 +67,7 @@ class AgentDialog extends Component {
     noteAvatarImage: "",
     files: [],
     shouldOpenSelectDMPopup: false,
-    size: null
+    size: []
   };
 
   handleDialogClose = () => {
@@ -241,6 +241,9 @@ class AgentDialog extends Component {
     let isEmpty = files.length === 0;
     if (imageUrl) {
       isEmpty = false;
+    }
+    if(size){
+      size = [];
     }
     return (
       <Dialog

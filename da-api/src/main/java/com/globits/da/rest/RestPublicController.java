@@ -52,7 +52,7 @@ public class RestPublicController {
 	
 	@RequestMapping(value = "/getListProductByPage", method = RequestMethod.POST)
 	public ResponseEntity<Page<SanPhamDto>> getPage(@RequestBody SearchDto dto ) {
-		Page<SanPhamDto> results = sanPhamService.searchByPage(dto);
+		Page<SanPhamDto> results = sanPhamService.searchByPagePublic(dto);
 		return new ResponseEntity<Page<SanPhamDto>>(results, HttpStatus.OK);
 	}
 	@RequestMapping(value = "/getListProductCategoryByPage", method = RequestMethod.POST)
