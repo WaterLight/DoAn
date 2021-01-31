@@ -294,6 +294,11 @@ class PhieuXuatKhoDialog extends Component {
         width: "300",
       },
       {
+        title: "Size",
+        field: "size.ma",
+        width: "300",
+      },
+      {
         title: t("Số lượng"),
         field: "code",
         align: "left",
@@ -302,6 +307,7 @@ class PhieuXuatKhoDialog extends Component {
             className="w-100 "
             onChange={(e) => this.handleChangeSL(row, e)}
             type="number"
+            disabled = {true}
             value={row.soLuong}
             validators={["required"]}
             errorMessages={[t("general.required")]}

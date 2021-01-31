@@ -190,7 +190,7 @@ class RealEstateSourceTable extends React.Component {
 
   updatePageData = () => {
     var searchObject = {};
-    if(this.state.orderStatus != null){
+    if (this.state.orderStatus != null) {
       searchObject.statusOrder = this.state.orderStatus;
     }
     searchObject.keyword = this.state.keyword;
@@ -360,7 +360,7 @@ class RealEstateSourceTable extends React.Component {
   handleSelectStatus = (value, status) => {
     if (status != null && status.id != null) {
       this.setState({ orderStatus: status.id })
-    }else{
+    } else {
       this.setState({ orderStatus: null })
     }
     this.updatePageData();
@@ -484,6 +484,19 @@ class RealEstateSourceTable extends React.Component {
         }
       },
       {
+        title: "Hình thức thanh toán",
+        width: "150",
+        render: rowData => {
+          if (rowData.paymentType != null) {
+            if (rowData.paymentType === 1) return 'Chuyển khoản';
+            else if (rowData.paymentType === 2) return 'Thanh toán khi nhận hàng';
+            else return "";
+          }else{
+            return "";
+          }
+        }
+      },
+      {
         title: t("Người bán"),
         field: "nguoiBan.displayName",
         width: "150",
@@ -573,15 +586,15 @@ class RealEstateSourceTable extends React.Component {
             )}
           </Grid>
           <Grid item md={4} sm={12} xs={12}>
-              <Autocomplete
+            <Autocomplete
               size="small"
               id="combo-box"
               options={listStatus}
               className="flex-end w-80 mb-10"
               getOptionLabel={option => option.name}
               onChange={this.handleSelectStatus}
-              value={orderStatus ? orderStatus :null}
-              defaultValue = {orderStatus ? orderStatus :null}
+              value={orderStatus ? orderStatus : null}
+              defaultValue={orderStatus ? orderStatus : null}
               renderInput={params => (
                 <TextField
                   {...params}

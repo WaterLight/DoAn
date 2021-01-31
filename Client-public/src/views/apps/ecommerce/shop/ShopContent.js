@@ -73,31 +73,35 @@ class ShopContent extends React.Component {
 
   handleAddToCart = product => {
     if (product && product.id) {
-      let { productSize } = this.state;
+      let { productSize, saleOrder } = this.state;
       let sanPhamDonHangDto = {};
       sanPhamDonHangDto.sanPham = product;
       sanPhamDonHangDto.soLuong = 1;//tạm fix là 1 sản phẩm
       sanPhamDonHangDto.donGia = product.giaBanHienThoi;
-      sanPhamDonHangDto.trietKhau = product.giamGia / 100;
-      sanPhamDonHangDto.thanhTien = sanPhamDonHangDto.soLuong * sanPhamDonHangDto.donGia * (1 - sanPhamDonHangDto.trietKhau);
+      if(product.giamGia != null && product.giamGia > 0){
+        sanPhamDonHangDto.trietKhau = product.giamGia / 100;
+        sanPhamDonHangDto.thanhTien = sanPhamDonHangDto.soLuong * sanPhamDonHangDto.donGia * (1 - sanPhamDonHangDto.trietKhau);
+      }else{
+        sanPhamDonHangDto.thanhTien = sanPhamDonHangDto.soLuong * sanPhamDonHangDto.donGia;
+      }
       if (productSize != null && product.id == productSize.product.id && productSize.size != null) {
         sanPhamDonHangDto.size = productSize.size;
       } else {
         toast.warning("Bạn chưa chọn size cho sản phẩm " + product.tenSP + ".");
+        return false;
       }
-      this.state.saleOrder.sanPhamDonHang.push(sanPhamDonHangDto);
-      this.state.saleOrder.totalAmount += product.giaBanHienThoi;
+      saleOrder.sanPhamDonHang.push(sanPhamDonHangDto);
+      saleOrder.totalAmount += product.giaBanHienThoi;
       if (product.giamGia != 0 && product.giamGia != null) {
-        this.state.saleOrder.giamGia += product.giamGia;
-        this.state.saleOrder.tongGia += product.giaBanHienThoi * (100 - product.giamGia) / 100;
-        this.state.saleOrder.thanhTien = this.state.saleOrder.tongGia;
+        saleOrder.giamGia += product.giamGia;
+        saleOrder.tongGia += product.giaBanHienThoi * (100 - product.giamGia) / 100;
       } else {
-        this.state.saleOrder.tongGia += product.giaBanHienThoi;
-        this.state.saleOrder.thanhTien = this.state.saleOrder.tongGia;
+        saleOrder.tongGia += product.giaBanHienThoi;
       }
+      saleOrder.thanhTien = saleOrder.tongGia;
       this.setState({ inCart: product.id });
       toast.info("Thêm thành công " + product.tenSP + " vào giỏ hàng của bạn!");
-      window.localStorage.setItem("saleOrder", JSON.stringify(this.state.saleOrder));
+      window.localStorage.setItem("saleOrder", JSON.stringify(saleOrder));
     }
   }
 

@@ -39,7 +39,8 @@ public class DonHang extends BaseObject{
 	private String ghiChu;
 	@OneToMany(mappedBy = "donHang", cascade=CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval=true)
 	private Set<SanPhamDonHang> sanPhamDonHang;
-	
+	@Column(name = "payment_type")
+	private Integer paymentType;// hình thức thanh toán, 1: thanh toán qua ngân hàng, 2: thanh toán khi nhận hàng
 	public String getTen() {
 		return ten;
 	}
@@ -106,6 +107,11 @@ public class DonHang extends BaseObject{
 	public void setSanPhamDonHang(Set<SanPhamDonHang> sanPhamDonHang) {
 		this.sanPhamDonHang = sanPhamDonHang;
 	}
-	
+	public Integer getPaymentType() {
+		return paymentType;
+	}
+	public void setPaymentType(Integer paymentType) {
+		this.paymentType = paymentType;
+	}
 
 }
