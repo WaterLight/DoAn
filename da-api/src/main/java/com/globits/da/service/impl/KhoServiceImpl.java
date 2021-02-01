@@ -96,7 +96,7 @@ public class KhoServiceImpl extends GenericServiceImpl<Kho, UUID> implements Kho
 		String sql = "select new com.globits.da.dto.KhoDto(entity) from Kho as entity where (1=1)  ";
 
 		if (dto.getKeyword() != null && StringUtils.hasText(dto.getKeyword())) {
-			whereClause += " AND ( entity.tenKho LIKE :text OR entity.MaKho LIKE :text )";
+			whereClause += " AND ( entity.tenKho LIKE :text OR entity.maKho LIKE :text )";
 		}
 
 		

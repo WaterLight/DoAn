@@ -359,7 +359,7 @@ class BaoCaoDonHang extends React.Component {
       kho,
     } = this.state;
     let SearchObject = { pageIndex: 1, pageSize: 100000 };
-    let TitlePage = t("Báo cáo nhập kho");
+    let TitlePage = t("Báo cáo đơn hàng");
 
     let columns = [
       {
