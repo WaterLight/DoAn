@@ -18,6 +18,7 @@ public class SearchDto {
 	private Double priceMax;
 	private Date dateOrder;
 	private int statusOrder;
+	private Boolean isPopular;
 	
 	public UUID getId() {
 		return id;
@@ -102,6 +103,12 @@ public class SearchDto {
 	}
 	public void setStatusOrder(int statusOrder) {
 		this.statusOrder = statusOrder;
+	}
+	public Boolean getIsPopular() {
+		return isPopular;
+	}
+	public void setIsPopular(Boolean isPopular) {
+		this.isPopular = isPopular;
 	}
 	
 }

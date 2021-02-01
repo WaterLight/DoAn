@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.Column;
+
 import com.globits.da.domain.DanhMucSanPham;
 import com.globits.da.domain.SanPham;
 import com.globits.da.domain.SanPhamKho;
@@ -26,6 +28,7 @@ public class SanPhamDto extends BaseObjectDto{
 	private String imageUrl;//Đường dẫn đến File ảnh tiêu đề bài báo (nếu có)
 	private DanhMucSanPhamDto danhMucSanPham;
 	private Set<ThuocTinhSanPhamDto> size = new HashSet<ThuocTinhSanPhamDto>();
+	private Boolean isPopular = false;
 	
 	public String getTenSP() {
 		return tenSP;
@@ -117,6 +120,13 @@ public class SanPhamDto extends BaseObjectDto{
 	public void setShortContent(String shortContent) {
 		this.shortContent = shortContent;
 	}
+	
+	public Boolean getIsPopular() {
+		return isPopular;
+	}
+	public void setIsPopular(Boolean isPopular) {
+		this.isPopular = isPopular;
+	}
 	public SanPhamDto() {
 		super();
 	}
@@ -137,6 +147,7 @@ public class SanPhamDto extends BaseObjectDto{
 				this.baiViet = e.getBaiViet();
 				this.imageUrl = e.getImageUrl();
 				this.shortContent = e.getShortConent();
+				this.isPopular = e.getIsPopular();
 				if(e.getDonViTinh() != null) {
 					this.donViTinh = new DonViTinhDto(e.getDonViTinh());
 				}
@@ -159,6 +170,7 @@ public class SanPhamDto extends BaseObjectDto{
 		this.baiViet = e.getBaiViet();
 		this.imageUrl = e.getImageUrl();
 		this.shortContent = e.getShortConent();
+		this.isPopular = e.getIsPopular();
 		if(e.getDonViTinh() != null) {
 			this.donViTinh = new DonViTinhDto(e.getDonViTinh());
 		}
@@ -188,6 +200,7 @@ public class SanPhamDto extends BaseObjectDto{
 		this.baiViet = e.getBaiViet();
 		this.imageUrl = e.getImageUrl();
 		this.shortContent = e.getShortConent();
+		this.isPopular = e.getIsPopular();
 		if(e.getDonViTinh() != null) {
 			this.donViTinh = new DonViTinhDto(e.getDonViTinh());
 		}
