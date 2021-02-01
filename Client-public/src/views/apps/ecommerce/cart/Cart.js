@@ -49,14 +49,14 @@ class Checkout extends React.Component {
   }
   handleDeleteProductInCart = product => {
     if (product && product.sanPham.id) {
-      let {saleOrder} = this.state;
+      let { saleOrder } = this.state;
       if (saleOrder != null && saleOrder.sanPhamDonHang != null && saleOrder.sanPhamDonHang.length > 0) {
         for (let i = 0; i < saleOrder.sanPhamDonHang.length; i++) {
           if (saleOrder.sanPhamDonHang[i].sanPham.id == product.sanPham.id) {
             var removeIndex = saleOrder.sanPhamDonHang.map(function (item) { return item.id; }).indexOf(product.sanPham.id);
             saleOrder.sanPhamDonHang.splice(removeIndex + 1, 1);
             window.localStorage.setItem("saleOrder", JSON.stringify(saleOrder));
-            this.setState({saleOrder: JSON.parse(window.localStorage.getItem("saleOrder"))});
+            this.setState({ saleOrder: JSON.parse(window.localStorage.getItem("saleOrder")) });
           }
         }
       }
@@ -89,23 +89,24 @@ class Checkout extends React.Component {
   handleChooseDefaultAddress = step => {
     this.setState({ activeStep: step })
   }
-  handleConfirmOrder = ()=>{
+  handleConfirmOrder = () => {
     let { currentUser, saleOrder } = this.state;
     if (currentUser != null && currentUser.id != null && saleOrder.sanPhamDonHang != null && saleOrder.sanPhamDonHang.length > 0) {
       saveOrder(saleOrder).then((res) => {
         if (res.status == 200) {
           toast.info("Chúc mừng bạn đã đặt hàng thành công");
           //clear đơn hàng
-          if(JSON.parse(window.localStorage.getItem("saleOrder")) != null){
+          if (JSON.parse(window.localStorage.getItem("saleOrder")) != null) {
             window.localStorage.clear();
+            window.location.href = ConstantList.ROOT_PATH + "/ecommerce/shop";
           }
         } else {
           toast.error("Có lỗi xảy ra khi đặt hàng, vui lòng đăng nhập để thử lại");
           window.location.href = ConstantList.ROOT_PATH + "/authentication/login";
         }
       }).catch(err => {
-          toast.error("Có lỗi xảy ra khi đặt hàng, vui lòng đăng nhập để thử lại");
-          window.location.href = ConstantList.ROOT_PATH + "/authentication/login";
+        toast.error("Có lỗi xảy ra khi đặt hàng, vui lòng đăng nhập để thử lại");
+        window.location.href = ConstantList.ROOT_PATH + "/authentication/login";
       })
     }
   }
@@ -129,43 +130,46 @@ class Checkout extends React.Component {
             sanPhamDonHang.thanhTien = sanPhamDonHang.soLuong * sanPhamDonHang.donGia;
             // cập nhật vào đơn hàng ở local store
             saleOrder.sanPhamDonHang[i].thanhTien = sanPhamDonHang.thanhTien;
-            //cập nhật tổng tiền sản phẩm
-            if (sanPhamDonHang.sanPham.giamGia != 0 && sanPhamDonHang.sanPham.giamGia != null) {
-              saleOrder.giamGia += sanPhamDonHang.sanPham.giamGia;
-              saleOrder.tongGia += sanPhamDonHang.sanPham.giaBanHienThoi * (100 - sanPhamDonHang.sanPham.giamGia) / 100;
-              saleOrder.thanhTien = saleOrder.tongGia;
-            } else {
-              saleOrder.tongGia += sanPhamDonHang.sanPham.giaBanHienThoi;
-              saleOrder.thanhTien = saleOrder.tongGia;
-            }
-            saleOrder.totalAmount = saleOrder.tongGia;
+            saleOrder.tongGia = 0;
           }
-          window.localStorage.setItem("saleOrder", JSON.stringify(saleOrder));
-          this.setState({ saleOrder: JSON.parse(window.localStorage.getItem("saleOrder"))});
         }
+        // cập nhật tổng tiền đơn hàng
+        for (var i = 0; i < saleOrder.sanPhamDonHang.length; i++) {
+          if (saleOrder.sanPhamDonHang[i].sanPham.giamGia != 0 && saleOrder.sanPhamDonHang[i].sanPham.giamGia != null) {
+            saleOrder.giamGia += saleOrder.sanPhamDonHang[i].sanPham.giamGia;
+            saleOrder.tongGia += saleOrder.sanPhamDonHang[i].sanPham.giaBanHienThoi * (100 - saleOrder.sanPhamDonHang[i].sanPham.giamGia) / 100;
+            saleOrder.thanhTien = saleOrder.tongGia;
+          } else {
+            saleOrder.tongGia += saleOrder.sanPhamDonHang[i].thanhTien;
+            saleOrder.thanhTien = saleOrder.tongGia;
+          }
+        }
+        saleOrder.totalAmount = saleOrder.tongGia;
       }
+      window.localStorage.setItem("saleOrder", JSON.stringify(saleOrder));
+      this.setState({ saleOrder: JSON.parse(window.localStorage.getItem("saleOrder")) });
     }
   }
-  handleChangeTypeOfPayment = (paymentType) =>{
-    if(paymentType != null){
-      let {saleOrder} = this.state;
-      if(paymentType == 2){//thanh toán khi nhận hàng
-          if(saleOrder != null){
-            saleOrder.paymentType = paymentType;
-          }
+  handleChangeTypeOfPayment = (paymentType) => {
+    if (paymentType != null) {
+      let { saleOrder } = this.state;
+      if (paymentType == 2) {//thanh toán khi nhận hàng
+        if (saleOrder != null) {
+          saleOrder.paymentType = paymentType;
+        }
       }
-      if(paymentType == 1){//thanh toán qua tài khoản ngân hàng
-        if(saleOrder != null){
+      if (paymentType == 1) {//thanh toán qua tài khoản ngân hàng
+        if (saleOrder != null) {
           saleOrder.paymentType = paymentType;
         }
       }
       window.localStorage.setItem("saleOrder", JSON.stringify(saleOrder));
-      this.setState({saleOrder:window.localStorage.setItem("saleOrder", JSON.stringify(saleOrder))});
+      this.setState({ saleOrder: JSON.parse(window.localStorage.getItem("saleOrder"))});
     }
   }
 
   render() {
-    const { activeStep, currentUser, saleOrder, soLuong ,paymentType} = this.state;
+    const { activeStep, currentUser, saleOrder, soLuong, paymentType } = this.state;
     let steps = [
       {
         title: <ShoppingCart size={22} />,
@@ -195,7 +199,7 @@ class Checkout extends React.Component {
                       <div className="item-name">
                         <span>Sản phẩm: {item.sanPham.tenSP} - <span>Giá: {item.sanPham.giaBanHienThoi.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} đ</span> </span>
                         <div className="item-company">
-                        Size: <span className="company-name"> {item.size ? item.size.ma : ""} </span>
+                          Size: <span className="company-name"> {item.size ? item.size.ma : ""} </span>
                           - Thành tiền:  <span className="company-name">{item.thanhTien ? item.thanhTien.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") : item.donGia.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} đ</span>
                         </div>
                         <div className="item-quantity mt-60">
@@ -205,7 +209,7 @@ class Checkout extends React.Component {
                             value={item.soLuong ? item.soLuong : 1}
                             mobile
                             min={1}
-                            max = {100}
+                            max={100}
                             style={mobileStyle}
                             onChange={(soLuong) => this.handleChangeNumberOfProduct(item.sanPham, soLuong)}
                           />
@@ -239,9 +243,9 @@ class Checkout extends React.Component {
                 </Card>
               ))
               }
-              {saleOrder == null || saleOrder.sanPhamDonHang == null || saleOrder.sanPhamDonHang.length ==0 ?(
+              {saleOrder == null || saleOrder.sanPhamDonHang == null || saleOrder.sanPhamDonHang.length == 0 ? (
                 <a className="bold" href={ConstantList.ROOT_PATH + "/ecommerce/shop"}>Giỏ hàng của bạn còn trống! Xin mời chọn các mẫu giầy của shop.</a>
-              ) :("")}
+              ) : ("")}
             </div>
             <div className="checkout-options">
               <Card>
@@ -384,7 +388,7 @@ class Checkout extends React.Component {
                   </Col> */}
 
 
-                  
+
                   {/* <Col md="6" sm="12">
                     <AvGroup>
                       <Label for="state"> State</Label>
@@ -438,7 +442,7 @@ class Checkout extends React.Component {
                     color="primary"
                     className="btn-block"
                     onClick={() => this.handleChooseDefaultAddress(2)}>
-                      Giao đến địa chỉ này
+                    Giao đến địa chỉ này
                   </Button.Ripple>
                 </CardBody>
               </Card>
@@ -496,7 +500,7 @@ class Checkout extends React.Component {
                         defaultChecked={true}
                         value={2}
                         name="paymentType"
-                        onClick = {()=> this.handleChangeTypeOfPayment(2)}
+                        onClick={() => this.handleChangeTypeOfPayment(2)}
                       />
                     </li>
                     <li className="py-25">
@@ -506,7 +510,7 @@ class Checkout extends React.Component {
                         value={1}
                         defaultChecked={false}
                         name="paymentType"
-                        onClick = {()=> this.handleChangeTypeOfPayment(1)}
+                        onClick={() => this.handleChangeTypeOfPayment(1)}
                       />
                       <img src={bankLogo} alt="img-placeholder" height="40" />
                       <span>Thanh toán qua tài khoản ngân hàng: <span className="bold">069100386735</span> - ngân hàng VietCombank - Chủ tài khoản: <span className="bold">Dương Thị Huyền Trang</span> chi nhánh Tây Hà Nội hoặc số tài khoản <span className="bold">100002003535535</span> Ngân hàng Công Thương Việt Nam VietTinBank - chủ tài khoản: <span className="bold">Nguyễn Thanh Lâm</span> - chi nhánh Hà Nội</span>
@@ -522,7 +526,7 @@ class Checkout extends React.Component {
                   <CardTitle>Thanh toán</CardTitle>
                 </CardHeader>
                 <CardBody>
-                <div className="detail">
+                  <div className="detail">
                     <div className="detail-title">Tổng tiền sản phẩm</div>
                     <div className="detail-amt">
                       {saleOrder != null && saleOrder.totalAmount != null ? (

@@ -193,8 +193,8 @@ class SelectMultiProductsPopup extends React.Component {
         onClick={(event) => this.handleClick(event, rowData)}
         />
       },
-      { title: t("general.code"), field: "code", align: "left", width: "150" },
-      { title: t("general.name"), field: "name", width: "150" },
+      { title: t("general.code"), field: "ma", align: "left", width: "150" },
+      { title: t("general.name"), field: "ten", width: "150" },
     ];
     return (
       <Dialog onClose={handleClose} open={open} PaperComponent={PaperComponent} maxWidth={'md'} fullWidth>
