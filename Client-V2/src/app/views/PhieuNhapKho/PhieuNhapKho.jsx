@@ -319,6 +319,8 @@ class PhieuNhapKho extends React.Component {
     } else if (listAlert.length > 0) {
       toast.warning(t("urbanArea.deleted_unused"));
       // alert("Đã xoá các trạng thái chưa sử dụng");
+    } else {
+      toast.info("Xoá thành công");
     }
   }
 

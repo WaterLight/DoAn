@@ -15,19 +15,19 @@ export const navigations = [
       {
         name: "Danh Sách Sản Phẩm",
         path: ConstantList.ROOT_PATH + "directory/sanpham",
-        iconText: "S",
+        iconText: "DSSP",
         isVisible: true,
       },
       {
         name: "Đơn Vị Tính",
         path: ConstantList.ROOT_PATH + "directory/donvitinh",
-        iconText: "S",
+        iconText: "ĐVT",
         isVisible: true,
       },
       {
         name: "Thuộc Tính Sản Phẩm",
         path: ConstantList.ROOT_PATH + "directory/thuocTinhSanPham",
-        iconText: "S",
+        iconText: "TTSP",
         isVisible: true,
       },
       {

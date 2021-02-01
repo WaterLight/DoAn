@@ -357,7 +357,7 @@ class BaoCaoTon extends React.Component {
       shouldOpenNotificationPopup,
       kho,
     } = this.state;
-    let TitlePage = t("Báo cáo nhập kho");
+    let TitlePage = t("Báo cáo tồn");
     let SearchObject = { pageIndex: 1, pageSize: 100000 };
     let columns = [
       {
