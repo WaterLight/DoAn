@@ -111,6 +111,7 @@ class ShopContent extends React.Component {
     })
   }
   componentDidMount() {
+    debugger
     this.search();
   }
   componentWillUnmount() {
@@ -184,7 +185,7 @@ class ShopContent extends React.Component {
   render() {
     let { data } = this.state;
     if (data && data.length > 0) {
-      let renderProducts = this.state.data.map((product, i) => {
+      let renderProducts = data.map((product, i) => {
         let renderProductSizes = product.size.map((ps, j) => {
           return (
             <Radio
@@ -469,8 +470,6 @@ class ShopContent extends React.Component {
         </div>
       )
     }
-
-
   }
 }
 
