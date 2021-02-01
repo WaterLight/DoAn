@@ -13,4 +13,8 @@
 		<name>ROLE_USER</name>
 		<description></description>
 	</sys-role>
+	<sys-role>
+		<name>ROLE_STAFF</name>
+		<description></description>
+	</sys-role>
 </sys-roles>
