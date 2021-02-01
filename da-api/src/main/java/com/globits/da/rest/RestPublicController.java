@@ -25,10 +25,12 @@ import com.globits.da.dto.DanhMucSanPhamDto;
 import com.globits.da.dto.RegisterDto;
 import com.globits.da.dto.SanPhamDto;
 import com.globits.da.dto.SanPhamSizeDto;
+import com.globits.da.dto.SuKienDto;
 import com.globits.da.dto.search.SearchDto;
 import com.globits.da.service.DanhMucSanPhamService;
 import com.globits.da.service.MemberService;
 import com.globits.da.service.SanPhamService;
+import com.globits.da.service.SuKienService;
 
 @RestController
 @RequestMapping("/public")
@@ -43,13 +45,19 @@ public class RestPublicController {
 	DanhMucSanPhamService danhMucSanPhamService;
 	@Autowired
 	MemberService memberService; 
+	@Autowired
+	SuKienService suKienService; 
 	
 	@RequestMapping(value = "getProductById/{id}", method = RequestMethod.GET)
 	public ResponseEntity<SanPhamDto> getList(@PathVariable UUID id) {
 		SanPhamDto result = sanPhamService.getCertificate(id);
 		return new ResponseEntity<SanPhamDto>(result, HttpStatus.OK);
 	}
-	
+	@RequestMapping(value = "/getListEvent", method = RequestMethod.POST)
+	public ResponseEntity<Page<SuKienDto>> getListEvent(@RequestBody SearchDto dto ) {
+		Page<SuKienDto> results = suKienService.searchByPage(dto);
+		return new ResponseEntity<Page<SuKienDto>>(results, HttpStatus.OK);
+	}
 	@RequestMapping(value = "/getListProductByPage", method = RequestMethod.POST)
 	public ResponseEntity<Page<SanPhamDto>> getPage(@RequestBody SearchDto dto ) {
 		Page<SanPhamDto> results = sanPhamService.searchByPagePublic(dto);
