@@ -466,6 +466,43 @@ class ShopContent extends React.Component {
               <span className="bold">Không có sản phẩm nào phù hợp.</span>
               </div>
             </Col>
+            <Col sm="12">
+              <div className="ecommerce-pagination">
+                <Pagination className="d-flex justify-content-center mt-2">
+                  <PaginationItem className="prev-item">
+                    <PaginationLink href="#" first>
+                      <ChevronLeft />
+                    </PaginationLink>
+                  </PaginationItem>
+                  <PaginationItem active>
+                    <PaginationLink href="#">1</PaginationLink>
+                  </PaginationItem>
+                  <PaginationItem>
+                    <PaginationLink href="#">2</PaginationLink>
+                  </PaginationItem>
+                  <PaginationItem>
+                    <PaginationLink href="#">3</PaginationLink>
+                  </PaginationItem>
+                  <PaginationItem>
+                    <PaginationLink href="#">4</PaginationLink>
+                  </PaginationItem>
+                  <PaginationItem>
+                    <PaginationLink href="#">5</PaginationLink>
+                  </PaginationItem>
+                  <PaginationItem>
+                    <PaginationLink href="#">6</PaginationLink>
+                  </PaginationItem>
+                  <PaginationItem>
+                    <PaginationLink href="#">7</PaginationLink>
+                  </PaginationItem>
+                  <PaginationItem href="#" className="next-item">
+                    <PaginationLink href="#" last>
+                      <ChevronRight />
+                    </PaginationLink>
+                  </PaginationItem>
+                </Pagination>
+              </div>
+            </Col>
           </Row>
         </div>
       )
