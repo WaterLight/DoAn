@@ -38,6 +38,8 @@ public class SanPham extends BaseObject{
 	private DanhMucSanPham danhMucSanPham;
 	@OneToMany(mappedBy = "sanPham", cascade=CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval=true)
 	private Set<SanPhamSize> size = new HashSet<SanPhamSize>();
+	@Column(name="is_popular")
+	private Boolean isPopular = false;
 	
 	public String getShortConent() {
 		return shortConent;
@@ -99,4 +101,11 @@ public class SanPham extends BaseObject{
 	public void setSize(Set<SanPhamSize> size) {
 		this.size = size;
 	}
+	public Boolean getIsPopular() {
+		return isPopular;
+	}
+	public void setIsPopular(Boolean isPopular) {
+		this.isPopular = isPopular;
+	}
+	
 }
