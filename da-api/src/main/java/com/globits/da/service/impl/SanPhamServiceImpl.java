@@ -67,6 +67,7 @@ public class SanPhamServiceImpl extends GenericServiceImpl<SanPham, UUID> implem
 			entity.setBaiViet(dto.getBaiViet());
 			entity.setImageUrl(dto.getImageUrl());
 			entity.setShortConent(dto.getShortContent());
+			entity.setIsPopular(dto.getIsPopular());
 			if (dto.getDonViTinh() != null) {
 				DonViTinh nv = donViTinhRepository.getOne(dto.getDonViTinh().getId());
 				entity.setDonViTinh(nv);
@@ -144,6 +145,7 @@ public class SanPhamServiceImpl extends GenericServiceImpl<SanPham, UUID> implem
 		String orderBy = " ORDER BY entity.createDate DESC";
 		String sqlCount = "select count(entity.id) from SanPham as entity where (1=1)   ";
 		String sql = "select new com.globits.da.dto.SanPhamDto(entity, 1) from SanPham as entity JOIN SanPhamKho spk ON spk.sanPham.id = entity.id and spk.soLuong > 0";
+		String groupBy = " GROUP BY entity.id ";
 		if (dto.getKeyword() != null && StringUtils.hasText(dto.getKeyword())) {
 			whereClause += " AND ( entity.maSP LIKE :text or entity.tenSP LIKE :text )";
 		}
@@ -159,8 +161,12 @@ public class SanPhamServiceImpl extends GenericServiceImpl<SanPham, UUID> implem
 		if (dto.getPriceMax() != null && dto.getPriceMin() != null) {
 			whereClause += " AND ( entity.giaBanHienThoi >:priceMin ) AND (entity.giaBanHienThoi <:priceMax ) ";
 		}
-		sql += whereClause + orderBy;
-		sqlCount += whereClause;
+		if (dto.getIsPopular() != null && dto.getIsPopular() == true ) {
+			whereClause += " AND ( entity.isPopular IS NOT NULL and entity.isPopular is TRUE)";
+		}
+		
+		sql += whereClause  + groupBy + orderBy ;
+		sqlCount += whereClause + groupBy;
 
 		Query q = manager.createQuery(sql, SanPhamDto.class);
 		Query qCount = manager.createQuery(sqlCount);

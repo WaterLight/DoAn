@@ -17,17 +17,11 @@ import {
 import Breacrumbs from "../../components/@vuexy/breadCrumbs/BreadCrumb"
 import classnames from "classnames"
 import Swiper from "react-id-swiper"
-import macbook from "../../assets/img/elements/nike7.jfif"
-import headphones from "../../assets/img/elements/nike1.jfif"
-import laptop from "../../assets/img/elements/nike2.jfif"
-import homepod from "../../assets/img/elements/nike3.jfif"
-import earphones from "../../assets/img/elements/nike4.jfif"
-import iphoneX from "../../assets/img/elements/nike5.jfif"
-import watch from "../../assets/img/elements/nike8.jfif"
-import mouse from "../../assets/img/elements/nike6.jfif"
+import imageDefault from "../../assets/img/elements/nike7.jfif"
 import "swiper/css/swiper.css"
 import "../../assets/scss/pages/app-ecommerce-shop.scss"
 import { searchByPage } from "../apps/ecommerce/shop/ShopService"
+import ConstantList from "../../configs/appConfig";
 
 const swiperParams = {
   navigation: {
@@ -63,225 +57,130 @@ const swiperParams = {
 }
 
 class Home extends React.Component {
+  constructor() {
+    super();
+  }
   state = {
-    selectedColor: 1
+    selectedColor: 1,
+    data: []
   }
   toggleSelectedColor = color => this.setState({ selectedColor: color })
 
   componentDidMount() {
+    debugger
     this.search();
   }
-  search() {
+  search = () => {
     this.setState({ page: 0 }, function () {
       var searchObject = {};
       searchObject.pageIndex = 1;
-      searchObject.pageSize = 10;
+      searchObject.pageSize = 20;
+      searchObject.isPopular = true;
       searchByPage(searchObject).then(res => {
         this.setState({ data: [...res.data.content], totalElements: res.data.totalElements })
       }).catch(err => { console.log(err) });
     });
   }
+  formatPrice = value => {
+    if (value) {
+      return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+    }
+  }
   render() {
-    return (
-      <React.Fragment>
-        <CardBody>
-          <Row>
-            <Col className="text-center" sm="12">
-              <div className="heading-section mb-3">
-                <h3 className="text-uppercase mb-50">Sản phẩm ưa chuộng - được lựa chọn nhiều nhất!</h3>
-              </div>
-              <Swiper {...swiperParams}>
-                <div>
-                  <div className="title mb-1">
-                    <p className="font-medium-1 text-bold-600 truncate mb-0">
-                    Nike Air Max.
-                        </p>
-                    <small>By VN</small>
-                  </div>
-                  <div className="img-container">
-                    <img src={watch} alt="watch" />
-                  </div>
-                  <div className="ratings  ml-1">
-                    <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
-                    <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
-                    <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
-                    <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
-                    <Star size={15} fill="#fff" stroke="#b8c2cc" />
-                  </div>
-                  <p className="text-bold-500 font-medium-2 text-primary mt-50">
-                  690.000 đ
-                      </p>
+    let { data } = this.state;
+    if (data && data.length > 0) {
+      let renderProducts = data.map((product, i) => {
+        return (
+          <div key={i}>
+            <div className="title mb-1" >
+              <p className="font-medium-1 text-bold-600 truncate mb-0">
+                {product.tenSP}
+              </p>
+              <small>{product.shortContent}</small>
+            </div>
+            <div className="img-container">
+              {product.imageUrl ? (
+                <img src={ConstantList.API_ENPOINT + "/public/getImage/" + product.imageUrl.split(".")[0] + "/" + product.imageUrl.split(".")[1]}
+                  alt={product.tenSP} />
+              ) : (
+                  <img
+                    className="img-fluid"
+                    src={imageDefault}
+                    alt="Empty Image"
+                  />
+                )
+              }
+            </div>
+            <div className="ratings  ml-1">
+              <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
+              <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
+              <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
+              <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
+              <Star size={15} fill="#fff" stroke="#b8c2cc" />
+            </div>
+            <p className="text-bold-500 font-medium-2 text-primary mt-50">
+              {this.formatPrice(product.giaBanHienThoi)} đ
+            </p>
+          </div>
+        )
+      }
+      )
+      return (
+        <React.Fragment>
+          <CardBody>
+            <Row>
+              <Col className="text-center" sm="12">
+                <div className="heading-section mb-3">
+                  <h3 className="text-uppercase mb-50">Sản phẩm ưa chuộng - được lựa chọn nhiều nhất!</h3>
                 </div>
-                <div>
-                  <div className="title mb-1">
-                    <p className="font-medium-1 text-bold-600 truncate mb-0">
-                    Nike Air Force 1.
-                        </p>
-                    <small>By VN</small>
-                  </div>
-                  <div className="img-container">
-                    <img src={earphones} alt="earphones" />
-                  </div>
-                  <div className="ratings  ml-1">
-                    <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
-                    <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
-                    <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
-                    <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
-                    <Star size={15} fill="#fff" stroke="#b8c2cc" />
-                  </div>
-                  <p className="text-bold-500 font-medium-2 text-primary mt-50">
-                  800.000 đ
+                <Swiper {...swiperParams}>
+                  {renderProducts}
+                </Swiper>
+              </Col>
+            </Row>
+          </CardBody>
+          <Card className="overflow-hidden app-ecommerce-details">
+            <Row>
+              <Col sm="12">
+                <Row className="item-features py-5 mt-5">
+                  <Col className="text-center" md="4" sm="12">
+                    <div className="w-50 mx-auto">
+                      <Award className="text-primary mb-1" size={42} />
+                      <p className="font-medium-2 text-bold-600 mb-0">
+                        Sản phẩm được lựa chọn số 1
                       </p>
-                </div>
-                <div>
-                  <div className="title mb-1">
-                    <p className="font-medium-1 text-bold-600 truncate mb-0">
-                    Nike Zoom.
-                        </p>
-                    <small>By VN</small>
-                  </div>
-                  <div className="img-container">
-                    <img src={laptop} alt="laptop" />
-                  </div>
-                  <div className="ratings  ml-1">
-                    <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
-                    <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
-                    <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
-                    <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
-                    <Star size={15} fill="#fff" stroke="#b8c2cc" />
-                  </div>
-                  <p className="text-bold-500 font-medium-2 text-primary mt-50">
-                  390.000 đ
+                      <p>
+                        Trẻ trung - Năng động - Thời trang
                       </p>
-                </div>
-                <div>
-                  <div className="title mb-1">
-                    <p className="font-medium-1 text-bold-600 truncate mb-0">
-                    Nike Flyknit.
-                        </p>
-                    <small>By VN</small>
-                  </div>
-                  <div className="img-container">
-                    <img src={homepod} alt="homepod" />
-                  </div>
-                  <div className="ratings  ml-1">
-                    <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
-                    <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
-                    <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
-                    <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
-                    <Star size={15} fill="#fff" stroke="#b8c2cc" />
-                  </div>
-                  <p className="text-bold-500 font-medium-2 text-primary mt-50">
-                  590.000 đ
+                    </div>
+                  </Col>
+                  <Col className="text-center" md="4" sm="12">
+                    <div className="w-50 mx-auto">
+                      <Clock className="text-primary mb-1" size={42} />
+                      <p className="font-medium-2 text-bold-600 mb-0">
+                        Thời gian phản hồi nhanh chóng
                       </p>
-                </div>
-                <div>
-                  <div className="title mb-1">
-                    <p className="font-medium-1 text-bold-600 truncate mb-0">
-                    Nike SF-AF1 “Desert Camo”
-                        </p>
-                    <small>By VN</small>
-                  </div>
-                  <div className="img-container">
-                    <img src={iphoneX} alt="homepod" />
-                  </div>
-                  <div className="ratings  ml-1">
-                    <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
-                    <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
-                    <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
-                    <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
-                    <Star size={15} fill="#fff" stroke="#b8c2cc" />
-                  </div>
-                  <p className="text-bold-500 font-medium-2 text-primary mt-50">
-                  2.190.000 đ
+                      <p>Nhân viên hỗ trợ, phụ vụ tận tình chu đáo.</p>
+                    </div>
+                  </Col>
+                  <Col className="text-center" md="4" sm="12">
+                    <div className="w-50 mx-auto">
+                      <Shield className="text-primary mb-1" size={42} />
+                      <p className="font-medium-2 text-bold-600 mb-0">
+                        Sự tin tưởng
                       </p>
-                </div>
-                <div>
-                  <div className="title mb-1">
-                    <p className="font-medium-1 text-bold-600 truncate mb-0">
-                    Nike Air Huarache “Legion Green”
-                        </p>
-                    <small>by VN</small>
-                  </div>
-                  <div className="img-container">
-                    <img src={headphones} alt="homepod" />
-                  </div>
-                  <div className="ratings  ml-1">
-                    <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
-                    <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
-                    <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
-                    <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
-                    <Star size={15} fill="#fff" stroke="#b8c2cc" />
-                  </div>
-                  <p className="text-bold-500 font-medium-2 text-primary mt-50">
-                  1.890.000 đ
-                      </p>
-                </div>
-                <div>
-                  <div className="title mb-1">
-                    <p className="font-medium-1 text-bold-600 truncate mb-0">
-                    Nike Air TR 17.
-                        </p>
-                    <small>by VN</small>
-                  </div>
-                  <div className="img-container">
-                    <img src={mouse} alt="homepod" />
-                  </div>
-                  <div className="ratings  ml-1">
-                    <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
-                    <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
-                    <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
-                    <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
-                    <Star size={15} fill="#fff" stroke="#b8c2cc" />
-                  </div>
-                  <p className="text-bold-500 font-medium-2 text-primary mt-50">
-                    890.000 đ
-                      </p>
-                </div>
-              </Swiper>
-            </Col>
-          </Row>
-        </CardBody>
-        <Card className="overflow-hidden app-ecommerce-details">
-          <Row>
-            <Col sm="12">
-              <Row className="item-features py-5 mt-5">
-                <Col className="text-center" md="4" sm="12">
-                  <div className="w-50 mx-auto">
-                    <Award className="text-primary mb-1" size={42} />
-                    <p className="font-medium-2 text-bold-600 mb-0">
-                      Sản phẩm được lựa chọn số 1
-                      </p>
-                    <p>
-                      Trẻ trung - Năng động - Thời trang
-                      </p>
-                  </div>
-                </Col>
-                <Col className="text-center" md="4" sm="12">
-                  <div className="w-50 mx-auto">
-                    <Clock className="text-primary mb-1" size={42} />
-                    <p className="font-medium-2 text-bold-600 mb-0">
-                      Thời gian phản hồi nhanh chóng
-                      </p>
-                    <p>Nhân viên hỗ trợ, phụ vụ tận tình chu đáo.</p>
-                  </div>
-                </Col>
-                <Col className="text-center" md="4" sm="12">
-                  <div className="w-50 mx-auto">
-                    <Shield className="text-primary mb-1" size={42} />
-                    <p className="font-medium-2 text-bold-600 mb-0">
-                      Sự tin tưởng
-                      </p>
-                    <p>Ra mắt những sản phẩm tốt nhất</p>
-                  </div>
-                </Col>
-              </Row>
-            </Col>
-          </Row>
-
-        </Card>
-      </React.Fragment>
-    )
+                      <p>Ra mắt những sản phẩm tốt nhất</p>
+                    </div>
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
+          </Card>
+        </React.Fragment>
+      )
+    } else {
+      return (<span>Đã có lỗi xảy ra, vui lòng tải lại trang!</span>)
+    }
   }
 }
 

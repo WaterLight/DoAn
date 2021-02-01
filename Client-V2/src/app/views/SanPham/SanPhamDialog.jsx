@@ -12,6 +12,8 @@ import {
   Icon,
   Fab,
   Card,
+  FormControlLabel,
+  Checkbox
 } from "@material-ui/core";
 // import Paper from '@material-ui/core/Paper'
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
@@ -31,7 +33,7 @@ import "react-toastify/dist/ReactToastify.css";
 import EditorForm from "./EditorForm";
 import DanhMucSanPham from "./DanhMucSanPham";
 import AsynchronousAutocomplete from "../utilities/AsynchronousAutocomplete";
-import {searchByPage as searchByPageSize} from '../ThuocTinhSanPham/ThuocTinhSanPhamService'
+import { searchByPage as searchByPageSize } from '../ThuocTinhSanPham/ThuocTinhSanPhamService'
 toast.configure({
   autoClose: 2000,
   draggable: false,
@@ -68,7 +70,8 @@ class AgentDialog extends Component {
     files: [],
     shouldOpenSelectDMPopup: false,
     size: [],
-    shortContent:""
+    shortContent: "",
+    isPopular: false
   };
 
   handleDialogClose = () => {
@@ -84,6 +87,10 @@ class AgentDialog extends Component {
     event.persist();
     if (source === "switch") {
       this.setState({ isActive: event.target.checked });
+      return;
+    }
+    if (source === "isPopular") {
+      this.setState({ isPopular: event.target.checked });
       return;
     }
     this.setState({
@@ -138,7 +145,7 @@ class AgentDialog extends Component {
     this.setState({
       donViTinh: item ? item : null,
       shouldOpenSelectAgencyPopup: false,
-    }, ()=> {
+    }, () => {
       console.log(this.state.donViTinh)
     });
   };
@@ -223,7 +230,7 @@ class AgentDialog extends Component {
   };
 
   selectSize = (item) => {
-    this.setState({ size: item }, function () {});
+    this.setState({ size: item }, function () { });
   };
 
   render() {
@@ -237,7 +244,7 @@ class AgentDialog extends Component {
       imageUrl,
       files,
       noteAvatarImage,
-      size
+      size, isPopular
     } = this.state;
 
     console.log(imageUrl);
@@ -326,10 +333,19 @@ class AgentDialog extends Component {
                         variant="outlined"
                         size="small"
                       />
+                      <FormControlLabel
+                        value={isPopular}
+                        className=""
+                        name="isPopular"
+                        onChange={(isPopular) => this.handleChange(isPopular, "isPopular")}
+                        control={<Checkbox checked={isPopular} />}
+                        label="Sản phẩm nổi bật"
+                      />
                     </span>
                   )}
                 </Grid>
               </Grid>
+
               <Grid item sm={12} xs={12} md={4}>
                 <TextValidator
                   className="w-100 "
@@ -480,7 +496,7 @@ class AgentDialog extends Component {
                       <span> {t("Kích thước")}</span>
                     </span>
                   }
-                  multiple = {true}
+                  multiple={true}
                   searchFunction={searchByPageSize}
                   searchObject={searchObject}
                   defaultValue={size}
