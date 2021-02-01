@@ -142,7 +142,7 @@ class ChonNhanVien extends React.Component {
 
   render() {
     const { t, i18n, handleClose, handleSelect, selectedItem, open } = this.props;
-    let { keyword, shouldOpenProductDialog, itemList } = this.state;
+    let { keyword, shouldOpenProductDialog, itemList,size } = this.state;
     let columns = [
       {
         title: t("general.select"),
@@ -153,12 +153,12 @@ class ChonNhanVien extends React.Component {
         />
       },
       { title: t("general.code"), field: "maNV", align: "left", width: "150" },
-      { title: t("general.name"), field: "tenNV", width: "150" },
+      { title: t("general.name"), field: "displayName", width: "150" },
     ];
     return (
       <Dialog onClose={handleClose} open={open} PaperComponent={PaperComponent} maxWidth={'md'} fullWidth>
         <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
-          <span className="mb-20">{t("title.source")}</span>
+          <span className="mb-20">Chọn nhân viên</span>
         </DialogTitle>
         <DialogContent>
           <Grid item xs={12}>

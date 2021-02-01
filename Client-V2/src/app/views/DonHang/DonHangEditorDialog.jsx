@@ -329,7 +329,7 @@ class DonHangEditorDialog extends Component {
         align: "left",
         render: (row) => (
           <TextValidator
-            className="w-100 "
+            className="w-30"
             onChange={(e) => this.handleChangeSL(row, e)}
             type="number"
             value={row.soLuong}
@@ -339,15 +339,28 @@ class DonHangEditorDialog extends Component {
         ),
       },
       {
-        title: t("Tổng giá"),
-        field: "code",
+        title: "Đơn giá",
         align: "left",
         render: (row) => (
           <TextValidator
-            className="w-100 "
+            className="w-50"
             onChange={(e) => this.handleChangeGia(row, e)}
             type="number"
             value={row.donGia}
+            validators={["required"]}
+            errorMessages={[t("general.required")]}
+          />
+        ),
+      },
+      {
+        title: "Thành tiền",
+        align: "left",
+        render: (row) => (
+          <TextValidator
+            className="w-50"
+            onChange={(e) => this.handleChangeGia(row, e)}
+            type="number"
+            value={row.thanhTien}
             validators={["required"]}
             errorMessages={[t("general.required")]}
           />

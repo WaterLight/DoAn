@@ -95,7 +95,7 @@ public class PhieuXuatKhoServiceImpl extends GenericServiceImpl<PhieuXuatKho, UU
 					ThuocTinhSanPham size = null;
 					if (sanPhamPhieuXuatlDto.getSize() != null && sanPhamPhieuXuatlDto.getSize().getId() != null) {
 						size = sizeRepository.getOne(sanPhamPhieuXuatlDto.getSize().getId());
-						if(size == null || size.getId() != null) {
+						if(size == null || size.getId() == null) {
 							return null;
 						}
 					}

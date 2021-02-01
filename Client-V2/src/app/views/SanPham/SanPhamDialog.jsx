@@ -67,7 +67,8 @@ class AgentDialog extends Component {
     noteAvatarImage: "",
     files: [],
     shouldOpenSelectDMPopup: false,
-    size: null
+    size: [],
+    shortContent:""
   };
 
   handleDialogClose = () => {
@@ -231,6 +232,7 @@ class AgentDialog extends Component {
       maSP,
       tenSP,
       description,
+      shortContent,
       shouldOpenNotificationPopup,
       imageUrl,
       files,
@@ -319,8 +321,8 @@ class AgentDialog extends Component {
                         label={t("general.noteAvatarImage")}
                         onChange={this.handleChange}
                         type="text"
-                        name="noteAvatarImage"
-                        value={noteAvatarImage}
+                        name="shortContent"
+                        value={shortContent}
                         variant="outlined"
                         size="small"
                       />

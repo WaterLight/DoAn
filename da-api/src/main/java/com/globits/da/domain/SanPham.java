@@ -20,6 +20,8 @@ public class SanPham extends BaseObject{
 	private String tenSP;
 	@Column(name = "ma_san_pham")
 	private String maSP;
+	@Column(name = "short_content")
+	private String shortConent;
 	@Column(name = "gia_ban_hien_Thoi")
 	private Double giaBanHienThoi;
 	@ManyToOne
@@ -37,6 +39,12 @@ public class SanPham extends BaseObject{
 	@OneToMany(mappedBy = "sanPham", cascade=CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval=true)
 	private Set<SanPhamSize> size = new HashSet<SanPhamSize>();
 	
+	public String getShortConent() {
+		return shortConent;
+	}
+	public void setShortConent(String shortConent) {
+		this.shortConent = shortConent;
+	}
 	public String getTenSP() {
 		return tenSP;
 	}

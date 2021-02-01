@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import moment from "moment";
 import {
   Grid,
   IconButton,
@@ -9,9 +10,6 @@ import {
   FormControl,
   Input,
   InputAdornment,
-  Select,
-  MenuItem,
-  InputLabel
 } from "@material-ui/core";
 import MaterialTable, {
   MTableToolbar,
@@ -30,19 +28,15 @@ import Tooltip from "@material-ui/core/Tooltip";
 import { Link } from "react-router-dom";
 import NotificationPopup from "../Component/NotificationPopup/NotificationPopup";
 import { isThisSecond } from "date-fns/esm";
-import RealEstateSourceDialog from "./DonHangEditorDialog";
+import SuKienDialog from "./SuKienDialog";
 import {
-  getAllSource,
-  getSourceById,
-  deleteSource,
+  getAllUrbanArea,
+  getItemById,
+  deleteItem,
   searchByPage,
-} from "./DonHangService";
-import moment from "moment";
+} from "./SuKienService";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
-
 toast.configure({
   autoClose: 2000,
   draggable: false,
@@ -102,7 +96,7 @@ function MaterialButton(props) {
   );
 }
 
-class RealEstateSourceTable extends React.Component {
+class SuKien extends React.Component {
   state = {
     keyword: "",
     rowsPerPage: 10,
@@ -118,19 +112,12 @@ class RealEstateSourceTable extends React.Component {
     shouldOpenConfirmationDeleteListDialog: false,
     shouldOpenNotificationPopup: false,
     Notification: "",
-    orderStatus: null,
-    listStatus: [
-      { id: 1, name: "Đơn hàng mới" },
-      { id: 2, name: "Đơn hàng đã xác nhận" },
-      { id: 3, name: "Đơn hàng đã thanh toán" },
-      { id: 4, name: "Đơn hàng đã hủy" }
-    ]
   };
   numSelected = 0;
   rowCount = 0;
 
   handleTextChange = (event) => {
-    this.setState({ keyword: event.target.value }, function () { });
+    this.setState({ keyword: event.target.value }, function () {});
   };
 
   handleKeyDownEnterSearch = (e) => {
@@ -174,13 +161,10 @@ class RealEstateSourceTable extends React.Component {
     });
   }
   checkData = () => {
-    let { t } = this.props;
+    let {t} = this.props
     if (!this.data || this.data.length === 0) {
       toast.warning(t("general.noti_check_data"));
-      // this.setState({
-      //   shouldOpenNotificationPopup: true,
-      //   Notification: "general.noti_check_data",
-      // });
+      
     } else if (this.data.length === this.state.itemList.length) {
       this.setState({ shouldOpenConfirmationDeleteAllDialog: true });
     } else {
@@ -190,12 +174,10 @@ class RealEstateSourceTable extends React.Component {
 
   updatePageData = () => {
     var searchObject = {};
-    if (this.state.orderStatus != null) {
-      searchObject.statusOrder = this.state.orderStatus;
-    }
     searchObject.keyword = this.state.keyword;
     searchObject.pageIndex = this.state.page + 1;
     searchObject.pageSize = this.state.rowsPerPage;
+
     searchByPage(searchObject).then((res) => {
       this.setState({
         itemList: [...res.data.content],
@@ -236,7 +218,7 @@ class RealEstateSourceTable extends React.Component {
   };
 
   handleEditMaintainRequestStatus = (item) => {
-    getSourceById(item.id).then((result) => {
+    getItemById(item.id).then((result) => {
       this.setState({
         item: result.data,
         shouldOpenEditorDialog: true,
@@ -246,8 +228,6 @@ class RealEstateSourceTable extends React.Component {
 
   handleConfirmationResponse = () => {
     var { t } = this.props;
-    console.log(this.state.id);
-    console.log(this.state.itemList[this.state.itemList.length - 1].id);
     if (
       this.state.itemList.length % this.state.rowsPerPage === 1 &&
       this.state.itemList.length > 1 &&
@@ -258,14 +238,14 @@ class RealEstateSourceTable extends React.Component {
         page: page,
       });
     }
-    deleteSource(this.state.id)
+    deleteItem(this.state.id)
       .then((res) => {
         toast.success(t("general.deleteSuccess"));
         this.handleDialogClose();
         this.updatePageData();
       })
       .catch(() => {
-        toast.warning(t("source.warning-delete"));
+        toast.warning(t("urbanArea.warning-delete"));
       });
   };
 
@@ -327,20 +307,18 @@ class RealEstateSourceTable extends React.Component {
     let listAlert = [];
     var { t } = this.props;
     for (var i = 0; i < list.length; i++) {
-      // deleteItem(list[i].id)
       try {
-        await deleteSource(list[i].id);
+        await deleteItem(list[i].id);
       } catch (error) {
         listAlert.push(list[i].name);
       }
     }
-    // toast.success(t("general.deleteSuccess"));
     this.handleDialogClose();
     if (listAlert.length === list.length) {
-      toast.warning(t("source.use_all"));
+      toast.warning(t("urbanArea.use_all"));
       // alert("Các trạng thái đều đã sử dụng");
     } else if (listAlert.length > 0) {
-      toast.warning(t("source.deleted_unused"));
+      toast.warning(t("urbanArea.deleted_unused"));
       // alert("Đã xoá các trạng thái chưa sử dụng");
     }
   }
@@ -357,14 +335,6 @@ class RealEstateSourceTable extends React.Component {
         console.log("loi");
       });
   };
-  handleSelectStatus = (value, status) => {
-    if (status != null && status.id != null) {
-      this.setState({ orderStatus: status.id })
-    } else {
-      this.setState({ orderStatus: null })
-    }
-    this.updatePageData();
-  }
 
   render() {
     const { t, i18n } = this.props;
@@ -379,10 +349,8 @@ class RealEstateSourceTable extends React.Component {
       shouldOpenEditorDialog,
       shouldOpenConfirmationDeleteAllDialog,
       shouldOpenNotificationPopup,
-      listStatus,
-      orderStatus
     } = this.state;
-    let TitlePage = t("Đơn Hàng");
+    let TitlePage = "Sự Kiện";
 
     let columns = [
       {
@@ -400,8 +368,9 @@ class RealEstateSourceTable extends React.Component {
           <MaterialButton
             item={rowData}
             onSelect={(rowData, method) => {
+              console.log(rowData.id);
               if (method === 0) {
-                getSourceById(rowData.id)
+                getItemById(rowData.id)
                   .then(({ data }) => {
                     console.log(data);
                     if (data === null) {
@@ -424,88 +393,20 @@ class RealEstateSourceTable extends React.Component {
           />
         ),
       },
-      {
-        title: t("general.name"),
-        field: "ten",
-        align: "left",
-        width: "150",
+      
+      { 
+        title: "Tiêu Đề", field: "tieuDe", width: "350" 
       },
-      {
-        title: t("general.code"),
-        field: "ma",
-        width: "150",
+      { 
+        title: "Ngày bắt đầu", field: "", width: "150",
+        render: rowData =>
+          (rowData.ngayBatDau) ? <span>{moment(rowData.ngayBatDau).format('DD/MM/YYYY')}</span> : ''
       },
-      {
-        title: t("Ngày đặt hàng"),
-        field: "ngayDatHang",
-        width: "150",
-        render: (rowData) =>
-          rowData.ngayDatHang ? (
-            <span> {moment(rowData.ngayDatHang).format('DD/MM/YYYY hh:mm')}</span>
-          ) : (
-              ""
-            ),
-      },
-      {
-        title: t("Ngày giao hàng"),
-        field: "ngayGiaoHang",
-        width: "150",
-        render: (rowData) =>
-          rowData.ngayGiaoHang ? (
-            <span>{moment(rowData.ngayGiaoHang).format("DD/MM/YYYY HH:MM")}</span>
-          ) : (
-              ""
-            ),
-      },
-      {
-        title: t("Tổng giá"),
-        field: "tongGia",
-        width: "150",
-      },
-      {
-        title: t("Giảm giá"),
-        field: "giamGia",
-        width: "150",
-      },
-      {
-        title: t("Thành tiền"),
-        field: "thanhTien",
-        width: "150",
-      },
-      {
-        title: "Trạng thái",
-        width: "150",
-        render: rowData => {
-          if (rowData.trangThai === 1) return 'Đơn hàng mới';
-          else if (rowData.trangThai === 2) return 'Đơn hàng đã xác nhận';
-          else if (rowData.trangThai === 3) return 'Đơn hàng đã thanh toán';
-          else if (rowData.trangThai === 4) return 'Đơn hàng đã hủy';
-          else return "";
-        }
-      },
-      {
-        title: "Hình thức thanh toán",
-        width: "150",
-        render: rowData => {
-          if (rowData.paymentType != null) {
-            if (rowData.paymentType === 1) return 'Chuyển khoản';
-            else if (rowData.paymentType === 2) return 'Thanh toán khi nhận hàng';
-            else return "";
-          }else{
-            return "";
-          }
-        }
-      },
-      {
-        title: t("Người bán"),
-        field: "nguoiBan.displayName",
-        width: "150",
-      },
-      // {
-      //   title: t("Ghi chú"),
-      //   field: "ghiChu",
-      //   width: "150",
-      // },
+      { 
+        title: "Ngày kết thúc", field: "", width: "150",
+        render: rowData =>
+          (rowData.ngayKetThuc) ? <span>{moment(rowData.ngayKetThuc).format('DD/MM/YYYY')}</span> : ''
+      }
     ];
 
     return (
@@ -521,7 +422,7 @@ class RealEstateSourceTable extends React.Component {
             routeSegments={[
               {
                 name: t("Dashboard.category"),
-                path: "/directory/source",
+                path: "/list/maintain_request_status",
               },
               { name: TitlePage },
             ]}
@@ -530,7 +431,7 @@ class RealEstateSourceTable extends React.Component {
 
         <Grid container spacing={2} justify="space-between">
           <Grid item md={3} xs={12}>
-            {/* <Button
+            <Button
               className="mb-16 mr-16 align-bottom"
               variant="contained"
               color="primary"
@@ -542,7 +443,7 @@ class RealEstateSourceTable extends React.Component {
               }}
             >
               {t("general.add")}
-            </Button> */}
+            </Button>
             <Button
               className="mb-16 mr-36 align-bottom"
               variant="contained"
@@ -586,25 +487,6 @@ class RealEstateSourceTable extends React.Component {
             )}
           </Grid>
           <Grid item md={4} sm={12} xs={12}>
-            <Autocomplete
-              size="small"
-              id="combo-box"
-              options={listStatus}
-              className="flex-end w-80 mb-10"
-              getOptionLabel={option => option.name}
-              onChange={this.handleSelectStatus}
-              value={orderStatus ? orderStatus : null}
-              defaultValue={orderStatus ? orderStatus : null}
-              renderInput={params => (
-                <TextField
-                  {...params}
-                  label="Lọc theo trạng thái"
-                  variant="outlined"
-                />
-              )}
-            />
-          </Grid>
-          <Grid item md={4} sm={12} xs={12}>
             <FormControl fullWidth>
               <Input
                 className="search_box w-100"
@@ -614,7 +496,7 @@ class RealEstateSourceTable extends React.Component {
                 id="search_box"
                 startAdornment={
                   <InputAdornment>
-                    <Link>
+                    <Link to={"#"}>
                       {" "}
                       <SearchIcon
                         onClick={() => this.search(keyword)}
@@ -629,7 +511,7 @@ class RealEstateSourceTable extends React.Component {
           <Grid item xs={12}>
             <div>
               {shouldOpenEditorDialog && (
-                <RealEstateSourceDialog
+                <SuKienDialog
                   t={t}
                   i18n={i18n}
                   handleClose={this.handleDialogClose}
@@ -704,7 +586,8 @@ class RealEstateSourceTable extends React.Component {
               component="div"
               labelRowsPerPage={t("general.rows_per_page")}
               labelDisplayedRows={({ from, to, count }) =>
-                `${from}-${to} ${t("general.of")} ${count !== -1 ? count : `more than ${to}`
+                `${from}-${to} ${t("general.of")} ${
+                  count !== -1 ? count : `more than ${to}`
                 }`
               }
               count={totalElements}
@@ -720,10 +603,10 @@ class RealEstateSourceTable extends React.Component {
               onChangeRowsPerPage={this.setRowsPerPage}
             />
           </Grid>
-        </Grid >
-      </div >
+        </Grid>
+      </div>
     );
   }
 }
 
-export default RealEstateSourceTable;
+export default SuKien;

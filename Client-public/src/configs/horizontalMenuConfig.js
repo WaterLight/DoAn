@@ -28,7 +28,7 @@ const horizontalMenuConfig = [
   },
   {
     id: "checkout",
-    title: "Đơn hàng",
+    title: "Giỏ hàng",
     type: "item",
     icon: <Icon.ShoppingCart size={12} />,
     permissions: ["admin", "editor"],
@@ -41,6 +41,22 @@ const horizontalMenuConfig = [
     icon: <Icon.Archive size={12} />,
     permissions: ["admin", "editor"],
     navLink: ConstantsList.ROOT_PATH+"/ecommerce/product-detail"
+  },
+  {
+    id: "event",
+    title: "Sự kiện",
+    type: "item",
+    icon: <Icon.Award size={12} />,
+    permissions: ["admin", "editor"],
+    navLink: ConstantsList.ROOT_PATH + "/event"
+  },
+  {
+    id: "about",
+    title: "Giới thiệu",
+    type: "item",
+    icon: <Icon.Info size={12} />,
+    permissions: ["admin", "editor"],
+    navLink: ConstantsList.ROOT_PATH + "/about"
   },
   //   {
   //   id: "eCommerce",

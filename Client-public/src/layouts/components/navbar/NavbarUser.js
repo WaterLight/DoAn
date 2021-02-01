@@ -59,9 +59,9 @@ class NavbarUser extends React.PureComponent {
     return (
       <ul className="nav navbar-nav navbar-nav-user float-right">
         <NavItem className="nav-search" onClick={this.handleNavbarSearch}>
-          <NavLink className="nav-link-search">
+          {/* <NavLink className="nav-link-search">
             <Icon.Search size={21} data-tour="search" />
-          </NavLink>
+          </NavLink> */}
           <div
             className={classnames("search-input", {
               open: this.state.navbarSearch,

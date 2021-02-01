@@ -132,6 +132,7 @@ public class PhieuNhapKhoServiceImpl extends GenericServiceImpl<PhieuNhapKho, UU
 						sanPhamKho = sanPhamKhoRepository.save(sanPhamKho);
 					}
 					sanPhamPhieuNhap.setKho(kho);
+					sanPhamPhieuNhap.setSize(size);
 					sanPhamPhieuNhap.setSoLuong(sanPhamPhieuNhaplDto.getSoLuong());
 					sanPhamPhieuNhap.setGia(sanPhamPhieuNhaplDto.getGia());
 					sanPhamPhieuNhap.setPhieuNhapKho(entity);

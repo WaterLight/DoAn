@@ -43,17 +43,20 @@ class Checkout extends React.Component {
     user: null,
     steps: [],
     currentUser: {},
-    saleOrder: {}
+    saleOrder: {},
+    soLuong: null,
+    paymentType: 1
   }
   handleDeleteProductInCart = product => {
     if (product && product.sanPham.id) {
-      let order = JSON.parse(window.localStorage.getItem("saleOrder")).sanPhamDonHang;
-      if (order != null && order.length > 0) {
-        for (let i = 0; i < order.length; i++) {
-          if (order[i].sanPham.id == product.sanPham.id) {
-            var removeIndex = order.map(function (item) { return item.id; }).indexOf(product.sanPham.id);
-            order.splice(removeIndex + 1, 1);
-            window.localStorage.setItem("saleOrder", JSON.stringify(order));
+      let {saleOrder} = this.state;
+      if (saleOrder != null && saleOrder.sanPhamDonHang != null && saleOrder.sanPhamDonHang.length > 0) {
+        for (let i = 0; i < saleOrder.sanPhamDonHang.length; i++) {
+          if (saleOrder.sanPhamDonHang[i].sanPham.id == product.sanPham.id) {
+            var removeIndex = saleOrder.sanPhamDonHang.map(function (item) { return item.id; }).indexOf(product.sanPham.id);
+            saleOrder.sanPhamDonHang.splice(removeIndex + 1, 1);
+            window.localStorage.setItem("saleOrder", JSON.stringify(saleOrder));
+            this.setState({saleOrder: JSON.parse(window.localStorage.getItem("saleOrder"))});
           }
         }
       }
@@ -79,23 +82,30 @@ class Checkout extends React.Component {
   handleActiveStep = index => {
     let { currentUser } = this.state;
     if (currentUser == null || currentUser.id == null) {
-      window.location.href = ConstantList.URL + "authentication/login";
+      window.location.href = ConstantList.ROOT_PATH + "/authentication/login";
     }
     this.setState({ activeStep: index })
   }
-  handleChooseDefaultAddress = () => {
-    let { currentUser } = this.state;
-    let order = JSON.parse(window.localStorage.getItem("saleOrder"));
-    if (currentUser != null && currentUser.id != null && order.sanPhamDonHang != null && order.sanPhamDonHang.length > 0) {
-      saveOrder(order).then((res) => {
+  handleChooseDefaultAddress = step => {
+    this.setState({ activeStep: step })
+  }
+  handleConfirmOrder = ()=>{
+    let { currentUser, saleOrder } = this.state;
+    if (currentUser != null && currentUser.id != null && saleOrder.sanPhamDonHang != null && saleOrder.sanPhamDonHang.length > 0) {
+      saveOrder(saleOrder).then((res) => {
         if (res.status == 200) {
           toast.info("Chúc mừng bạn đã đặt hàng thành công");
+          //clear đơn hàng
+          if(JSON.parse(window.localStorage.getItem("saleOrder")) != null){
+            window.localStorage.clear();
+          }
         } else {
-          toast.error("Có lỗi xảy ra khi đặt hàng, vui lòng thử lại");
+          toast.error("Có lỗi xảy ra khi đặt hàng, vui lòng đăng nhập để thử lại");
+          window.location.href = ConstantList.ROOT_PATH + "/authentication/login";
         }
       }).catch(err => {
-        toast.error("Có lỗi xảy ra khi đặt hàng, vui lòng thử lại");
-        console.log(err)
+          toast.error("Có lỗi xảy ra khi đặt hàng, vui lòng đăng nhập để thử lại");
+          window.location.href = ConstantList.ROOT_PATH + "/authentication/login";
       })
     }
   }
@@ -105,16 +115,64 @@ class Checkout extends React.Component {
       position: toast.POSITION.BOTTOM_RIGHT
     })
   }
+  handleChangeNumberOfProduct = (sanPham, soLuong) => {
+    if (sanPham != null && sanPham.id != null && soLuong > 0) {
+      let { saleOrder } = this.state;
+      if (saleOrder != null && saleOrder.sanPhamDonHang != null && saleOrder.sanPhamDonHang.length > 0) {
+        for (var i = 0; i < saleOrder.sanPhamDonHang.length; i++) {
+          let sanPhamDonHang = saleOrder.sanPhamDonHang[i];
+          if (sanPhamDonHang.sanPham.id == sanPham.id) {
+            sanPhamDonHang.soLuong = soLuong;
+            if (sanPhamDonHang.trietKhau != null) {
+              sanPhamDonHang.thanhTien = sanPhamDonHang.soLuong * sanPhamDonHang.donGia * (1 - sanPhamDonHang.trietKhau / 100);
+            }
+            sanPhamDonHang.thanhTien = sanPhamDonHang.soLuong * sanPhamDonHang.donGia;
+            // cập nhật vào đơn hàng ở local store
+            saleOrder.sanPhamDonHang[i].thanhTien = sanPhamDonHang.thanhTien;
+            //cập nhật tổng tiền sản phẩm
+            if (sanPhamDonHang.sanPham.giamGia != 0 && sanPhamDonHang.sanPham.giamGia != null) {
+              saleOrder.giamGia += sanPhamDonHang.sanPham.giamGia;
+              saleOrder.tongGia += sanPhamDonHang.sanPham.giaBanHienThoi * (100 - sanPhamDonHang.sanPham.giamGia) / 100;
+              saleOrder.thanhTien = saleOrder.tongGia;
+            } else {
+              saleOrder.tongGia += sanPhamDonHang.sanPham.giaBanHienThoi;
+              saleOrder.thanhTien = saleOrder.tongGia;
+            }
+            saleOrder.totalAmount = saleOrder.tongGia;
+          }
+          window.localStorage.setItem("saleOrder", JSON.stringify(saleOrder));
+          this.setState({ saleOrder: JSON.parse(window.localStorage.getItem("saleOrder"))});
+        }
+      }
+    }
+  }
+  handleChangeTypeOfPayment = (paymentType) =>{
+    if(paymentType != null){
+      let {saleOrder} = this.state;
+      if(paymentType == 2){//thanh toán khi nhận hàng
+          if(saleOrder != null){
+            saleOrder.paymentType = paymentType;
+          }
+      }
+      if(paymentType == 1){//thanh toán qua tài khoản ngân hàng
+        if(saleOrder != null){
+          saleOrder.paymentType = paymentType;
+        }
+      }
+      window.localStorage.setItem("saleOrder", JSON.stringify(saleOrder));
+      this.setState({saleOrder:window.localStorage.setItem("saleOrder", JSON.stringify(saleOrder))});
+    }
+  }
 
   render() {
-    const { activeStep, currentUser, saleOrder } = this.state;
+    const { activeStep, currentUser, saleOrder, soLuong ,paymentType} = this.state;
     let steps = [
       {
         title: <ShoppingCart size={22} />,
         content: (
           <div className="list-view product-checkout">
             <div className="checkout-items">
-              {saleOrder != null && saleOrder.sanPhamDonHang != null && saleOrder.sanPhamDonHang.length >= 0 && saleOrder.sanPhamDonHang.map((item, i) => (
+              {saleOrder != null && saleOrder.sanPhamDonHang != null && saleOrder.sanPhamDonHang.length > 0 && saleOrder.sanPhamDonHang.map((item, i) => (
                 <Card className="ecommerce-card" key={i}>
                   <div className="card-content">
                     <div className="item-img text-center">
@@ -135,18 +193,21 @@ class Checkout extends React.Component {
                     </div>
                     <CardBody>
                       <div className="item-name">
-                        <span>{item.sanPham.tenSP} - <span>Giá: {item.sanPham.giaBanHienThoi.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} đ</span> </span>
-                        <p className="item-company">
-                          {/* By <span className="company-name">{item.by}</span> */}
-                        </p>
+                        <span>Sản phẩm: {item.sanPham.tenSP} - <span>Giá: {item.sanPham.giaBanHienThoi.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} đ</span> </span>
+                        <div className="item-company">
+                        Size: <span className="company-name"> {item.size ? item.size.ma : ""} </span>
+                          - Thành tiền:  <span className="company-name">{item.thanhTien ? item.thanhTien.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") : item.donGia.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} đ</span>
+                        </div>
                         <div className="item-quantity mt-60">
                           <p className="quantity-title">Số lượng</p>
                           <NumericInput
-                            min={0}
-                            max={10}
-                            value={1}
+                            type="number"
+                            value={item.soLuong ? item.soLuong : 1}
                             mobile
+                            min={1}
+                            max = {100}
                             style={mobileStyle}
+                            onChange={(soLuong) => this.handleChangeNumberOfProduct(item.sanPham, soLuong)}
                           />
                         </div>
                         {/* <p className="delivery-date">{item.deliveryBy}</p>
@@ -176,7 +237,11 @@ class Checkout extends React.Component {
                     </div>
                   </div>
                 </Card>
-              ))}
+              ))
+              }
+              {saleOrder == null || saleOrder.sanPhamDonHang == null || saleOrder.sanPhamDonHang.length ==0 ?(
+                <a className="bold" href={ConstantList.ROOT_PATH + "/ecommerce/shop"}>Giỏ hàng của bạn còn trống! Xin mời chọn các mẫu giầy của shop.</a>
+              ) :("")}
             </div>
             <div className="checkout-options">
               <Card>
@@ -254,7 +319,7 @@ class Checkout extends React.Component {
               </CardHeader>
               <CardBody>
                 <Row>
-                  <Col md="6" sm="12">
+                  {/* <Col md="6" sm="12">
                     <AvGroup>
                       <Label for="name"> Tên người nhận </Label>
                       <AvInput id="name" name="name" type="text" required />
@@ -316,7 +381,10 @@ class Checkout extends React.Component {
                       />
                       <AvFeedback>Bạn chưa chọn tỉnh thành phố</AvFeedback>
                     </AvGroup>
-                  </Col>
+                  </Col> */}
+
+
+                  
                   {/* <Col md="6" sm="12">
                     <AvGroup>
                       <Label for="state"> State</Label>
@@ -365,10 +433,12 @@ class Checkout extends React.Component {
                   }</p>
                   <hr />
                   <Button.Ripple
+                    type="submit"
+                    block
                     color="primary"
                     className="btn-block"
-                    onClick={() => this.handleChooseDefaultAddress()}>
-                    Giao đến địa chỉ này
+                    onClick={() => this.handleChooseDefaultAddress(2)}>
+                      Giao đến địa chỉ này
                   </Button.Ripple>
                 </CardBody>
               </Card>
@@ -423,16 +493,20 @@ class Checkout extends React.Component {
                       <Radio
                         label="Thanh toán khi nhận hàng"
                         color="primary"
-                        defaultChecked={false}
+                        defaultChecked={true}
+                        value={2}
                         name="paymentType"
+                        onClick = {()=> this.handleChangeTypeOfPayment(2)}
                       />
                     </li>
                     <li className="py-25">
                       <Radio
                         label="Thanh toán qua ngân hàng"
                         color="primary"
+                        value={1}
                         defaultChecked={false}
                         name="paymentType"
+                        onClick = {()=> this.handleChangeTypeOfPayment(1)}
                       />
                       <img src={bankLogo} alt="img-placeholder" height="40" />
                       <span>Thanh toán qua tài khoản ngân hàng: <span className="bold">069100386735</span> - ngân hàng VietCombank - Chủ tài khoản: <span className="bold">Dương Thị Huyền Trang</span> chi nhánh Tây Hà Nội hoặc số tài khoản <span className="bold">100002003535535</span> Ngân hàng Công Thương Việt Nam VietTinBank - chủ tài khoản: <span className="bold">Nguyễn Thanh Lâm</span> - chi nhánh Hà Nội</span>
@@ -445,28 +519,35 @@ class Checkout extends React.Component {
             <div className="amount-payable checkout-options">
               <Card>
                 <CardHeader>
-                  <CardTitle>Price Details</CardTitle>
+                  <CardTitle>Thanh toán</CardTitle>
                 </CardHeader>
                 <CardBody>
-                  <div className="detail">
-                    <div className="details title">Price of 3 items</div>
+                <div className="detail">
+                    <div className="detail-title">Tổng tiền sản phẩm</div>
                     <div className="detail-amt">
-                      <strong>$699.30</strong>
+                      {saleOrder != null && saleOrder.totalAmount != null ? (
+                        <span>{saleOrder.totalAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} đ</span>
+                      ) : ("0đ")}
                     </div>
                   </div>
                   <div className="detail">
-                    <div className="details title">Delivery Charges</div>
-                    <div className="detail-amt discount-amt">
-                      <strong>Free</strong>
-                    </div>
+                    <div className="detail-title">Khuyến mãi</div>
+                    {saleOrder != null && saleOrder.giamGia != null ? (
+                      <div className="detail-amt discount-amt">{saleOrder.giamGia} %</div>
+                    ) : ("0%")}
                   </div>
-                  <hr />
                   <div className="detail">
-                    <div className="details title">Amount Payable</div>
-                    <div className="detail-amt">
-                      <strong>$699.30</strong>
-                    </div>
+                    <div className="detail-title detail-total">Tổng tiền thanh toán</div>
+                    {saleOrder != null && saleOrder.tongGia != null ? (
+                      <span>{saleOrder.tongGia.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} đ</span>
+                    ) : ("0đ")}
                   </div>
+                  <Button.Ripple
+                    color="primary"
+                    className="btn-block"
+                    onClick={() => this.handleConfirmOrder()}>
+                    Xác nhận đặt hàng
+                  </Button.Ripple>
                 </CardBody>
               </Card>
             </div>

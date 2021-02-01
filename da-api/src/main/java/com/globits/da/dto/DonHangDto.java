@@ -21,7 +21,7 @@ public class DonHangDto extends BaseObjectDto {
 	private String ghiChu;
 	private NhanVienDto nguoiBan;
 	private Set<SanPhamDonHangDto> sanPhamDonHang;
-	
+	private Integer paymentType;// hình thức thanh toán, 1: thanh toán qua ngân hàng, 2: thanh toán khi nhận hàng
 	
 	public String getTen() {
 		return ten;
@@ -90,6 +90,13 @@ public class DonHangDto extends BaseObjectDto {
 	public void setSanPhamDonHang(Set<SanPhamDonHangDto> sanPhamDonHang) {
 		this.sanPhamDonHang = sanPhamDonHang;
 	}
+	
+	public Integer getPaymentType() {
+		return paymentType;
+	}
+	public void setPaymentType(Integer paymentType) {
+		this.paymentType = paymentType;
+	}
 	public DonHangDto() {
 		super();
 	}
@@ -105,6 +112,7 @@ public class DonHangDto extends BaseObjectDto {
 			this.setThanhTien(entity.getThanhTien());
 			this.setTrangThai(entity.getTrangThai());
 			this.setGhiChu(entity.getGhiChu());
+			this.setPaymentType(entity.getPaymentType());
 			if(entity.getNguoiBan() != null && entity.getNguoiBan().getId() != null) {
 				this.setNguoiBan(new NhanVienDto(entity.getNguoiBan()));
 			}

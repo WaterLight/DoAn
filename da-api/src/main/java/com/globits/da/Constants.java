@@ -32,4 +32,16 @@ public final class Constants {
 			return value;
 		}
 	}
+	public static enum TypeOfPayMent{//Hình thức thanh toán
+		transferBanking(1),// chuyển khoản
+		cashing(2);// tiền mặt
+		
+		private Integer value;
+		private TypeOfPayMent(Integer value) {
+		    this.value = value;
+		}
+		public Integer getValue() {
+			return value;
+		}
+	}
 }

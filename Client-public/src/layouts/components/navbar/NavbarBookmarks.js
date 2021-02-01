@@ -114,7 +114,7 @@ class NavbarBookmarks extends React.PureComponent {
                           ref={provided.innerRef}
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}>
-                          <NavItem className="nav-item d-none d-lg-block">
+                          {/* <NavItem className="nav-item d-none d-lg-block">
                             <NavLink
                               tag="span"
                               id={item.target}
@@ -127,7 +127,7 @@ class NavbarBookmarks extends React.PureComponent {
                               target={item.target}>
                               {item.title}
                             </UncontrolledTooltip>
-                          </NavItem>
+                          </NavItem> */}
                         </div>
                       )
                     }}
@@ -191,9 +191,9 @@ class NavbarBookmarks extends React.PureComponent {
           <NavItem
             className="nav-item d-none d-lg-block"
             onClick={this.handleBookmarksVisibility}>
-            <NavLink>
+            {/* <NavLink>
               <Icon.Star className="text-warning" size={21} />
-            </NavLink>
+            </NavLink> */}
             <div
               className={classnames("bookmark-input search-input", {
                 show: this.state.showBookmarks
