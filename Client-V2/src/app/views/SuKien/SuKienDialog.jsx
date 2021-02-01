@@ -105,10 +105,10 @@ class SuKienDialog extends Component {
         tieuDePhu: "",
         tomTat: "",
         noiDung: "",
-        phanTramGiamGia: 0,
-        tienGiamGia: 0,
+        phanTramGiamGia: "",
+        tienGiamGia: "",
         ngayBatDau: new Date(),
-        ngayKetThuc: new Date(),
+        ngayKetThuc: null,
         lstProduct: [],
         sanPham: [],
         danhMucSanPham: [],
@@ -145,10 +145,23 @@ class SuKienDialog extends Component {
     };
 
     handleFormSubmit = () => {
-        debugger
-        let { id } = this.state;
-        let { ma } = this.state;
+        let { id,ngayKetThuc,ngayBatDau } = this.state;
         var { t } = this.props;
+        if(!ngayKetThuc){
+            toast.warning("Thời gian kết thúc không được để trống!");
+            return;
+        }
+        if(!id && ngayBatDau && ngayKetThuc){
+            if(ngayBatDau.getTime() > ngayKetThuc.getTime()){
+                toast.warning("Thời gian bắt đầu diễn ra sự kiện không được lớn hơn thời gian kết thúc!");
+                return;
+            }
+        }else{
+            if(ngayBatDau > ngayKetThuc){
+                toast.warning("Thời gian bắt đầu diễn ra sự kiện không được lớn hơn thời gian kết thúc!");
+                return;
+            }
+        }
         if (id) {
             updateItem({
                 ...this.state,
@@ -224,6 +237,7 @@ class SuKienDialog extends Component {
         });
         this.handleDialogCancel();
     };
+
     handleDateChange = (date, name) => {
         this.setState({
             [name]: date,
@@ -332,8 +346,8 @@ class SuKienDialog extends Component {
                                     label={
                                         <span>
                                             <span style={{ color: "red" }}>*</span>
-                      Tiêu đề
-                    </span>
+                                        Tiêu đề
+                                        </span>
                                     }
                                     onChange={this.handleChange}
                                     type="text"
@@ -343,14 +357,13 @@ class SuKienDialog extends Component {
                                     errorMessages={[t("general.required")]}
                                 />
                             </Grid>
-
                             <Grid item sm={12} xs={12}>
                                 <TextValidator
                                     className="w-100 mt-8"
                                     label={
                                         <span>
                                             Tiêu đề phụ
-                    </span>
+                                        </span>
                                     }
                                     onChange={this.handleChange}
                                     type="text"
@@ -358,15 +371,14 @@ class SuKienDialog extends Component {
                                     value={tieuDePhu}
                                 />
                             </Grid>
-
                             <Grid item sm={12} xs={12}>
                                 <TextValidator
                                     className="w-100 mt-8"
                                     label={
                                         <span>
                                             <span style={{ color: "red" }}>*</span>
-                      Tóm tắt
-                    </span>
+                                        Tóm tắt
+                                        </span>
                                     }
                                     onChange={this.handleChange}
                                     type="text"
@@ -376,15 +388,14 @@ class SuKienDialog extends Component {
                                     errorMessages={[t("general.required")]}
                                 />
                             </Grid>
-
                             <Grid item sm={12} xs={12}>
                                 <TextValidator
                                     className="w-100 mt-8"
                                     label={
                                         <span>
                                             <span style={{ color: "red" }}>*</span>
-                      Nội dung
-                    </span>
+                                        Nội dung
+                                        </span>
                                     }
                                     onChange={this.handleChange}
                                     type="text"
@@ -393,59 +404,60 @@ class SuKienDialog extends Component {
                                     validators={["required"]}
                                     errorMessages={[t("general.required")]}
                                 />
-
                             </Grid>
-                            <Grid className="" container spacing={2}>
-                                <Grid item sm={6} xs={12}>
-                                    <TextValidator
-                                        className="w-100 mt-8"
-                                        label={
-                                            <span>
-                                                Phần trăm giảm giá
-                    </span>
-                                        }
-                                        onChange={this.handleChange}
-                                        type="text"
-                                        name="phanTramGiamGia"
-                                        value={phanTramGiamGia}
+                            <Grid item sm={6} xs={12}>
+                                <TextValidator
+                                    className="w-100 mt-8"
+                                    label={
+                                        <span>
+                                            Phần trăm giảm giá
+                                        </span>
+                                    }
+                                    onChange={this.handleChange}
+                                    type="text"
+                                    name="phanTramGiamGia"
+                                    value={phanTramGiamGia}
+                                />
+                            </Grid>
+                            <Grid item sm={6} xs={12}>
+                                <TextValidator
+                                    className="w-100 mt-8"
+                                    label={
+                                        <span>
+                                            <span style={{ color: "red" }}>*</span>
+                                            Số tiền giảm giá
+                                        </span>
+                                    }
+                                    onChange={this.handleChange}
+                                    type="number"
+                                    name="tienGiamGia"
+                                    value={tienGiamGia}
+                                    validators={["required"]}
+                                    errorMessages={[t("general.required")]}
+                                />
+                            </Grid>
+                            <Grid item sm={6} xs={12}>
+                                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                    <span style={{ color: "red" }}>*</span>
+                                    <KeyboardDatePicker
+                                        margin="none"
+                                        fullWidth
+                                        id="date-picker-dialog mt-2"
+                                        label={t("Ngày bắt đầu")}
+                                        format="dd/MM/yyyy"
+                                        value={ngayBatDau}
+                                        onChange={(date) => this.handleDateChange(date, "ngayBatDau")}
+                                        KeyboardButtonProps={{
+                                            "aria-label": "change date",
+                                        }}
+                                        invalidDateMessage={t("general.invalidDateFormat")}
+                                        validators={["required"]}
+                                        errorMessages={[t("general.required")]}
                                     />
-                                </Grid>
-
-
-                                <Grid item sm={6} xs={12}>
-                                    <TextValidator
-                                        className="w-100 mt-8"
-                                        label={
-                                            <span>
-                                                Số tiền giảm giá
-                    </span>
-                                        }
-                                        onChange={this.handleChange}
-                                        type="text"
-                                        name="tienGiamGia"
-                                        value={tienGiamGia}
-                                    />
-                                </Grid>
-
-                                <Grid item sm={6} xs={12}>
-                                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                        <KeyboardDatePicker
-                                            margin="none"
-                                            fullWidth
-                                            id="date-picker-dialog mt-2"
-                                            label={t("Ngày bắt đầu")}
-                                            format="dd/MM/yyyy"
-                                            value={ngayBatDau}
-                                            onChange={(date) => this.handleDateChange(date, "ngayBatDau")}
-                                            KeyboardButtonProps={{
-                                                "aria-label": "change date",
-                                            }}
-                                            invalidDateMessage={t("general.invalidDateFormat")}
-                                        />
-                                    </MuiPickersUtilsProvider>
-                                </Grid>
-
-                                <Grid item sm={6} xs={12}>
+                                </MuiPickersUtilsProvider>
+                            </Grid>
+                            <Grid item sm={6} xs={12}>
+                                    <span style={{ color: "red" }}>*</span>
                                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                                         <KeyboardDatePicker
                                             margin="none"
@@ -459,69 +471,11 @@ class SuKienDialog extends Component {
                                                 "aria-label": "change date",
                                             }}
                                             invalidDateMessage={t("general.invalidDateFormat")}
+                                            validators={["required"]}
+                                            errorMessages={[t("general.required")]}
                                         />
                                     </MuiPickersUtilsProvider>
                                 </Grid>
-
-                            </Grid>
-                            <Grid item sm={5} xs={12}>
-                                <Button
-                                    className=" mt-10 mb-10"
-                                    variant="contained"
-                                    color="primary"
-                                    onClick={() => {
-                                        this.setState({
-                                            shouldOpenMultipleChoiseProductDialog: true,
-                                            item: {},
-                                        });
-                                    }}
-                                >
-                                    Chọn sản phẩm
-                                </Button>
-                            </Grid>
-                            {shouldOpenMultipleChoiseProductDialog && (
-                                <SelectMultiProductsPopup
-                                    open={shouldOpenMultipleChoiseProductDialog}
-                                    onConfirmDialogClose={this.handleMultipleChoiseProductDialogClose}
-                                    product={lstProduct}
-                                    t={t}
-                                    i18n={i18n}
-                                />
-                            )}
-                            <Grid item sm={12} xs={12} className="mt-10">
-                                <MaterialTable
-                                    data={
-                                        this.state.sanPham
-                                            ? this.state.sanPham
-                                            : []
-                                    }
-                                    columns={columns}
-                                    options={{
-                                        selection: false,
-                                        actionsColumnIndex: 0,
-                                        paging: false,
-                                        search: false,
-                                        rowStyle: (rowData) => ({
-                                            backgroundColor:
-                                                rowData.tableData.id % 2 === 1 ? "#EEE" : "#FFF",
-                                        }),
-                                        maxBodyHeight: "253px",
-                                        minBodyHeight: "253px",
-                                        headerStyle: {
-                                            backgroundColor: "#358600",
-                                            color: "#fff",
-                                        },
-                                        padding: "dense",
-                                        toolbar: false,
-                                    }}
-                                    components={{
-                                        Toolbar: (props) => <MTableToolbar {...props} />,
-                                    }}
-                                    onSelectionChange={(rows) => {
-                                        this.data = rows;
-                                    }}
-                                />
-                            </Grid>
                         </Grid>
                     </DialogContent>
                     <DialogActions>
