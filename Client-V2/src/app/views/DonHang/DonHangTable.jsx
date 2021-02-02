@@ -11,7 +11,7 @@ import {
   InputAdornment,
   Select,
   MenuItem,
-  InputLabel
+  InputLabel,
 } from "@material-ui/core";
 import MaterialTable, {
   MTableToolbar,
@@ -29,6 +29,7 @@ import SearchIcon from "@material-ui/icons/Search";
 import Tooltip from "@material-ui/core/Tooltip";
 import { Link } from "react-router-dom";
 import NotificationPopup from "../Component/NotificationPopup/NotificationPopup";
+import InventoryCountVoucherPrint from "./InventoryCountVoucherPrint";
 import { isThisSecond } from "date-fns/esm";
 import RealEstateSourceDialog from "./DonHangEditorDialog";
 import {
@@ -40,7 +41,7 @@ import {
 import moment from "moment";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import Autocomplete from "@material-ui/lab/Autocomplete";
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 
 toast.configure({
@@ -98,6 +99,11 @@ function MaterialButton(props) {
           </Icon>
         </IconButton>
       </LightTooltip>
+      <IconButton size="small" onClick={() => props.onSelect(item, 3)}>
+        <Icon fontSize="small" color="inherit">
+          print
+        </Icon>
+      </IconButton>
     </div>
   );
 }
@@ -118,19 +124,20 @@ class RealEstateSourceTable extends React.Component {
     shouldOpenConfirmationDeleteListDialog: false,
     shouldOpenNotificationPopup: false,
     Notification: "",
+    shouldOpenPrintDialog: false,
     orderStatus: null,
     listStatus: [
       { id: 1, name: "Đơn hàng mới" },
       { id: 2, name: "Đơn hàng đã xác nhận" },
       { id: 3, name: "Đơn hàng đã thanh toán" },
-      { id: 4, name: "Đơn hàng đã hủy" }
-    ]
+      { id: 4, name: "Đơn hàng đã hủy" },
+    ],
   };
   numSelected = 0;
   rowCount = 0;
 
   handleTextChange = (event) => {
-    this.setState({ keyword: event.target.value }, function () { });
+    this.setState({ keyword: event.target.value }, function () {});
   };
 
   handleKeyDownEnterSearch = (e) => {
@@ -217,6 +224,7 @@ class RealEstateSourceTable extends React.Component {
       shouldOpenConfirmationDeleteAllDialog: false,
       shouldOpenConfirmationDeleteListDialog: false,
       shouldOpenNotificationPopup: false,
+      shouldOpenPrintDialog: false
     });
   };
 
@@ -359,12 +367,12 @@ class RealEstateSourceTable extends React.Component {
   };
   handleSelectStatus = (value, status) => {
     if (status != null && status.id != null) {
-      this.setState({ orderStatus: status.id })
+      this.setState({ orderStatus: status.id });
     } else {
-      this.setState({ orderStatus: null })
+      this.setState({ orderStatus: null });
     }
     this.updatePageData();
-  }
+  };
 
   render() {
     const { t, i18n } = this.props;
@@ -380,7 +388,8 @@ class RealEstateSourceTable extends React.Component {
       shouldOpenConfirmationDeleteAllDialog,
       shouldOpenNotificationPopup,
       listStatus,
-      orderStatus
+      orderStatus,
+      shouldOpenPrintDialog
     } = this.state;
     let TitlePage = t("Đơn Hàng");
 
@@ -417,6 +426,17 @@ class RealEstateSourceTable extends React.Component {
                   });
               } else if (method === 1) {
                 this.handleDelete(rowData.id);
+              } else if (method === 3) {
+                // print
+                getSourceById(rowData.id).then(({ data }) => {
+                  if (data === null) {
+                    data = {};
+                  }
+                  this.setState({
+                    item: data,
+                    shouldOpenPrintDialog: true,
+                  });
+                });
               } else {
                 alert("Call Selected Here:" + rowData.id);
               }
@@ -441,10 +461,13 @@ class RealEstateSourceTable extends React.Component {
         width: "150",
         render: (rowData) =>
           rowData.ngayDatHang ? (
-            <span> {moment(rowData.ngayDatHang).format('DD/MM/YYYY hh:mm')}</span>
+            <span>
+              {" "}
+              {moment(rowData.ngayDatHang).format("DD/MM/YYYY hh:mm")}
+            </span>
           ) : (
-              ""
-            ),
+            ""
+          ),
       },
       {
         title: t("Ngày giao hàng"),
@@ -452,10 +475,12 @@ class RealEstateSourceTable extends React.Component {
         width: "150",
         render: (rowData) =>
           rowData.ngayGiaoHang ? (
-            <span>{moment(rowData.ngayGiaoHang).format("DD/MM/YYYY HH:MM")}</span>
+            <span>
+              {moment(rowData.ngayGiaoHang).format("DD/MM/YYYY HH:MM")}
+            </span>
           ) : (
-              ""
-            ),
+            ""
+          ),
       },
       {
         title: t("Tổng giá"),
@@ -475,26 +500,27 @@ class RealEstateSourceTable extends React.Component {
       {
         title: "Trạng thái",
         width: "150",
-        render: rowData => {
-          if (rowData.trangThai === 1) return 'Đơn hàng mới';
-          else if (rowData.trangThai === 2) return 'Đơn hàng đã xác nhận';
-          else if (rowData.trangThai === 3) return 'Đơn hàng đã thanh toán';
-          else if (rowData.trangThai === 4) return 'Đơn hàng đã hủy';
+        render: (rowData) => {
+          if (rowData.trangThai === 1) return "Đơn hàng mới";
+          else if (rowData.trangThai === 2) return "Đơn hàng đã xác nhận";
+          else if (rowData.trangThai === 3) return "Đơn hàng đã thanh toán";
+          else if (rowData.trangThai === 4) return "Đơn hàng đã hủy";
           else return "";
-        }
+        },
       },
       {
         title: "Hình thức thanh toán",
         width: "150",
-        render: rowData => {
+        render: (rowData) => {
           if (rowData.paymentType != null) {
-            if (rowData.paymentType === 1) return 'Chuyển khoản';
-            else if (rowData.paymentType === 2) return 'Thanh toán khi nhận hàng';
+            if (rowData.paymentType === 1) return "Chuyển khoản";
+            else if (rowData.paymentType === 2)
+              return "Thanh toán khi nhận hàng";
             else return "";
-          }else{
+          } else {
             return "";
           }
-        }
+        },
       },
       {
         title: t("Người bán"),
@@ -530,7 +556,7 @@ class RealEstateSourceTable extends React.Component {
 
         <Grid container spacing={2} justify="space-between">
           <Grid item md={3} xs={12}>
-            {/* <Button
+            <Button
               className="mb-16 mr-16 align-bottom"
               variant="contained"
               color="primary"
@@ -542,7 +568,7 @@ class RealEstateSourceTable extends React.Component {
               }}
             >
               {t("general.add")}
-            </Button> */}
+            </Button>
             <Button
               className="mb-16 mr-36 align-bottom"
               variant="contained"
@@ -552,6 +578,16 @@ class RealEstateSourceTable extends React.Component {
             >
               {t("general.delete")}
             </Button>
+
+            {shouldOpenPrintDialog && (
+                <InventoryCountVoucherPrint
+                  t={t}
+                  i18n={i18n}
+                  handleClose={this.handleDialogClose}
+                  open={shouldOpenPrintDialog}
+                  item={item}
+                />
+              )}
 
             {shouldOpenNotificationPopup && (
               <NotificationPopup
@@ -591,11 +627,11 @@ class RealEstateSourceTable extends React.Component {
               id="combo-box"
               options={listStatus}
               className="flex-end w-80 mb-10"
-              getOptionLabel={option => option.name}
+              getOptionLabel={(option) => option.name}
               onChange={this.handleSelectStatus}
               value={orderStatus ? orderStatus : null}
               defaultValue={orderStatus ? orderStatus : null}
-              renderInput={params => (
+              renderInput={(params) => (
                 <TextField
                   {...params}
                   label="Lọc theo trạng thái"
@@ -704,7 +740,8 @@ class RealEstateSourceTable extends React.Component {
               component="div"
               labelRowsPerPage={t("general.rows_per_page")}
               labelDisplayedRows={({ from, to, count }) =>
-                `${from}-${to} ${t("general.of")} ${count !== -1 ? count : `more than ${to}`
+                `${from}-${to} ${t("general.of")} ${
+                  count !== -1 ? count : `more than ${to}`
                 }`
               }
               count={totalElements}
@@ -720,8 +757,8 @@ class RealEstateSourceTable extends React.Component {
               onChangeRowsPerPage={this.setRowsPerPage}
             />
           </Grid>
-        </Grid >
-      </div >
+        </Grid>
+      </div>
     );
   }
 }
