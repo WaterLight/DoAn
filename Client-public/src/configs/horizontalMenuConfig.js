@@ -34,14 +34,14 @@ const horizontalMenuConfig = [
     permissions: ["admin", "editor"],
     navLink: ConstantsList.ROOT_PATH+"/ecommerce/checkout"
   },
-  {
-    id: "detail",
-    title: "Thông tin chi tiết",
-    type: "item",
-    icon: <Icon.Archive size={12} />,
-    permissions: ["admin", "editor"],
-    navLink: ConstantsList.ROOT_PATH+"/ecommerce/product-detail"
-  },
+  // {
+  //   id: "detail",
+  //   title: "Thông tin chi tiết",
+  //   type: "item",
+  //   icon: <Icon.Archive size={12} />,
+  //   permissions: ["admin", "editor"],
+  //   navLink: ConstantsList.ROOT_PATH+"/ecommerce/product-detail"
+  // },
   {
     id: "event",
     title: "Sự kiện",
@@ -57,6 +57,14 @@ const horizontalMenuConfig = [
     icon: <Icon.Info size={12} />,
     permissions: ["admin", "editor"],
     navLink: ConstantsList.ROOT_PATH + "/about"
+  },
+  {
+    id: "myorder",
+    title: "Đơn hàng của tôi",
+    type: "item",
+    icon: <Icon.Info size={12} />,
+    permissions: ["admin", "editor"],
+    navLink: ConstantsList.ROOT_PATH + "/myorder"
   },
   //   {
   //   id: "eCommerce",

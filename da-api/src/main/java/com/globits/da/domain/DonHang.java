@@ -13,6 +13,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.globits.core.domain.BaseObject;
+import com.globits.security.domain.User;
 @Entity
 @Table(name = "tbl_don_hang")
 public class DonHang extends BaseObject{
@@ -41,6 +42,9 @@ public class DonHang extends BaseObject{
 	private Set<SanPhamDonHang> sanPhamDonHang;
 	@Column(name = "payment_type")
 	private Integer paymentType;// hình thức thanh toán, 1: thanh toán qua ngân hàng, 2: thanh toán khi nhận hàng
+	@ManyToOne
+	@JoinColumn(name="user_id")
+	private User user;
 	public String getTen() {
 		return ten;
 	}
@@ -112,6 +116,12 @@ public class DonHang extends BaseObject{
 	}
 	public void setPaymentType(Integer paymentType) {
 		this.paymentType = paymentType;
+	}
+	public User getUser() {
+		return user;
+	}
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 }

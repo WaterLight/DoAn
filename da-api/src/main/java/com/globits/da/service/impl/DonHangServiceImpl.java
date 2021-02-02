@@ -106,8 +106,10 @@ public class DonHangServiceImpl extends GenericServiceImpl<DonHang, UUID> implem
 			}
 			entity.setTrangThai(dto.getTrangThai());
 			if (isNew == true) {
+				
 				entity.setTrangThai(Constants.OrderStatus.newOrder.getValue());
-				if (user != null && user.getPerson() != null && user.getPerson().getDisplayName() != null) {
+				if (user != null && user.getId() != null && user.getPerson() != null && user.getPerson().getDisplayName() != null) {
+					entity.setUser(user);
 					entity.setTen(user.getPerson().getDisplayName());
 				}
 				entity.setMa(RandomStringUtils.random(9, true, true));
@@ -261,6 +263,9 @@ public class DonHangServiceImpl extends GenericServiceImpl<DonHang, UUID> implem
 		if (dto.getStatusOrder() > 0 && dto.getStatusOrder() < 5) {
 			whereClause += " AND ( entity.trangThai =: statusOrder)";
 		}
+		if(dto.getUserId() != null ) {
+			whereClause += " AND ( entity.user.id =: userId ) " ;
+		}
 		sql += whereClause + orderBy;
 		sqlCount += whereClause;
 		Query q = manager.createQuery(sql, DonHangDto.class);
@@ -276,6 +281,10 @@ public class DonHangServiceImpl extends GenericServiceImpl<DonHang, UUID> implem
 		if (dto.getStatusOrder() > 0 && dto.getStatusOrder() < 5) {
 			q.setParameter("statusOrder", dto.getStatusOrder());
 			qCount.setParameter("statusOrder", dto.getStatusOrder());
+		}
+		if(dto.getUserId() != null ) {
+			q.setParameter("userId", dto.getUserId());
+			qCount.setParameter("userId",dto.getUserId());
 		}
 		int startPosition = pageIndex * pageSize;
 		q.setFirstResult(startPosition);

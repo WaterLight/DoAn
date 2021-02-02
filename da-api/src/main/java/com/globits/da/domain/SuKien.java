@@ -43,7 +43,8 @@ public class SuKien extends BaseObject {
 	private String imageThumbnailUrl;//Đường dẫn đến File ảnh thumbnail (nếu có)
 	@Column(name="image_banner_url")
 	private String imageBannerUrl;//Đường dẫn đến File ảnh thumbnail (nếu có)
-	
+	@Column(name="is_active")
+	private Boolean isActive=false;
 	@OneToMany(mappedBy = "sanPham", cascade=CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval=true)
 	@NotFound(action = NotFoundAction.IGNORE)
 	private Set<SuKienVaSanPham> sanPham;
@@ -138,6 +139,15 @@ public class SuKien extends BaseObject {
 
 	public void setImageThumbnailUrl(String imageThumbnailUrl) {
 		this.imageThumbnailUrl = imageThumbnailUrl;
+	}
+	
+
+	public Boolean getIsActive() {
+		return isActive;
+	}
+
+	public void setIsActive(Boolean isActive) {
+		this.isActive = isActive;
 	}
 
 	public String getImageBannerUrl() {

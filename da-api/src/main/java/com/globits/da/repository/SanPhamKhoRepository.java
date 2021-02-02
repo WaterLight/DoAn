@@ -12,5 +12,7 @@ import com.globits.da.domain.SanPhamKho;
 public interface SanPhamKhoRepository extends JpaRepository<SanPhamKho, UUID>{
 	@Query("select entity from SanPhamKho entity where entity.sanPham.id =?1 and entity.kho.id =?2 and entity.size.id =?3 ")
 	List<SanPhamKho> getListSanPhamKho(UUID sanPhamID, UUID khoID, UUID sizeId);
-
+	
+	@Query("select entity.soLuong from SanPhamKho entity where entity.sanPham.id =?1 and entity.size.id =?2")
+	Integer getNumberOfProductBySie(UUID sanPhamID, UUID sizeId);
 }

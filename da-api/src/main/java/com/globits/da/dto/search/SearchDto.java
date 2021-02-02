@@ -19,7 +19,8 @@ public class SearchDto {
 	private Date dateOrder;
 	private int statusOrder;
 	private Boolean isPopular;
-	
+	private Boolean isActive;
+	private Long userId;
 	public UUID getId() {
 		return id;
 	}
@@ -110,5 +111,16 @@ public class SearchDto {
 	public void setIsPopular(Boolean isPopular) {
 		this.isPopular = isPopular;
 	}
-	
+	public Boolean getIsActive() {
+		return isActive;
+	}
+	public void setIsActive(Boolean isActive) {
+		this.isActive = isActive;
+	}
+	public Long getUserId() {
+		return userId;
+	}
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
 }

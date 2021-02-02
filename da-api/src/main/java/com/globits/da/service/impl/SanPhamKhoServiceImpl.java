@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import javax.persistence.Query;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -17,16 +18,18 @@ import com.globits.da.domain.SanPhamKho;
 import com.globits.da.dto.NhanVienDto;
 import com.globits.da.dto.SanPhamKhoDto;
 import com.globits.da.dto.search.SearchDto;
+import com.globits.da.repository.SanPhamKhoRepository;
 import com.globits.da.service.SanPhamKhoService;
 @Service
 public class SanPhamKhoServiceImpl extends GenericServiceImpl<SanPhamKho, UUID> implements SanPhamKhoService{
 
+	@Autowired
+	SanPhamKhoRepository sanPhamKhoRepository;
 	@Override
 	public Page<SanPhamKhoDto> searchByPage(SearchDto dto) {
 		if (dto == null) {
 			return null;
 		}
-
 		int pageIndex = dto.getPageIndex();
 		int pageSize = dto.getPageSize();
 
@@ -49,7 +52,6 @@ public class SanPhamKhoServiceImpl extends GenericServiceImpl<SanPhamKho, UUID> 
 		if(dto.getKhoId() != null ) {
 			whereClause += " AND ( entity.kho.id =: khoId ) " ;
 		}
-		
 		sql += whereClause + orderBy;
 		sqlCount += whereClause;
 
@@ -61,10 +63,10 @@ public class SanPhamKhoServiceImpl extends GenericServiceImpl<SanPhamKho, UUID> 
 			qCount.setParameter("text", '%' + dto.getKeyword() + '%');
 		}
 		if(dto.getKhoId() != null ) {
-			whereClause += " AND ( entity.kho.id =: khoId ) " ;
 			q.setParameter("khoId", dto.getKhoId());
 			qCount.setParameter("khoId",dto.getKhoId());
 		}
+		
 		int startPosition = pageIndex * pageSize;
 		q.setFirstResult(startPosition);
 		q.setMaxResults(pageSize);
@@ -74,6 +76,18 @@ public class SanPhamKhoServiceImpl extends GenericServiceImpl<SanPhamKho, UUID> 
 		Pageable pageable = PageRequest.of(pageIndex, pageSize);
 		Page<SanPhamKhoDto> result = new PageImpl<SanPhamKhoDto>(entities, pageable, count);
 		return result;
+	}
+
+	@Override
+	public Integer numberOfProductBySize(UUID productId, UUID sizeId) {
+		if(productId != null && sizeId != null){
+			Integer num =0;
+			num = sanPhamKhoRepository.getNumberOfProductBySie(productId, sizeId);
+			if(num != null && num >0) {
+				return num;
+			}
+		}
+		return 0;
 	}
 
 }

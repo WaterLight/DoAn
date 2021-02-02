@@ -10,6 +10,7 @@ const shop = lazy(() => import("./views/apps/ecommerce/shop/Shop"))
 const home = lazy(() => import("./views/pages/Home"))
 const event = lazy(() => import("./views/pages/Event"))
 const about = lazy(() => import("./views/pages/About"))
+const myorder = lazy(() => import("./views/pages/MyOrder"))
 const login = lazy(() => import("./views/pages/authentication/login/Login"))
 const registerMember = lazy(() => import("./views/pages/authentication/login/RegisterMember"))
 const productDetail = lazy(() => import("./views/apps/ecommerce/detail/Detail"))
@@ -72,6 +73,10 @@ class AppRouter extends React.Component {
            <AppRoute
             path={ConstantsList.ROOT_PATH +"/about"}
             component={about}
+          />
+          <AppRoute
+            path={ConstantsList.ROOT_PATH +"/myorder"}
+            component={myorder}
           />
           <AppRoute
             path={ConstantsList.ROOT_PATH +"/home"}

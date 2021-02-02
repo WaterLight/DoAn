@@ -17,3 +17,9 @@ export const getProductById = (id) => {
 export const searchProductCategoryByPage = (searchObject) => {
   return axios.post(API_PATH +  "getListProductCategoryByPage", searchObject);
 };
+//get number of product by size
+export const getNumberOfProductBySize = (productId, sizeId) =>{
+  if(productId != null && sizeId != null){
+    return axios.get(API_PATH +  "getNumberOfProduct/" + productId + "/" + sizeId);
+  }
+}

@@ -8,6 +8,7 @@ import com.globits.da.domain.DonHang;
 import com.globits.da.domain.Kho;
 import com.globits.da.domain.NhanVien;
 import com.globits.da.domain.SanPhamDonHang;
+import com.globits.security.dto.UserDto;
 
 public class DonHangDto extends BaseObjectDto {
 	private String ten;
@@ -22,7 +23,7 @@ public class DonHangDto extends BaseObjectDto {
 	private NhanVienDto nguoiBan;
 	private Set<SanPhamDonHangDto> sanPhamDonHang;
 	private Integer paymentType;// hình thức thanh toán, 1: thanh toán qua ngân hàng, 2: thanh toán khi nhận hàng
-	
+	private UserDto user;
 	public String getTen() {
 		return ten;
 	}
@@ -97,6 +98,13 @@ public class DonHangDto extends BaseObjectDto {
 	public void setPaymentType(Integer paymentType) {
 		this.paymentType = paymentType;
 	}
+	
+	public UserDto getUser() {
+		return user;
+	}
+	public void setUser(UserDto user) {
+		this.user = user;
+	}
 	public DonHangDto() {
 		super();
 	}
@@ -113,6 +121,9 @@ public class DonHangDto extends BaseObjectDto {
 			this.setTrangThai(entity.getTrangThai());
 			this.setGhiChu(entity.getGhiChu());
 			this.setPaymentType(entity.getPaymentType());
+			if(entity.getUser() != null && entity.getUser().getId() != null) {
+				this.setUser(new UserDto(entity.getUser()));
+			}
 			if(entity.getNguoiBan() != null && entity.getNguoiBan().getId() != null) {
 				this.setNguoiBan(new NhanVienDto(entity.getNguoiBan()));
 			}

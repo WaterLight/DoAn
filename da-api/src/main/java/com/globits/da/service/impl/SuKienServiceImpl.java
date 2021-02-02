@@ -65,8 +65,8 @@ public class SuKienServiceImpl extends GenericServiceImpl<SuKien, UUID> implemen
 		if (dto.getKeyword() != null && StringUtils.hasText(dto.getKeyword())) {
 			whereClause += " AND ( entity.tieuDe LIKE :text or entity.tieuDePhu LIKE :text )";
 		}
-		if (dto.getFromDate() == null && dto.getFromDate() != null) {
-			whereClause += " AND ( entity.giaBanHienThoi  <: priceMin ) ";
+		if (dto.getIsActive() != null && dto.getIsActive() == true) {
+			whereClause += " AND ( entity.isActive is not null and entity.isActive is TRUE ) ";
 		}
 		
 		sql += whereClause + orderBy;
@@ -114,7 +114,7 @@ public class SuKienServiceImpl extends GenericServiceImpl<SuKien, UUID> implemen
 			entity.setNoiDung(dto.getNoiDung());
 			entity.setPhanTramGiamGia(dto.getPhanTramGiamGia());
 			entity.setTienGiamGia(dto.getTienGiamGia());
-			
+			entity.setIsActive(dto.getIsActive());
 			Set<SuKienVaSanPham> listSKSP = new HashSet<SuKienVaSanPham>();
 			if (dto.getSanPham() != null && dto.getSanPham().size() > 0) {
 				for (SuKienVaSanPhamDto skspDto : dto.getSanPham()) {

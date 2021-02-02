@@ -29,6 +29,7 @@ import com.globits.da.dto.SuKienDto;
 import com.globits.da.dto.search.SearchDto;
 import com.globits.da.service.DanhMucSanPhamService;
 import com.globits.da.service.MemberService;
+import com.globits.da.service.SanPhamKhoService;
 import com.globits.da.service.SanPhamService;
 import com.globits.da.service.SuKienService;
 
@@ -47,11 +48,17 @@ public class RestPublicController {
 	MemberService memberService; 
 	@Autowired
 	SuKienService suKienService; 
-	
+	@Autowired
+	SanPhamKhoService sanPhamKhoService;
 	@RequestMapping(value = "getProductById/{id}", method = RequestMethod.GET)
 	public ResponseEntity<SanPhamDto> getList(@PathVariable UUID id) {
 		SanPhamDto result = sanPhamService.getCertificate(id);
 		return new ResponseEntity<SanPhamDto>(result, HttpStatus.OK);
+	}
+	@RequestMapping(value = "getNumberOfProduct/{productId}/{sizeId}", method = RequestMethod.GET)
+	public Integer getNumberOfProductBySize(@PathVariable UUID productId, @PathVariable UUID sizeId) {
+		Integer result = sanPhamKhoService.numberOfProductBySize(productId, sizeId);
+		return result;
 	}
 	@RequestMapping(value = "/getListEvent", method = RequestMethod.POST)
 	public ResponseEntity<Page<SuKienDto>> getListEvent(@RequestBody SearchDto dto ) {
