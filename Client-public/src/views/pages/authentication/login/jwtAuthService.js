@@ -113,6 +113,7 @@ class JwtAuthService {
     }
   }
   setSession(token) {
+    debugger
     if (token) {
       localStorageService.setItem("jwt_token", token);
       axios.defaults.headers.common["Authorization"] = "Bearer " + token;
@@ -122,6 +123,7 @@ class JwtAuthService {
     }
   };
   async setLoginUser(user) {
+    debugger
     localStorageService.setItem("auth_user", user);
     window.localStorage.setItem("currentUser", JSON.stringify(user));
     return user;
@@ -131,7 +133,6 @@ class JwtAuthService {
   }
   setUser = (user) => {
     localStorageService.setItem('auth_user', user);
-
   }
   removeUser = () => {
     localStorageService.removeItem('auth_user');

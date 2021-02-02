@@ -66,7 +66,7 @@ class Event extends React.Component {
             <p className="text-bold-500 font-medium-2 text-primary mt-50">
               Thời gian kết thúc: {format(event.ngayKetThuc, "dd/MM/yyyy")}
             </p>
-            <h3>Khi đặt khoảng thời gian này, mỗi đơn hàng sẽ được giảm: {this.formatPrice(event.tienGiamGia)} đ</h3>
+            <h3>Các đơn hàng đặt trong khoảng thời gian này, mỗi đơn hàng có tổng giá trị trên 2.000.000 đ sẽ được giảm: {this.formatPrice(event.tienGiamGia)} đ</h3>
           </div>
 
         )

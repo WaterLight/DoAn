@@ -14,9 +14,9 @@ export function loginWithEmailAndPassword({ username, password }) {
       pathname: ConstantList.ROOT_PATH + "/home"
     });
   })
-    .catch(error => {
-      alert('Tài khoản hoặc mật khẩu không đúng. Mời bạn đăng nhập lại');
-    });
+    // .catch(error => {
+    //   alert('Tài khoản hoặc mật khẩu không đúng. Mời bạn đăng nhập lại');
+    // });
 }
 
 export function registerMember({ displayName, userName, password,confirmPassword, phoneNumber,address }) {

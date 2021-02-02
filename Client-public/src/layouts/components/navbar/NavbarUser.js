@@ -41,8 +41,6 @@ class NavbarUser extends React.PureComponent {
     this.getCurrentUser().then(({ data }) => {
       if (data != null && data.id != null) {
         this.setState({ currentUser: data });
-        console.log(this.state.currentUser);
-        alert(this.state.currentUser.displayName);
       }
     })
   }
@@ -56,6 +54,7 @@ class NavbarUser extends React.PureComponent {
     })
   }
   render() {
+    let {currentUser} = this.state;
     return (
       <ul className="nav navbar-nav navbar-nav-user float-right">
         <NavItem className="nav-search" onClick={this.handleNavbarSearch}>
@@ -188,12 +187,12 @@ class NavbarUser extends React.PureComponent {
           tag="li"
           className="dropdown-notification nav-item"
         >
-          {this.state.currentUser === null ? (
+          {currentUser != null && currentUser.id != null ? (
             <UncontrolledDropdown tag="li" className="dropdown-user nav-item">
               <DropdownToggle tag="a" className="nav-link dropdown-user-link">
                 <div className="user-nav d-sm-flex d-none">
                   <span className="user-name text-bold-600">
-                  {this.state.currentUser.displayName}
+                  {currentUser.displayName}
                   </span>
                   <span className="user-status"></span>
                 </div>
