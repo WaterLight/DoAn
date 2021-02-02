@@ -255,6 +255,28 @@ class DonHangEditorDialog extends Component {
     });
   };
 
+  handleChangeThanhTien = (item, e) => {
+    let { sanPhamDonHang } = this.state;
+    if (sanPhamDonHang == null) {
+      sanPhamDonHang = [];
+      let p = {};
+      p.sanPham = item;
+      p.thanhTien = e.target.value;
+      sanPhamDonHang.push(p);
+    }
+    if (sanPhamDonHang != null && sanPhamDonHang.length > 0) {
+      sanPhamDonHang.forEach((el) => {
+        if (el.sanPham.id == item.sanPham.id) {
+          // let p ={}
+          el.thanhTien = e.target.value;
+        }
+      });
+    }
+    this.setState({ sanPhamDonHang: sanPhamDonHang }, () => {
+      console.log(this.state.sanPhamDonHang);
+    });
+  };
+
   render() {
     let { open, handleClose, handleOKEditClose, t, i18n } = this.props;
     let {
@@ -358,7 +380,7 @@ class DonHangEditorDialog extends Component {
         render: (row) => (
           <TextValidator
             className="w-50"
-            onChange={(e) => this.handleChangeGia(row, e)}
+            onChange={(e) => this.handleChangeThanhTien(row, e)}
             type="number"
             value={row.thanhTien}
             validators={["required"]}
