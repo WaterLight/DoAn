@@ -10,6 +10,8 @@ import {
     DialogContent,
     Icon,
     IconButton,
+    Checkbox,
+    FormControlLabel
 } from "@material-ui/core";
 // import Paper from '@material-ui/core/Paper'
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
@@ -115,6 +117,7 @@ class SuKienDialog extends Component {
         shouldOpenNotificationPopup: false,
         Notification: "",
         shouldOpenMultipleChoiseProductDialog: false,
+        isActive: false
     };
 
     handleDialogClose = () => {
@@ -142,22 +145,26 @@ class SuKienDialog extends Component {
         this.setState({
             [event.target.name]: event.target.value,
         });
+        if (source === "isActive") {
+            this.setState({ isActive: event.target.checked });
+            return;
+        }
     };
 
     handleFormSubmit = () => {
-        let { id,ngayKetThuc,ngayBatDau } = this.state;
+        let { id, ngayKetThuc, ngayBatDau } = this.state;
         var { t } = this.props;
-        if(!ngayKetThuc){
+        if (!ngayKetThuc) {
             toast.warning("Thời gian kết thúc không được để trống!");
             return;
         }
-        if(!id && ngayBatDau && ngayKetThuc){
-            if(ngayBatDau.getTime() > ngayKetThuc.getTime()){
+        if (!id && ngayBatDau && ngayKetThuc) {
+            if (ngayBatDau.getTime() > ngayKetThuc.getTime()) {
                 toast.warning("Thời gian bắt đầu diễn ra sự kiện không được lớn hơn thời gian kết thúc!");
                 return;
             }
-        }else{
-            if(ngayBatDau > ngayKetThuc){
+        } else {
+            if (ngayBatDau > ngayKetThuc) {
                 toast.warning("Thời gian bắt đầu diễn ra sự kiện không được lớn hơn thời gian kết thúc!");
                 return;
             }
@@ -244,7 +251,7 @@ class SuKienDialog extends Component {
         });
     };
     render() {
-        let { id, tieuDe, tieuDePhu, tomTat, noiDung, phanTramGiamGia, tienGiamGia, ngayBatDau, ngayKetThuc, lstProduct, sanPham, danhMucSanPham, shouldOpenMultipleChoiseProductDialog } = this.state;
+        let { id, isActive, tieuDe, tieuDePhu, tomTat, noiDung, phanTramGiamGia, tienGiamGia, ngayBatDau, ngayKetThuc, lstProduct, sanPham, danhMucSanPham, shouldOpenMultipleChoiseProductDialog } = this.state;
 
         let { open, handleClose, handleOKEditClose, t, i18n } = this.props;
 
@@ -299,7 +306,7 @@ class SuKienDialog extends Component {
                 align: "left",
                 render: (row) => (
                     <TextValidator
-                        className="w-100 mt-8"
+                        className="w-100"
                         onChange={(e) => this.handleChangeSL(row, e)}
                         type="number"
                         value={row.soLuong}
@@ -314,7 +321,7 @@ class SuKienDialog extends Component {
                 align: "left",
                 render: (row) => (
                     <TextValidator
-                        className="w-100 mt-8"
+                        className="w-100"
                         onChange={(e) => this.handleChangeGia(row, e)}
                         type="number"
                         value={row.gia}
@@ -339,10 +346,10 @@ class SuKienDialog extends Component {
                 </DialogTitle>
                 <ValidatorForm ref="form" onSubmit={this.handleFormSubmit}>
                     <DialogContent>
-                        <Grid className="" container spacing={2}>
+                        <Grid className="" container spacing={1}>
                             <Grid item sm={12} xs={12}>
                                 <TextValidator
-                                    className="w-100 mt-8"
+                                    className="w-100"
                                     label={
                                         <span>
                                             <span style={{ color: "red" }}>*</span>
@@ -358,8 +365,17 @@ class SuKienDialog extends Component {
                                 />
                             </Grid>
                             <Grid item sm={12} xs={12}>
+                                <FormControlLabel
+                                    value={isActive}
+                                    name="isActive"
+                                    onChange={(isActive) => this.handleChange(isActive, "isActive")}
+                                    control={<Checkbox checked={isActive} />}
+                                    label="Áp dụng"
+                                />
+                            </Grid>
+                            <Grid item sm={12} xs={12}>
                                 <TextValidator
-                                    className="w-100 mt-8"
+                                    className="w-100"
                                     label={
                                         <span>
                                             Tiêu đề phụ
@@ -373,7 +389,7 @@ class SuKienDialog extends Component {
                             </Grid>
                             <Grid item sm={12} xs={12}>
                                 <TextValidator
-                                    className="w-100 mt-8"
+                                    className="w-100"
                                     label={
                                         <span>
                                             <span style={{ color: "red" }}>*</span>
@@ -390,7 +406,7 @@ class SuKienDialog extends Component {
                             </Grid>
                             <Grid item sm={12} xs={12}>
                                 <TextValidator
-                                    className="w-100 mt-8"
+                                    className="w-100"
                                     label={
                                         <span>
                                             <span style={{ color: "red" }}>*</span>
@@ -407,7 +423,7 @@ class SuKienDialog extends Component {
                             </Grid>
                             <Grid item sm={6} xs={12}>
                                 <TextValidator
-                                    className="w-100 mt-8"
+                                    className="w-100"
                                     label={
                                         <span>
                                             Phần trăm giảm giá
@@ -421,7 +437,7 @@ class SuKienDialog extends Component {
                             </Grid>
                             <Grid item sm={6} xs={12}>
                                 <TextValidator
-                                    className="w-100 mt-8"
+                                    className="w-100"
                                     label={
                                         <span>
                                             <span style={{ color: "red" }}>*</span>
@@ -457,25 +473,25 @@ class SuKienDialog extends Component {
                                 </MuiPickersUtilsProvider>
                             </Grid>
                             <Grid item sm={6} xs={12}>
-                                    <span style={{ color: "red" }}>*</span>
-                                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                        <KeyboardDatePicker
-                                            margin="none"
-                                            fullWidth
-                                            id="date-picker-dialog mt-2"
-                                            label={t("Ngày kết thúc")}
-                                            format="dd/MM/yyyy"
-                                            value={ngayKetThuc}
-                                            onChange={(date) => this.handleDateChange(date, "ngayKetThuc")}
-                                            KeyboardButtonProps={{
-                                                "aria-label": "change date",
-                                            }}
-                                            invalidDateMessage={t("general.invalidDateFormat")}
-                                            validators={["required"]}
-                                            errorMessages={[t("general.required")]}
-                                        />
-                                    </MuiPickersUtilsProvider>
-                                </Grid>
+                                <span style={{ color: "red" }}>*</span>
+                                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                    <KeyboardDatePicker
+                                        margin="none"
+                                        fullWidth
+                                        id="date-picker-dialog mt-2"
+                                        label={t("Ngày kết thúc")}
+                                        format="dd/MM/yyyy"
+                                        value={ngayKetThuc}
+                                        onChange={(date) => this.handleDateChange(date, "ngayKetThuc")}
+                                        KeyboardButtonProps={{
+                                            "aria-label": "change date",
+                                        }}
+                                        invalidDateMessage={t("general.invalidDateFormat")}
+                                        validators={["required"]}
+                                        errorMessages={[t("general.required")]}
+                                    />
+                                </MuiPickersUtilsProvider>
+                            </Grid>
                         </Grid>
                     </DialogContent>
                     <DialogActions>

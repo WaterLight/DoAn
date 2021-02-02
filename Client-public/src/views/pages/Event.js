@@ -24,7 +24,7 @@ import { format } from "date-fns";
 class Event extends React.Component {
   state = {
     selectedColor: 1,
-    data:[]
+    data: []
   }
   toggleSelectedColor = color => this.setState({ selectedColor: color })
 
@@ -35,7 +35,8 @@ class Event extends React.Component {
     this.setState({ page: 0 }, function () {
       var searchObject = {};
       searchObject.pageIndex = 1;
-      searchObject.pageSize = 10;
+      searchObject.pageSize = 1;
+      searchObject.isActive = true;
       getListEvent(searchObject).then(res => {
         this.setState({ data: [...res.data.content], totalElements: res.data.totalElements })
       }).catch(err => { console.log(err) });
@@ -54,18 +55,18 @@ class Event extends React.Component {
           <div key={i}>
             <div className="title mb-1" >
               <p className="font-medium-1 text-bold-600 truncate mb-0">
-              <h3 className="text-uppercase mb-50">{event.tieuDe}</h3>
-              <h4>{event.tieuDePhu}</h4>
+                <h3 className="text-uppercase mb-50">{event.tieuDe}</h3>
+                <h4>{event.tieuDePhu}</h4>
               </p>
               <p>{event.noiDung}</p>
             </div>
             <p className="text-bold-500 font-medium-2 text-primary mt-50">
-            Thời gian bắt đầu: {format(event.ngayBatDau, "dd/MM/yyyy")}
+              Thời gian bắt đầu: {format(event.ngayBatDau, "dd/MM/yyyy")}
             </p>
             <p className="text-bold-500 font-medium-2 text-primary mt-50">
               Thời gian kết thúc: {format(event.ngayKetThuc, "dd/MM/yyyy")}
             </p>
-          <h3>Khi đặt khoảng thời gian này, mỗi đơn hàng sẽ được giảm: {this.formatPrice(event.tienGiamGia)} đ</h3>
+            <h3>Khi đặt khoảng thời gian này, mỗi đơn hàng sẽ được giảm: {this.formatPrice(event.tienGiamGia)} đ</h3>
           </div>
 
         )
@@ -121,13 +122,59 @@ class Event extends React.Component {
                 </Row>
               </Col>
             </Row>
-
           </Card>
         </React.Fragment>
       )
     }
     else {
-      return (<span>Đã có lỗi xảy ra, vui lòng tải lại trang!</span>)
+      return (
+        <React.Fragment>
+          <CardBody>
+            <Row>
+              <Col className="text-center" sm="12">
+                <span>Chưa có sự kiện nào diễn ra!</span>
+              </Col>
+            </Row>
+          </CardBody>
+          <Card className="overflow-hidden app-ecommerce-details">
+            <Row>
+              <Col sm="12">
+                <Row className="item-features py-5 mt-5">
+                  <Col className="text-center" md="4" sm="12">
+                    <div className="w-50 mx-auto">
+                      <Award className="text-primary mb-1" size={42} />
+                      <p className="font-medium-2 text-bold-600 mb-0">
+                        Sản phẩm được lựa chọn số 1
+                  </p>
+                      <p>
+                        Trẻ trung - Năng động - Thời trang
+                  </p>
+                    </div>
+                  </Col>
+                  <Col className="text-center" md="4" sm="12">
+                    <div className="w-50 mx-auto">
+                      <Clock className="text-primary mb-1" size={42} />
+                      <p className="font-medium-2 text-bold-600 mb-0">
+                        Thời gian phản hồi nhanh chóng
+                  </p>
+                      <p>Nhân viên hỗ trợ, phụ vụ tận tình chu đáo.</p>
+                    </div>
+                  </Col>
+                  <Col className="text-center" md="4" sm="12">
+                    <div className="w-50 mx-auto">
+                      <Shield className="text-primary mb-1" size={42} />
+                      <p className="font-medium-2 text-bold-600 mb-0">
+                        Sự tin tưởng
+                  </p>
+                      <p>Ra mắt những sản phẩm tốt nhất</p>
+                    </div>
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
+          </Card>
+        </React.Fragment>
+      )
     }
   }
 }

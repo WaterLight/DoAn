@@ -25,7 +25,7 @@ import {
   Menu
 } from "react-feather"
 import { Link } from "react-router-dom"
-import { searchByPage, getProductById } from "./ShopService"
+import { searchByPage, getProductById, getNumberOfProductBySize } from "./ShopService"
 import "../../../../assets/scss/plugins/forms/react-select/_react-select.scss"
 import ConstantList from "../../../../configs/appConfig";
 import imageDefault from "../../../../assets/img/pages/eCommerce/nike7.jfif"
@@ -62,6 +62,7 @@ class ShopContent extends React.Component {
     data: [],
     listProduct: [],
     totalElements: 0,
+    numberOfProduct:0,
     keyword: "",
     saleOrder: {
       sanPhamDonHang: [],
@@ -111,7 +112,6 @@ class ShopContent extends React.Component {
     })
   }
   componentDidMount() {
-    debugger
     this.search();
   }
   componentWillUnmount() {
@@ -174,12 +174,20 @@ class ShopContent extends React.Component {
       return value.slice(3, value.length - 4);
     }
   }
-  selectProductSize = (product, size) => {
+  selectProductSize = (product, size, i) => {
     if (size != null && product != null) {
       let productSize = {};
+
       productSize.size = size;
       productSize.product = product;
       this.setState({ productSize: productSize });
+
+      //check số lượng xem còn không
+      getNumberOfProductBySize(product.id, size.id).then(res => {
+        if(res.data != null){
+          this.setState({ numberOfProduct: res.data, productSelected:i})
+        }
+      }).catch(err => { toast.error("Có lỗi xảy ra vui lòng thử lại") });
     }
   }
   render() {
@@ -189,7 +197,7 @@ class ShopContent extends React.Component {
         let renderProductSizes = product.size.map((ps, j) => {
           return (
             <Radio
-              onClick={() => this.selectProductSize(product, ps)}
+              onClick={() => this.selectProductSize(product, ps,i)}
               key={j}
               label={ps.ma}
               defaultChecked={false}
@@ -236,7 +244,11 @@ class ShopContent extends React.Component {
                     <span className="item-name">{product.tenSP}</span>
                   </Link>
                   <p className="product-price">
-                    Còn lại: <span className="company-name">{product.soLuongDangCo}</span>
+                    Còn lại: 
+                    {this.state.numberOfProduct >= 0 && i=== this.state.productSelected ? (
+                      <span className="company-name" key={i}>{this.state.numberOfProduct}</span>
+                    ):(<span className="company-name">{product.soLuongDangCo}</span>)
+                    }
                   </p>
                 </div>
                 <div className="item-wrapper">
@@ -462,7 +474,7 @@ class ShopContent extends React.Component {
           </Row>
           <Row>
             <Col sm="12">
-              <div className="center-content">
+              <div className="center-content none-data">
               <span className="bold">Không có sản phẩm nào phù hợp.</span>
               </div>
             </Col>

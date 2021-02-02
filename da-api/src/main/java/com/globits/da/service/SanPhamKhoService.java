@@ -12,4 +12,5 @@ import com.globits.da.dto.search.SearchDto;
 @Service
 public interface SanPhamKhoService extends GenericService<SanPhamKho, UUID>{
 	Page<SanPhamKhoDto> searchByPage(SearchDto dto);
+	Integer numberOfProductBySize(UUID productId, UUID sizeId);
 }

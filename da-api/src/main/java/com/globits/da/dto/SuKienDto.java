@@ -9,7 +9,6 @@ import com.globits.da.domain.SuKienVaDanhMucSanPham;
 import com.globits.da.domain.SuKienVaSanPham;
 
 public class SuKienDto extends com.globits.core.dto.BaseObjectDto {
-	
 	private String tieuDe;
 	private String tieuDePhu;
 	private String tomTat;
@@ -22,7 +21,7 @@ public class SuKienDto extends com.globits.core.dto.BaseObjectDto {
 	private String imageBannerUrl;//Đường dẫn đến File ảnh thumbnail (nếu có)
 	private Set<SuKienVaSanPhamDto> sanPham;
 	private Set<SuKienVaDanhMucSanPhamDto> danhMucSanPham;
-
+	private Boolean isActive=false;
 	public String getTieuDe() {
 		return tieuDe;
 	}
@@ -119,6 +118,14 @@ public class SuKienDto extends com.globits.core.dto.BaseObjectDto {
 		this.danhMucSanPham = danhMucSanPham;
 	}
 
+	public Boolean getIsActive() {
+		return isActive;
+	}
+
+	public void setIsActive(Boolean isActive) {
+		this.isActive = isActive;
+	}
+
 	public SuKienDto() {
 		super();
 	}
@@ -136,7 +143,7 @@ public class SuKienDto extends com.globits.core.dto.BaseObjectDto {
 			this.tienGiamGia = entity.getTienGiamGia();
 			this.imageThumbnailUrl = entity.getImageThumbnailUrl();
 			this.imageBannerUrl = entity.getImageBannerUrl();
-			
+			this.isActive = entity.getIsActive();
 			if (entity.getSanPham() != null && entity.getSanPham().size() > 0) {
 				this.sanPham = new HashSet<SuKienVaSanPhamDto>();
 				for (SuKienVaSanPham suKienVaSanPham : entity.getSanPham()) {
@@ -169,6 +176,7 @@ public class SuKienDto extends com.globits.core.dto.BaseObjectDto {
 			this.tienGiamGia = entity.getTienGiamGia();
 			this.imageThumbnailUrl = entity.getImageThumbnailUrl();
 			this.imageBannerUrl = entity.getImageBannerUrl();
+			this.isActive = entity.getIsActive();
 		}
 	}
 
