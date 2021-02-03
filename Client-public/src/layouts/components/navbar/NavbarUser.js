@@ -1,5 +1,4 @@
 import React from "react"
-import ConstantsList from '../../../configs/appConfig';
 import {
   NavItem,
   NavLink,
@@ -10,13 +9,14 @@ import {
   Media,
   Badge
 } from "reactstrap"
-import PerfectScrollbar from "react-perfect-scrollbar"
 import axios from "axios"
 import * as Icon from "react-feather"
 import classnames from "classnames"
 import Autocomplete from "../../../components/@vuexy/autoComplete/AutoCompleteComponent"
 import { history } from "../../../history"
 import ConstantList from "../../../configs/appConfig";
+import UserService from "./UserService";
+import jwtAuthService from "../../../views/pages/authentication/login/jwtAuthService";
 
 class NavbarUser extends React.PureComponent {
   state = {
@@ -25,14 +25,23 @@ class NavbarUser extends React.PureComponent {
     currentUser: {}
   }
   logOut = () => {
-    let currentUser = JSON.parse(window.localStorage.getItem("currentUser"));
-    if (currentUser != null && currentUser.id != null) {
-      window.localStorage.clear();
-      history.push(ConstantsList.ROOT_PATH + "/home")
+    if(ConstantList.AUTH_MODE=="Keycloak"){
+      UserService.doLogout();
+      jwtAuthService.setSession(null);
+      jwtAuthService.removeUser();
+      history.push(ConstantList.HOME_PAGE)
+    }else{
+      let url = ConstantList.API_ENPOINT + "/oauth/logout";
+      let res = axios.delete(url);
+      jwtAuthService.setSession(null);
+      jwtAuthService.removeUser();
+      history.push(ConstantList.HOME_PAGE)
+      window.location.reload(true);
     }
   }
+  
   logIn = () => {
-    history.push(ConstantsList.ROOT_PATH + "/authentication/login")
+    history.push(ConstantList.ROOT_PATH + "/authentication/login")
   }
   componentDidMount() {
     axios.get("/api/main-search/data").then(({ data }) => {

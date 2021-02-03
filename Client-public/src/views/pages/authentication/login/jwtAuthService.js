@@ -43,7 +43,7 @@ class JwtAuthService {
       this.setLoginUser(res.data);
     });
   };
-  async registerMember(displayName, userName, password,confirmPassword, phoneNumber, address) {
+  async registerMember(displayName, userName, password, confirmPassword, phoneNumber, address) {
     let requestBody = {};
     requestBody.displayName = displayName;
     requestBody.userName = userName;
@@ -58,17 +58,21 @@ class JwtAuthService {
           toast.warning("Mật khẩu xác nhận và mật khẩu không trùng khớp");
           return;
         }
-        if (response.data.hasEmail == true) {
+        else if (response.data.hasEmail == true) {
           toast.warning("Địa chỉ email đã được đăng ký");
           return;
         }
-        if (response.data.hasPhoneNumber == true) {
+        else if (response.data.hasPhoneNumber == true) {
           toast.warning("Số điện thoại đã được đăng ký");
           return;
         }
-        if (response.data.hasUserName == true) {
+        else if (response.data.hasUserName == true) {
           toast.warning("Tên đăng nhập đã tồn tại");
           return;
+        }
+        else{
+          this.loginWithUserNameAndPassword(response.data.userName, response.data.password);
+          window.location.reload(true);
         }
       }
     });
@@ -113,7 +117,6 @@ class JwtAuthService {
     }
   }
   setSession(token) {
-    debugger
     if (token) {
       localStorageService.setItem("jwt_token", token);
       axios.defaults.headers.common["Authorization"] = "Bearer " + token;
@@ -123,7 +126,6 @@ class JwtAuthService {
     }
   };
   async setLoginUser(user) {
-    debugger
     localStorageService.setItem("auth_user", user);
     window.localStorage.setItem("currentUser", JSON.stringify(user));
     return user;

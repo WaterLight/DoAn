@@ -3,7 +3,7 @@ import { Navbar } from "reactstrap"
 import classnames from "classnames"
 import NavbarBookmarks from "./NavbarBookmarks"
 import NavbarUser from "./NavbarUser"
-import userImg from "../../../assets/img/portrait/small/avatar-s-11.jpg"
+import userImg from "../../../assets/img/portrait/small/avatar.jpg"
 
 
 const ThemeNavbar = props => {

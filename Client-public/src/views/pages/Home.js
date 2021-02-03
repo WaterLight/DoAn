@@ -67,7 +67,6 @@ class Home extends React.Component {
   toggleSelectedColor = color => this.setState({ selectedColor: color })
 
   componentDidMount() {
-    debugger
     this.search();
   }
   search = () => {

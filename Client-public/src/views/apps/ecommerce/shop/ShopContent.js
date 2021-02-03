@@ -25,13 +25,15 @@ import {
   Menu
 } from "react-feather"
 import { Link } from "react-router-dom"
-import { searchByPage, getProductById, getNumberOfProductBySize } from "./ShopService"
+import { searchByPage, getNumberOfProductBySize } from "./ShopService"
 import "../../../../assets/scss/plugins/forms/react-select/_react-select.scss"
 import ConstantList from "../../../../configs/appConfig";
 import imageDefault from "../../../../assets/img/pages/eCommerce/nike7.jfif"
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Radio from "../../../../components/@vuexy/radio/RadioVuexy"
+import { history } from "../../../../history";
+import DetailPage from "./Detail";
 
 const sortOptions = [
   {
@@ -54,6 +56,7 @@ class ShopContent extends React.Component {
     window.CallOutSideComponent = this;
   }
   state = {
+    product: {},
     inCart: [],
     inWishlist: [],
     view: "grid-view",
@@ -62,7 +65,7 @@ class ShopContent extends React.Component {
     data: [],
     listProduct: [],
     totalElements: 0,
-    numberOfProduct:0,
+    numberOfProduct: 0,
     keyword: "",
     saleOrder: {
       sanPhamDonHang: [],
@@ -79,10 +82,10 @@ class ShopContent extends React.Component {
       sanPhamDonHangDto.sanPham = product;
       sanPhamDonHangDto.soLuong = 1;//tạm fix là 1 sản phẩm
       sanPhamDonHangDto.donGia = product.giaBanHienThoi;
-      if(product.giamGia != null && product.giamGia > 0){
+      if (product.giamGia != null && product.giamGia > 0) {
         sanPhamDonHangDto.trietKhau = product.giamGia / 100;
         sanPhamDonHangDto.thanhTien = sanPhamDonHangDto.soLuong * sanPhamDonHangDto.donGia * (1 - sanPhamDonHangDto.trietKhau);
-      }else{
+      } else {
         sanPhamDonHangDto.thanhTien = sanPhamDonHangDto.soLuong * sanPhamDonHangDto.donGia;
       }
       if (productSize != null && product.id == productSize.product.id && productSize.size != null) {
@@ -115,7 +118,6 @@ class ShopContent extends React.Component {
     this.search();
   }
   componentWillUnmount() {
-
   }
   search = () => {
     this.setState({ page: 0 }, function () {
@@ -151,9 +153,11 @@ class ShopContent extends React.Component {
   }
   getProductDetail = (productId) => {
     if (productId != null) {
-      getProductById(productId).then(res => {
-        this.setState({ product: [...res.data.content] })
-      }).catch(err => { toast.error("Có lỗi xảy ra khi tải thông tin sản phẩm") });
+      history.push(ConstantList.ROOT_PATH + "/ecommerce/product-detail/" + productId);
+      return (
+        <DetailPage productDetail={productId} >
+        </DetailPage>
+      )
     }
   }
   handleWishlist = i => {
@@ -184,8 +188,8 @@ class ShopContent extends React.Component {
 
       //check số lượng xem còn không
       getNumberOfProductBySize(product.id, size.id).then(res => {
-        if(res.data != null){
-          this.setState({ numberOfProduct: res.data, productSelected:i})
+        if (res.data != null) {
+          this.setState({ numberOfProduct: res.data, productSelected: i })
         }
       }).catch(err => { toast.error("Có lỗi xảy ra vui lòng thử lại") });
     }
@@ -197,7 +201,7 @@ class ShopContent extends React.Component {
         let renderProductSizes = product.size.map((ps, j) => {
           return (
             <Radio
-              onClick={() => this.selectProductSize(product, ps,i)}
+              onClick={() => this.selectProductSize(product, ps, i)}
               key={j}
               label={ps.ma}
               defaultChecked={false}
@@ -244,10 +248,10 @@ class ShopContent extends React.Component {
                     <span className="item-name">{product.tenSP}</span>
                   </Link>
                   <p className="product-price">
-                    Còn lại: 
-                    {this.state.numberOfProduct >= 0 && i=== this.state.productSelected ? (
+                    Còn lại:
+                    {this.state.numberOfProduct >= 0 && i === this.state.productSelected ? (
                       <span className="company-name" key={i}>{this.state.numberOfProduct}</span>
-                    ):(<span className="company-name">{product.soLuongDangCo}</span>)
+                    ) : (<span className="company-name">{product.soLuongDangCo}</span>)
                     }
                   </p>
                 </div>
@@ -475,7 +479,7 @@ class ShopContent extends React.Component {
           <Row>
             <Col sm="12">
               <div className="center-content none-data">
-              <span className="bold">Không có sản phẩm nào phù hợp.</span>
+                <span className="bold">Không có sản phẩm nào phù hợp.</span>
               </div>
             </Col>
             <Col sm="12">
