@@ -73,6 +73,8 @@ public class MemberServiceImpl extends GenericServiceImpl<Person, UUID> implemen
 				}
 			}
 			result = new RegisterDto();
+			result.setUserName(registerDto.getUserName());
+			result.setPassword(registerDto.getPassword());
 			// create user
 			User user = new User();
 			user.setUsername(registerDto.getUserName());

@@ -13,7 +13,7 @@ const about = lazy(() => import("./views/pages/About"))
 const myorder = lazy(() => import("./views/pages/MyOrder"))
 const login = lazy(() => import("./views/pages/authentication/login/Login"))
 const registerMember = lazy(() => import("./views/pages/authentication/login/RegisterMember"))
-const productDetail = lazy(() => import("./views/apps/ecommerce/detail/Detail"))
+const productDetail = lazy(() => import("./views/apps/ecommerce/shop/Detail"))
 const wishlist = lazy(() => import("./views/apps/ecommerce/wishlist/Wishlist"))
 const checkout = lazy(() => import("./views/apps/ecommerce/cart/Cart"))
 // Set Layout and Component Using App Route

@@ -36,6 +36,8 @@ import "react-toastify/dist/ReactToastify.css"
 import "../../../../assets/scss/plugins/extensions/toastr.scss"
 import imageDefault from "../../../../assets/img/pages/eCommerce/nike7.jfif"
 import { saveOrder } from "./cartService";
+import axios from "axios";
+import {getListEvent} from "../../../pages/EventService"
 
 class Checkout extends React.Component {
   state = {
@@ -45,7 +47,8 @@ class Checkout extends React.Component {
     currentUser: {},
     saleOrder: {},
     soLuong: null,
-    paymentType: 1
+    paymentType: 1,
+    event:[]
   }
   handleDeleteProductInCart = product => {
     if (product && product.sanPham.id) {
@@ -63,14 +66,31 @@ class Checkout extends React.Component {
     }
   }
   componentDidMount() {
-    let currentUser = JSON.parse(window.localStorage.getItem("currentUser"));
-    if (currentUser != null && currentUser.id != null) {
-      this.setState({ currentUser: currentUser });
-    }
+    this.getCurrentUser();
     let saleOrder = JSON.parse(window.localStorage.getItem("saleOrder"));
     if (saleOrder != null && saleOrder.sanPhamDonHang != null && saleOrder.sanPhamDonHang.length > 0) {
       this.setState({ saleOrder: saleOrder });
     }
+    this.searchEvent();
+  }
+  getCurrentUser() {
+    let url = ConstantList.API_ENPOINT + "/api/users/getCurrentUser";
+    return axios.get(url).then(res=>{
+      if(res && res.data){
+        this.setState({currentUser:res.data});
+      }
+    });
+  };
+  searchEvent() {
+    this.setState({ page: 0 }, function () {
+      var searchObject = {};
+      searchObject.pageIndex = 1;
+      searchObject.pageSize = 1;
+      searchObject.isActive = true;
+      getListEvent(searchObject).then(res => {
+        this.setState({ event: [...res.data.content], totalElements: res.data.totalElements })
+      }).catch(err => { console.log(err) });
+    });
   }
   componentWillUnmount() {
   }
@@ -79,6 +99,7 @@ class Checkout extends React.Component {
       return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
     }
   }
+  
   handleActiveStep = index => {
     let { currentUser } = this.state;
     if (currentUser == null || currentUser.id == null) {
@@ -90,16 +111,26 @@ class Checkout extends React.Component {
     this.setState({ activeStep: step })
   }
   handleConfirmOrder = () => {
-    let { currentUser, saleOrder } = this.state;
+    debugger
+    let dateNow = new Date();
+    // kiểm tra có sự kiện giảm giá không, nếu có thì giảm cho đơn hàng
+    let { currentUser, saleOrder, event } = this.state;
     if (currentUser != null && currentUser.id != null && saleOrder.sanPhamDonHang != null && saleOrder.sanPhamDonHang.length > 0) {
+      if(event[0].ngayBatDau < dateNow.getTime() && dateNow.getTime() < event[0].ngayKetThuc){
+        if(event && event[0].tienGiamGia && event[0].tienGiamGia >0){
+          if(saleOrder.totalAmount >= 2000000)
+            saleOrder.giamGia = event[0].tienGiamGia;
+            saleOrder.thanhTien = saleOrder.totalAmount - event[0].tienGiamGia;
+        }
+      }
       saveOrder(saleOrder).then((res) => {
         if (res.status == 200) {
           toast.info("Chúc mừng bạn đã đặt hàng thành công");
           //clear đơn hàng
           if (JSON.parse(window.localStorage.getItem("saleOrder")) != null) {
             window.localStorage.clear();
-            window.location.href = ConstantList.ROOT_PATH + "/ecommerce/shop";
           }
+          window.location.href = ConstantList.ROOT_PATH + "/myorder";
         } else {
           toast.error("Có lỗi xảy ra khi đặt hàng, vui lòng đăng nhập để thử lại");
           window.location.href = ConstantList.ROOT_PATH + "/authentication/login";
@@ -244,7 +275,7 @@ class Checkout extends React.Component {
               ))
               }
               {saleOrder == null || saleOrder.sanPhamDonHang == null || saleOrder.sanPhamDonHang.length == 0 ? (
-                <a className="bold" href={ConstantList.ROOT_PATH + "/ecommerce/shop"}>Giỏ hàng của bạn còn trống! Xin mời chọn các mẫu giầy của shop.</a>
+                <a className="bold" href={ConstantList.ROOT_PATH + "/ecommerce/shop"}>Giỏ hàng của bạn trống! Xin mời chọn các mẫu giầy của shop.</a>
               ) : ("")}
             </div>
             <div className="checkout-options">
@@ -314,7 +345,7 @@ class Checkout extends React.Component {
         title: <Home size={22} />,
         content: (
           <div className="list-view product-checkout">
-            <Card>
+            {/* <Card>
               <CardHeader className="flex-column align-items-start">
                 <CardTitle>Thêm địa chỉ nhận hàng khác</CardTitle>
                 <p className="text-muted mt-25">
@@ -322,7 +353,7 @@ class Checkout extends React.Component {
                 </p>
               </CardHeader>
               <CardBody>
-                <Row>
+                <Row> */}
                   {/* <Col md="6" sm="12">
                     <AvGroup>
                       <Label for="name"> Tên người nhận </Label>
@@ -405,7 +436,7 @@ class Checkout extends React.Component {
                       </Input>
                     </FormGroup>
                   </Col>*/}
-                  <Col sm="6" md={{ offset: 6, size: 6 }}>
+                  {/* <Col sm="6" md={{ offset: 6, size: 6 }}>
                     <Button.Ripple
                       type="submit"
                       color="primary"
@@ -415,7 +446,7 @@ class Checkout extends React.Component {
                   </Col>
                 </Row>
               </CardBody>
-            </Card>
+            </Card> */}
             <div className="customer-card">
               <Card>
                 <CardHeader>

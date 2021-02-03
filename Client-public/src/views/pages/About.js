@@ -90,196 +90,39 @@ class About extends React.Component {
               <div className="heading-section mb-3">
                 <h3 className="text-uppercase mb-50">Thông tin giới thiệu về cửa hàng</h3>
               </div>
-              <Swiper {...swiperParams}>
-                <div>
-                  <div className="title mb-1">
-                    <p className="font-medium-1 text-bold-600 truncate mb-0">
-                    Nike Air Max.
-                        </p>
-                    <small>By VN</small>
-                  </div>
-                  <div className="img-container">
-                    <img src={watch} alt="watch" />
-                  </div>
-                  <div className="ratings  ml-1">
-                    <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
-                    <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
-                    <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
-                    <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
-                    <Star size={15} fill="#fff" stroke="#b8c2cc" />
-                  </div>
-                  <p className="text-bold-500 font-medium-2 text-primary mt-50">
-                  690.000 đ
-                      </p>
+              <div className="text-justify">
+                <p>
+                  Shoe Sneakers là trang thương mại điện tử chuyên cung cấp và bán lẻ các sản phẩm giày thời trang cao cấp, giày thể thao hàng hiệu hàng đầu tại Việt Nam.
+                </p>
+                Shoe Sneackers ra đời với sứ mệnh: Đem cả thế giới giày hàng hiệu đến ngôi nhà của bạn chỉ trong vài cái click chuột. Đơn giản - Nhanh chóng và Siêu Tiện lợi.
+                <p>
+
+                  Mục tiêu về chiến lược: Shoe Sneakers  phấn đấu trở thành một sàn thương mại điện tử về giày thể thao cao cấp hàng đầu Việt Nam và vươn xa ra thị trường thế giới, góp phần tạo nên chất lượng và trải nghiệm tốt nhất cho người Việt với giá cả phải chăng.
+              </p>
+                <p>
+
+                  Shoe Sneakers  hứa hẹn mang đến cho các khách hàng thân yêu những đôi giày thể thao thời thượng xịn xò, trẻ trung, năng động và cá tính từ những thương hiệu danh tiếng trên thế giới như: Nike, Adidas, MLB,Vans, Puma, Converse...
+              </p>
+                <p>
+
+                  Tất cả những gì bạn cần làm là nhấp chuột đặt hàng và Shoe Sneakers  sẽ hoàn thành phần còn lại để những đôi giày cao cấp hàng hiệu được chuyển đến tận tay khách hàng với trải nghiệm tuyệt vời mà đội ngũ Shoe Sneakers  đã nỗ lực không ngừng nghỉ vì những khách hàng thân yêu của mình.
+                  Đội ngũ Shoe Sneakers
+              </p>
+                <div className="text-info">
+                  <p>
+                    Địa chỉ: Ngõ 147 Triều khúc- Thanh xuân- Hà Nội
+                </p>
+                  <p>
+                    Số điện thoại liên hệ: 0983227930
+                </p>
+                  <p>
+                    Email: huyentrang070799@gmail.com
+                  </p>
                 </div>
-                <div>
-                  <div className="title mb-1">
-                    <p className="font-medium-1 text-bold-600 truncate mb-0">
-                    Nike Air Force 1.
-                        </p>
-                    <small>By VN</small>
-                  </div>
-                  <div className="img-container">
-                    <img src={earphones} alt="earphones" />
-                  </div>
-                  <div className="ratings  ml-1">
-                    <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
-                    <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
-                    <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
-                    <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
-                    <Star size={15} fill="#fff" stroke="#b8c2cc" />
-                  </div>
-                  <p className="text-bold-500 font-medium-2 text-primary mt-50">
-                  800.000 đ
-                      </p>
-                </div>
-                <div>
-                  <div className="title mb-1">
-                    <p className="font-medium-1 text-bold-600 truncate mb-0">
-                    Nike Zoom.
-                        </p>
-                    <small>By VN</small>
-                  </div>
-                  <div className="img-container">
-                    <img src={laptop} alt="laptop" />
-                  </div>
-                  <div className="ratings  ml-1">
-                    <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
-                    <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
-                    <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
-                    <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
-                    <Star size={15} fill="#fff" stroke="#b8c2cc" />
-                  </div>
-                  <p className="text-bold-500 font-medium-2 text-primary mt-50">
-                  390.000 đ
-                      </p>
-                </div>
-                <div>
-                  <div className="title mb-1">
-                    <p className="font-medium-1 text-bold-600 truncate mb-0">
-                    Nike Flyknit.
-                        </p>
-                    <small>By VN</small>
-                  </div>
-                  <div className="img-container">
-                    <img src={homepod} alt="homepod" />
-                  </div>
-                  <div className="ratings  ml-1">
-                    <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
-                    <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
-                    <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
-                    <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
-                    <Star size={15} fill="#fff" stroke="#b8c2cc" />
-                  </div>
-                  <p className="text-bold-500 font-medium-2 text-primary mt-50">
-                  590.000 đ
-                      </p>
-                </div>
-                <div>
-                  <div className="title mb-1">
-                    <p className="font-medium-1 text-bold-600 truncate mb-0">
-                    Nike SF-AF1 “Desert Camo”
-                        </p>
-                    <small>By VN</small>
-                  </div>
-                  <div className="img-container">
-                    <img src={iphoneX} alt="homepod" />
-                  </div>
-                  <div className="ratings  ml-1">
-                    <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
-                    <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
-                    <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
-                    <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
-                    <Star size={15} fill="#fff" stroke="#b8c2cc" />
-                  </div>
-                  <p className="text-bold-500 font-medium-2 text-primary mt-50">
-                  2.190.000 đ
-                      </p>
-                </div>
-                <div>
-                  <div className="title mb-1">
-                    <p className="font-medium-1 text-bold-600 truncate mb-0">
-                    Nike Air Huarache “Legion Green”
-                        </p>
-                    <small>by VN</small>
-                  </div>
-                  <div className="img-container">
-                    <img src={headphones} alt="homepod" />
-                  </div>
-                  <div className="ratings  ml-1">
-                    <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
-                    <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
-                    <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
-                    <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
-                    <Star size={15} fill="#fff" stroke="#b8c2cc" />
-                  </div>
-                  <p className="text-bold-500 font-medium-2 text-primary mt-50">
-                  1.890.000 đ
-                      </p>
-                </div>
-                <div>
-                  <div className="title mb-1">
-                    <p className="font-medium-1 text-bold-600 truncate mb-0">
-                    Nike Air TR 17.
-                        </p>
-                    <small>by VN</small>
-                  </div>
-                  <div className="img-container">
-                    <img src={mouse} alt="homepod" />
-                  </div>
-                  <div className="ratings  ml-1">
-                    <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
-                    <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
-                    <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
-                    <Star size={15} fill="#ff9f43" stroke="#ff9f43" />
-                    <Star size={15} fill="#fff" stroke="#b8c2cc" />
-                  </div>
-                  <p className="text-bold-500 font-medium-2 text-primary mt-50">
-                    890.000 đ
-                      </p>
-                </div>
-              </Swiper>
+              </div>
             </Col>
           </Row>
         </CardBody>
-        <Card className="overflow-hidden app-ecommerce-details">
-          <Row>
-            <Col sm="12">
-              <Row className="item-features py-5 mt-5">
-                <Col className="text-center" md="4" sm="12">
-                  <div className="w-50 mx-auto">
-                    <Award className="text-primary mb-1" size={42} />
-                    <p className="font-medium-2 text-bold-600 mb-0">
-                      Sản phẩm được lựa chọn số 1
-                      </p>
-                    <p>
-                      Trẻ trung - Năng động - Thời trang
-                      </p>
-                  </div>
-                </Col>
-                <Col className="text-center" md="4" sm="12">
-                  <div className="w-50 mx-auto">
-                    <Clock className="text-primary mb-1" size={42} />
-                    <p className="font-medium-2 text-bold-600 mb-0">
-                      Thời gian phản hồi nhanh chóng
-                      </p>
-                    <p>Nhân viên hỗ trợ, phụ vụ tận tình chu đáo.</p>
-                  </div>
-                </Col>
-                <Col className="text-center" md="4" sm="12">
-                  <div className="w-50 mx-auto">
-                    <Shield className="text-primary mb-1" size={42} />
-                    <p className="font-medium-2 text-bold-600 mb-0">
-                      Sự tin tưởng
-                      </p>
-                    <p>Ra mắt những sản phẩm tốt nhất</p>
-                  </div>
-                </Col>
-              </Row>
-            </Col>
-          </Row>
-
-        </Card>
       </React.Fragment>
     )
   }
