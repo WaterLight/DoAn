@@ -504,7 +504,7 @@ class PhieuXuatKhoDialog extends Component {
                     });
                   }}
                 >
-                  {t("general.select")}
+                  {t("Xem sản phẩm kho")}
                 </Button>
               </Grid>
               {this.state.shouldOpenMultipleDialog && (
