@@ -262,6 +262,9 @@ public class PhieuXuatKhoServiceImpl extends GenericServiceImpl<PhieuXuatKho, UU
 		}
 		if (listSPPN != null && listSPPN.size() > 0) {
 			for (SanPhamPhieuXuatDto spDto : listSPPN) {
+				if(spDto.getPhieu().getKho() == null || spDto.getPhieu().getKho().getId() == null || spDto.getSanPham() == null) {
+					continue;
+				}
 				BaoCaoDto bc = new BaoCaoDto();
 				bc.setSanPhamId(spDto.getSanPham().getId());
 				bc.setTenSP(spDto.getSanPham().getTenSP());
