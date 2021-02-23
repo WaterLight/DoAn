@@ -15,16 +15,7 @@ import {
   Shield
 } from "react-feather"
 import Breacrumbs from "../../../../components/@vuexy/breadCrumbs/BreadCrumb"
-import classnames from "classnames"
 import Swiper from "react-id-swiper"
-import macbook from "../../../../assets/img/elements/macbook-pro.png"
-import headphones from "../../../../assets/img/elements/beats-headphones.png"
-import laptop from "../../../../assets/img/elements/macbook-pro.png"
-import homepod from "../../../../assets/img/elements/homepod.png"
-import earphones from "../../../../assets/img/elements/wireless-earphones.png"
-import iphoneX from "../../../../assets/img/elements/iphone-x.png"
-import watch from "../../../../assets/img/elements/apple-watch.png"
-import mouse from "../../../../assets/img/elements/magic-mouse.png"
 import "swiper/css/swiper.css"
 import "../../../../assets/scss/pages/app-ecommerce-shop.scss"
 import { getProductById, getNumberOfProductBySize, searchByPage } from "./ShopService"
@@ -76,6 +67,7 @@ class DetailPage extends React.Component {
     productId: "",
     keyword: "",
     data: [],
+    comments:"",
     saleOrder: {
       sanPhamDonHang: [],
       totalAmount: 0,
@@ -172,6 +164,10 @@ class DetailPage extends React.Component {
       toast.info("Thêm thành công " + product.tenSP + " vào giỏ hàng của bạn!");
       window.localStorage.setItem("saleOrder", JSON.stringify(saleOrder));
     }
+  }
+  processComment = (event) => {
+    event.preventDefault();
+
   }
   render() {
     let { product, data } = this.state;
@@ -348,7 +344,11 @@ class DetailPage extends React.Component {
                     </div>
                   </Col>
                 </Row>
+                <Row>
+                  
+                </Row>
               </CardBody>
+
               <CardBody>
                 <Row>
                   <Col className="details-page-swiper text-center mt-5" sm="12">
@@ -363,7 +363,7 @@ class DetailPage extends React.Component {
                 </Row>
               </CardBody>
             </Card>
-          </React.Fragment>
+          </React.Fragment >
         )
       } else {
         return (<span>Có lỗi xảy ra, vui lòng thử lại sau</span>)

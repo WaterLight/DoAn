@@ -8,10 +8,7 @@ import {
   Input,
   Card,
   CardBody,
-  Badge,
-  Pagination,
-  PaginationItem,
-  PaginationLink
+  Badge
 } from "reactstrap"
 import {
   Grid,
@@ -34,6 +31,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Radio from "../../../../components/@vuexy/radio/RadioVuexy"
 import { history } from "../../../../history";
 import DetailPage from "./Detail";
+import Pagination from '@material-ui/lab/Pagination';
 
 const sortOptions = [
   {
@@ -60,11 +58,12 @@ class ShopContent extends React.Component {
     inCart: [],
     inWishlist: [],
     view: "grid-view",
-    rowsPerPage: 100000,
+    rowsPerPage: 3,
     page: 0,
     data: [],
     listProduct: [],
     totalElements: 0,
+    totalPages: 1,
     numberOfProduct: 0,
     keyword: "",
     saleOrder: {
@@ -126,7 +125,7 @@ class ShopContent extends React.Component {
       searchObject.pageIndex = this.state.page + 1;
       searchObject.pageSize = this.state.rowsPerPage;
       searchByPage(searchObject).then(res => {
-        this.setState({ data: [...res.data.content], totalElements: res.data.totalElements })
+        this.setState({ data: [...res.data.content], totalElements: res.data.totalElements , totalPages:res.data.totalPages})
       }).catch(err => { console.log(err) });
     });
   }
@@ -138,6 +137,15 @@ class ShopContent extends React.Component {
       this.search();
     }
   };
+  handleChangePage = (event, value) =>{
+    var searchObject = {};
+      searchObject.keyword = this.state.keyword;
+      searchObject.pageIndex = value;
+      searchObject.pageSize = this.state.rowsPerPage;
+      searchByPage(searchObject).then(res => {
+        this.setState({ data: [...res.data.content], totalElements: res.data.totalElements , totalPages:res.data.totalPages})
+      }).catch(err => { console.log(err) });
+  }
   filterProduct = (dto) => {
     if (dto != null) {
       var searchObject = {};
@@ -147,7 +155,7 @@ class ShopContent extends React.Component {
       searchObject.pageIndex = dto.pageIndex;
       searchObject.pageSize = dto.pageSize;
       searchByPage(searchObject).then(res => {
-        this.setState({ data: [...res.data.content], totalElements: res.data.totalElements })
+        this.setState({ data: [...res.data.content], totalElements: res.data.totalElements, totalPages:res.data.totalPages})
       }).catch(err => { toast.error("Có lỗi xảy ra khi tải danh sách sản phẩm") });
     }
   }
@@ -195,7 +203,7 @@ class ShopContent extends React.Component {
     }
   }
   render() {
-    let { data } = this.state;
+    let { data, totalPages } = this.state;
     if (data && data.length > 0) {
       let renderProducts = data.map((product, i) => {
         let renderProductSizes = product.size.map((ps, j) => {
@@ -378,38 +386,7 @@ class ShopContent extends React.Component {
             </Col>
             <Col sm="12">
               <div className="ecommerce-pagination">
-                <Pagination className="d-flex justify-content-center mt-2">
-                  <PaginationItem className="prev-item">
-                    <PaginationLink href="#" first>
-                      <ChevronLeft />
-                    </PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem active>
-                    <PaginationLink href="#">1</PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationLink href="#">2</PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationLink href="#">3</PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationLink href="#">4</PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationLink href="#">5</PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationLink href="#">6</PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationLink href="#">7</PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem href="#" className="next-item">
-                    <PaginationLink href="#" last>
-                      <ChevronRight />
-                    </PaginationLink>
-                  </PaginationItem>
+                <Pagination className="d-flex justify-content-center mt-2" count={totalPages} onChange={(event, value) =>this.handleChangePage(event, value)}>
                 </Pagination>
               </div>
             </Col>
@@ -485,37 +462,6 @@ class ShopContent extends React.Component {
             <Col sm="12">
               <div className="ecommerce-pagination">
                 <Pagination className="d-flex justify-content-center mt-2">
-                  <PaginationItem className="prev-item">
-                    <PaginationLink href="#" first>
-                      <ChevronLeft />
-                    </PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem active>
-                    <PaginationLink href="#">1</PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationLink href="#">2</PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationLink href="#">3</PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationLink href="#">4</PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationLink href="#">5</PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationLink href="#">6</PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationLink href="#">7</PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem href="#" className="next-item">
-                    <PaginationLink href="#" last>
-                      <ChevronRight />
-                    </PaginationLink>
-                  </PaginationItem>
                 </Pagination>
               </div>
             </Col>
