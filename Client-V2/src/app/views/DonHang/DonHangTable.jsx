@@ -125,19 +125,19 @@ class RealEstateSourceTable extends React.Component {
     shouldOpenNotificationPopup: false,
     Notification: "",
     shouldOpenPrintDialog: false,
-    orderStatus: null,
+    orderStatus: {},
     listStatus: [
       { id: 1, name: "Đơn hàng mới" },
       { id: 2, name: "Đơn hàng đã xác nhận" },
-      { id: 3, name: "Đơn hàng đã thanh toán" },
-      { id: 4, name: "Đơn hàng đã hủy" },
+      { id: 3, name: "Đơn hàng đã hủy" },
+      { id: 4, name: "Đơn hàng đã thanh toán" },
     ],
   };
   numSelected = 0;
   rowCount = 0;
 
   handleTextChange = (event) => {
-    this.setState({ keyword: event.target.value }, function () {});
+    this.setState({ keyword: event.target.value }, function () { });
   };
 
   handleKeyDownEnterSearch = (e) => {
@@ -195,21 +195,7 @@ class RealEstateSourceTable extends React.Component {
     }
   };
 
-  updatePageData = () => {
-    var searchObject = {};
-    if (this.state.orderStatus != null) {
-      searchObject.statusOrder = this.state.orderStatus;
-    }
-    searchObject.keyword = this.state.keyword;
-    searchObject.pageIndex = this.state.page + 1;
-    searchObject.pageSize = this.state.rowsPerPage;
-    searchByPage(searchObject).then((res) => {
-      this.setState({
-        itemList: [...res.data.content],
-        totalElements: res.data.totalElements,
-      });
-    });
-  };
+
 
   handleDownload = () => {
     var blob = new Blob(["Hello, world!"], {
@@ -365,15 +351,42 @@ class RealEstateSourceTable extends React.Component {
         console.log("loi");
       });
   };
-  handleSelectStatus = (value, status) => {
-    if (status != null && status.id != null) {
-      this.setState({ orderStatus: status.id });
-    } else {
-      this.setState({ orderStatus: null });
-    }
-    this.updatePageData();
-  };
 
+
+  updatePageData = () => {
+    var searchObject = {};
+    let { orderStatus } = this.state;
+    if (orderStatus && orderStatus.id != null) {
+      searchObject.statusOrder = orderStatus.id;
+    }
+    searchObject.keyword = this.state.keyword;
+    searchObject.pageIndex = this.state.page + 1;
+    searchObject.pageSize = this.state.rowsPerPage;
+    searchByPage(searchObject).then((res) => {
+      this.setState({
+        itemList: [...res.data.content],
+        totalElements: res.data.totalElements,
+      });
+    });
+  };
+  handleSelectStatus = (value, status) => {
+    this.setState({ orderStatus: status ? status : null }, () => {
+      var searchObject = {};
+      let { orderStatus } = this.state;
+      if (orderStatus && orderStatus.id != null) {
+        searchObject.statusOrder = orderStatus.id;
+      }
+      searchObject.keyword = this.state.keyword;
+      searchObject.pageIndex = this.state.page + 1;
+      searchObject.pageSize = this.state.rowsPerPage;
+      searchByPage(searchObject).then((res) => {
+        this.setState({
+          itemList: [...res.data.content],
+          totalElements: res.data.totalElements,
+        });
+      });
+    })
+  };
   render() {
     const { t, i18n } = this.props;
     let {
@@ -466,8 +479,8 @@ class RealEstateSourceTable extends React.Component {
               {moment(rowData.ngayDatHang).format("DD/MM/YYYY hh:mm")}
             </span>
           ) : (
-            ""
-          ),
+              ""
+            ),
       },
       {
         title: t("Ngày giao hàng"),
@@ -479,8 +492,8 @@ class RealEstateSourceTable extends React.Component {
               {moment(rowData.ngayGiaoHang).format("DD/MM/YYYY HH:MM")}
             </span>
           ) : (
-            ""
-          ),
+              ""
+            ),
       },
       {
         title: t("Tổng giá"),
@@ -503,8 +516,8 @@ class RealEstateSourceTable extends React.Component {
         render: (rowData) => {
           if (rowData.trangThai === 1) return "Đơn hàng mới";
           else if (rowData.trangThai === 2) return "Đơn hàng đã xác nhận";
-          else if (rowData.trangThai === 3) return "Đơn hàng đã thanh toán";
-          else if (rowData.trangThai === 4) return "Đơn hàng đã hủy";
+          else if (rowData.trangThai === 3) return "Đơn hàng đã hủy";
+          else if (rowData.trangThai === 4) return "Đơn hàng đã thanh toán";
           else return "";
         },
       },
@@ -580,14 +593,14 @@ class RealEstateSourceTable extends React.Component {
             </Button>
 
             {shouldOpenPrintDialog && (
-                <InventoryCountVoucherPrint
-                  t={t}
-                  i18n={i18n}
-                  handleClose={this.handleDialogClose}
-                  open={shouldOpenPrintDialog}
-                  item={item}
-                />
-              )}
+              <InventoryCountVoucherPrint
+                t={t}
+                i18n={i18n}
+                handleClose={this.handleDialogClose}
+                open={shouldOpenPrintDialog}
+                item={item}
+              />
+            )}
 
             {shouldOpenNotificationPopup && (
               <NotificationPopup
@@ -629,8 +642,7 @@ class RealEstateSourceTable extends React.Component {
               className="flex-end w-80 mb-10"
               getOptionLabel={(option) => option.name}
               onChange={this.handleSelectStatus}
-              value={orderStatus ? orderStatus : null}
-              defaultValue={orderStatus ? orderStatus : null}
+              // value={orderStatus ? orderStatus : null}
               renderInput={(params) => (
                 <TextField
                   {...params}
@@ -639,6 +651,7 @@ class RealEstateSourceTable extends React.Component {
                 />
               )}
             />
+
           </Grid>
           <Grid item md={4} sm={12} xs={12}>
             <FormControl fullWidth>
@@ -740,8 +753,7 @@ class RealEstateSourceTable extends React.Component {
               component="div"
               labelRowsPerPage={t("general.rows_per_page")}
               labelDisplayedRows={({ from, to, count }) =>
-                `${from}-${to} ${t("general.of")} ${
-                  count !== -1 ? count : `more than ${to}`
+                `${from}-${to} ${t("general.of")} ${count !== -1 ? count : `more than ${to}`
                 }`
               }
               count={totalElements}
