@@ -58,7 +58,7 @@ class ShopContent extends React.Component {
     inCart: [],
     inWishlist: [],
     view: "grid-view",
-    rowsPerPage: 3,
+    rowsPerPage: 6,
     page: 0,
     data: [],
     listProduct: [],
