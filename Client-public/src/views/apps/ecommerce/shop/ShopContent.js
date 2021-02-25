@@ -32,21 +32,7 @@ import Radio from "../../../../components/@vuexy/radio/RadioVuexy"
 import { history } from "../../../../history";
 import DetailPage from "./Detail";
 import Pagination from '@material-ui/lab/Pagination';
-
-const sortOptions = [
-  {
-    value: "featured",
-    label: "Featured"
-  },
-  {
-    value: "lowest",
-    label: "Lowest"
-  },
-  {
-    value: "highest",
-    label: "Highest"
-  }
-]
+toast.configure();
 
 class ShopContent extends React.Component {
   constructor() {
@@ -76,7 +62,7 @@ class ShopContent extends React.Component {
 
   handleAddToCart = product => {
     if (product && product.id) {
-      let { productSize, saleOrder } = this.state;
+      let { productSize, saleOrder, numberOfProduct } = this.state;
       let sanPhamDonHangDto = {};
       sanPhamDonHangDto.sanPham = product;
       sanPhamDonHangDto.soLuong = 1;//tạm fix là 1 sản phẩm
@@ -88,7 +74,13 @@ class ShopContent extends React.Component {
         sanPhamDonHangDto.thanhTien = sanPhamDonHangDto.soLuong * sanPhamDonHangDto.donGia;
       }
       if (productSize != null && product.id == productSize.product.id && productSize.size != null) {
-        sanPhamDonHangDto.size = productSize.size;
+        //kiểm tra số lượng trong kho còn không
+        if(numberOfProduct <= 0){
+          toast.warning("Số lượng sản phẩm " + product.tenSP + " trong kho tạm thời đã hết. Vui lòng lựa chọn size khác!");
+          return false;
+        }else{
+          sanPhamDonHangDto.size = productSize.size;
+        }
       } else {
         toast.warning("Bạn chưa chọn size cho sản phẩm " + product.tenSP + ".");
         return false;
@@ -305,9 +297,9 @@ class ShopContent extends React.Component {
                         {""}Đơn hàng của tôi
                       </Link>
                     ) : (
-                        <span onClick={() => this.handleAddToCart(product)}>
+                        <a onClick={() => this.handleAddToCart(product)}>
                           {""}Thêm vào giỏ hàng
-                        </span>
+                        </a>
                       )}
                   </span>
                 </div>

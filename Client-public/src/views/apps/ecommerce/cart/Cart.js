@@ -37,7 +37,10 @@ import "../../../../assets/scss/plugins/extensions/toastr.scss"
 import imageDefault from "../../../../assets/img/pages/eCommerce/nike7.jfif"
 import { saveOrder } from "./cartService";
 import axios from "axios";
-import {getListEvent} from "../../../pages/EventService"
+import { getListEvent } from "../../../pages/EventService"
+import { getNumberOfProductBySize } from "../shop/ShopService"
+
+toast.configure();
 
 class Checkout extends React.Component {
   state = {
@@ -48,7 +51,8 @@ class Checkout extends React.Component {
     saleOrder: {},
     soLuong: null,
     paymentType: 1,
-    event:[]
+    numberOfProduct: 0,
+    event: []
   }
   handleDeleteProductInCart = product => {
     if (product && product.sanPham.id) {
@@ -75,9 +79,9 @@ class Checkout extends React.Component {
   }
   getCurrentUser() {
     let url = ConstantList.API_ENPOINT + "/api/users/getCurrentUser";
-    return axios.get(url).then(res=>{
-      if(res && res.data){
-        this.setState({currentUser:res.data});
+    return axios.get(url).then(res => {
+      if (res && res.data) {
+        this.setState({ currentUser: res.data });
       }
     });
   };
@@ -99,7 +103,7 @@ class Checkout extends React.Component {
       return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
     }
   }
-  
+
   handleActiveStep = index => {
     let { currentUser } = this.state;
     if (currentUser == null || currentUser.id == null) {
@@ -111,16 +115,15 @@ class Checkout extends React.Component {
     this.setState({ activeStep: step })
   }
   handleConfirmOrder = () => {
-    debugger
     let dateNow = new Date();
     // kiểm tra có sự kiện giảm giá không, nếu có thì giảm cho đơn hàng
     let { currentUser, saleOrder, event } = this.state;
     if (currentUser != null && currentUser.id != null && saleOrder.sanPhamDonHang != null && saleOrder.sanPhamDonHang.length > 0) {
-      if(event[0].ngayBatDau < dateNow.getTime() && dateNow.getTime() < event[0].ngayKetThuc){
-        if(event && event[0].tienGiamGia && event[0].tienGiamGia >0){
-          if(saleOrder.totalAmount >= 2000000)
+      if (event[0].ngayBatDau < dateNow.getTime() && dateNow.getTime() < event[0].ngayKetThuc) {
+        if (event && event[0].tienGiamGia && event[0].tienGiamGia > 0) {
+          if (saleOrder.totalAmount >= 2000000)
             saleOrder.giamGia = event[0].tienGiamGia;
-            saleOrder.thanhTien = saleOrder.totalAmount - event[0].tienGiamGia;
+          saleOrder.thanhTien = saleOrder.totalAmount - event[0].tienGiamGia;
         }
       }
       saveOrder(saleOrder).then((res) => {
@@ -147,38 +150,49 @@ class Checkout extends React.Component {
       position: toast.POSITION.BOTTOM_RIGHT
     })
   }
-  handleChangeNumberOfProduct = (sanPham, soLuong) => {
-    if (sanPham != null && sanPham.id != null && soLuong > 0) {
-      let { saleOrder } = this.state;
-      if (saleOrder != null && saleOrder.sanPhamDonHang != null && saleOrder.sanPhamDonHang.length > 0) {
-        for (var i = 0; i < saleOrder.sanPhamDonHang.length; i++) {
-          let sanPhamDonHang = saleOrder.sanPhamDonHang[i];
-          if (sanPhamDonHang.sanPham.id == sanPham.id) {
-            sanPhamDonHang.soLuong = soLuong;
-            if (sanPhamDonHang.trietKhau != null) {
-              sanPhamDonHang.thanhTien = sanPhamDonHang.soLuong * sanPhamDonHang.donGia * (1 - sanPhamDonHang.trietKhau / 100);
+  handleChangeNumberOfProduct = (sanPham, soLuong, size) => {
+    if (sanPham != null && sanPham.id != null && soLuong > 0 && size != null && size.id != null) {
+      //kiểm tra số lượng order có còn đủ trong KHO không?
+      getNumberOfProductBySize(sanPham.id, size.id).then(res => {
+        if (res.data != null) {
+          this.setState({ numberOfProduct: res.data })
+        }
+      }).catch(err => { toast.error("Có lỗi xảy ra vui lòng thử lại") });
+      if (this.state.numberOfProduct >= soLuong) {
+        let { saleOrder } = this.state;
+        if (saleOrder != null && saleOrder.sanPhamDonHang != null && saleOrder.sanPhamDonHang.length > 0) {
+          for (var i = 0; i < saleOrder.sanPhamDonHang.length; i++) {
+            let sanPhamDonHang = saleOrder.sanPhamDonHang[i];
+            if (sanPhamDonHang.sanPham.id == sanPham.id) {
+              sanPhamDonHang.soLuong = soLuong;
+              if (sanPhamDonHang.trietKhau != null) {
+                sanPhamDonHang.thanhTien = sanPhamDonHang.soLuong * sanPhamDonHang.donGia * (1 - sanPhamDonHang.trietKhau / 100);
+              }
+              sanPhamDonHang.thanhTien = sanPhamDonHang.soLuong * sanPhamDonHang.donGia;
+              // cập nhật vào đơn hàng ở local store
+              saleOrder.sanPhamDonHang[i].thanhTien = sanPhamDonHang.thanhTien;
+              saleOrder.tongGia = 0;
             }
-            sanPhamDonHang.thanhTien = sanPhamDonHang.soLuong * sanPhamDonHang.donGia;
-            // cập nhật vào đơn hàng ở local store
-            saleOrder.sanPhamDonHang[i].thanhTien = sanPhamDonHang.thanhTien;
-            saleOrder.tongGia = 0;
           }
-        }
-        // cập nhật tổng tiền đơn hàng
-        for (var i = 0; i < saleOrder.sanPhamDonHang.length; i++) {
-          if (saleOrder.sanPhamDonHang[i].sanPham.giamGia != 0 && saleOrder.sanPhamDonHang[i].sanPham.giamGia != null) {
-            saleOrder.giamGia += saleOrder.sanPhamDonHang[i].sanPham.giamGia;
-            saleOrder.tongGia += saleOrder.sanPhamDonHang[i].sanPham.giaBanHienThoi * (100 - saleOrder.sanPhamDonHang[i].sanPham.giamGia) / 100;
-            saleOrder.thanhTien = saleOrder.tongGia;
-          } else {
-            saleOrder.tongGia += saleOrder.sanPhamDonHang[i].thanhTien;
-            saleOrder.thanhTien = saleOrder.tongGia;
+          // cập nhật tổng tiền đơn hàng
+          for (var i = 0; i < saleOrder.sanPhamDonHang.length; i++) {
+            if (saleOrder.sanPhamDonHang[i].sanPham.giamGia != 0 && saleOrder.sanPhamDonHang[i].sanPham.giamGia != null) {
+              saleOrder.giamGia += saleOrder.sanPhamDonHang[i].sanPham.giamGia;
+              saleOrder.tongGia += saleOrder.sanPhamDonHang[i].sanPham.giaBanHienThoi * (100 - saleOrder.sanPhamDonHang[i].sanPham.giamGia) / 100;
+              saleOrder.thanhTien = saleOrder.tongGia;
+            } else {
+              saleOrder.tongGia += saleOrder.sanPhamDonHang[i].thanhTien;
+              saleOrder.thanhTien = saleOrder.tongGia;
+            }
           }
+          saleOrder.totalAmount = saleOrder.tongGia;
         }
-        saleOrder.totalAmount = saleOrder.tongGia;
+        window.localStorage.setItem("saleOrder", JSON.stringify(saleOrder));
+        this.setState({ saleOrder: JSON.parse(window.localStorage.getItem("saleOrder")) });
+      }else{
+        toast.warning("Bạn đã đặt hết số lượng sản phẩm này trong kho");
+        return false; 
       }
-      window.localStorage.setItem("saleOrder", JSON.stringify(saleOrder));
-      this.setState({ saleOrder: JSON.parse(window.localStorage.getItem("saleOrder")) });
     }
   }
   handleChangeTypeOfPayment = (paymentType) => {
@@ -195,7 +209,7 @@ class Checkout extends React.Component {
         }
       }
       window.localStorage.setItem("saleOrder", JSON.stringify(saleOrder));
-      this.setState({ saleOrder: JSON.parse(window.localStorage.getItem("saleOrder"))});
+      this.setState({ saleOrder: JSON.parse(window.localStorage.getItem("saleOrder")) });
     }
   }
 
@@ -240,9 +254,9 @@ class Checkout extends React.Component {
                             value={item.soLuong ? item.soLuong : 1}
                             mobile
                             min={1}
-                            max={100}
+                            max={10000}
                             style={mobileStyle}
-                            onChange={(soLuong) => this.handleChangeNumberOfProduct(item.sanPham, soLuong)}
+                            onChange={(soLuong) => this.handleChangeNumberOfProduct(item.sanPham, soLuong, item.size)}
                           />
                         </div>
                         {/* <p className="delivery-date">{item.deliveryBy}</p>
@@ -354,7 +368,7 @@ class Checkout extends React.Component {
               </CardHeader>
               <CardBody>
                 <Row> */}
-                  {/* <Col md="6" sm="12">
+            {/* <Col md="6" sm="12">
                     <AvGroup>
                       <Label for="name"> Tên người nhận </Label>
                       <AvInput id="name" name="name" type="text" required />
@@ -420,7 +434,7 @@ class Checkout extends React.Component {
 
 
 
-                  {/* <Col md="6" sm="12">
+            {/* <Col md="6" sm="12">
                     <AvGroup>
                       <Label for="state"> State</Label>
                       <AvInput id="state" name="state" type="text" required />
@@ -436,7 +450,7 @@ class Checkout extends React.Component {
                       </Input>
                     </FormGroup>
                   </Col>*/}
-                  {/* <Col sm="6" md={{ offset: 6, size: 6 }}>
+            {/* <Col sm="6" md={{ offset: 6, size: 6 }}>
                     <Button.Ripple
                       type="submit"
                       color="primary"
