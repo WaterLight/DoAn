@@ -33,6 +33,7 @@ import { searchByPage as searchStore } from "../Kho/KhoService";
 // import { saveAs } from 'file-saver';
 import { isThisSecond } from "date-fns/esm";
 // import PhieuNhapKhoDialog from "./PhieuNhapKhoDialog";
+import TableCustom from "./TableCustom";
 import { searchByPage, exportToExcel } from "./BaoCaoNhapService";
 import {
   MuiPickersUtilsProvider,
@@ -413,7 +414,7 @@ class BaoCaoDonHang extends React.Component {
           />
         </div>
 
-        <Grid container spacing={2} justify="space-between">
+        <Grid container spacing={2} justify="start">
           {/* <Grid item md={2} xs={12}>
             <Button
               className="mt-16 align-bottom"
@@ -540,7 +541,7 @@ class BaoCaoDonHang extends React.Component {
                 />
               )}
             </div>
-            <MaterialTable
+            {/* <MaterialTable
               title={t("general.list")}
               data={itemList}
               columns={columns}
@@ -585,7 +586,8 @@ class BaoCaoDonHang extends React.Component {
                 this.data = rows;
                 // this.setState({selectedItems:rows});
               }}
-            />
+            /> */}
+            <TableCustom title={t("general.list")} data={itemList} t={t} />
             <TablePagination
               align="left"
               className="px-16"
