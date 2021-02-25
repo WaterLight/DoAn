@@ -44,10 +44,10 @@ public class SanPhamKhoServiceImpl extends GenericServiceImpl<SanPhamKho, UUID> 
 		String orderBy = " ORDER BY entity.createDate DESC";
 		
 		String sqlCount = "select count(entity.id) from SanPhamKho as entity where (1=1)   ";
-		String sql = "select new com.globits.da.dto.SanPhamKhoDto(entity) from SanPhamKho as entity where (1=1)  ";
+		String sql = "select new com.globits.da.dto.SanPhamKhoDto(entity) from SanPhamKho as entity where (1=1)";
 
 		if (dto.getKeyword() != null && StringUtils.hasText(dto.getKeyword())) {
-			whereClause += " AND ( entity.sanPham.tenSP LIKE :text and entity.kho.tenKho LIKE :text )";
+			whereClause += " AND ( entity.sanPham.tenSP LIKE :text or entity.sanPham.maSP LIKE :text or entity.kho.tenKho LIKE :text )";
 		}
 		if(dto.getKhoId() != null ) {
 			whereClause += " AND ( entity.kho.id =: khoId ) " ;
