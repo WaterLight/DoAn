@@ -40,6 +40,7 @@ import {
   KeyboardTimePicker,
   KeyboardDatePicker,
 } from "@material-ui/pickers";
+import TableCustom from "./TableCustom";
 import DateFnsUtils from "@date-io/date-fns";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -533,7 +534,7 @@ class BaoCaoNhap extends React.Component {
                 />
               )}
             </div>
-            <MaterialTable
+            {/* <MaterialTable
               title={t("general.list")}
               data={itemList}
               columns={columns}
@@ -601,7 +602,8 @@ class BaoCaoNhap extends React.Component {
               }}
               onChangePage={this.handleChangePage}
               onChangeRowsPerPage={this.setRowsPerPage}
-            />
+            /> */}
+            <TableCustom title={t("general.list")} data={itemList} t={t} />
           </Grid>
         </Grid>
       </div>
