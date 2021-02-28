@@ -51,7 +51,7 @@ class Checkout extends React.Component {
     saleOrder: {},
     soLuong: null,
     paymentType: 1,
-    numberOfProduct: 2,
+    numberOfProduct: new Number(10000),
     event: []
   }
   handleDeleteProductInCart = product => {
