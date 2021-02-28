@@ -39,7 +39,7 @@ import { saveOrder } from "./cartService";
 import axios from "axios";
 import { getListEvent } from "../../../pages/EventService"
 import { getNumberOfProductBySize } from "../shop/ShopService"
-
+import { history } from "../../../../history"
 toast.configure();
 
 class Checkout extends React.Component {
@@ -51,7 +51,7 @@ class Checkout extends React.Component {
     saleOrder: {},
     soLuong: null,
     paymentType: 1,
-    numberOfProduct: 0,
+    numberOfProduct: 2,
     event: []
   }
   handleDeleteProductInCart = product => {
@@ -97,6 +97,7 @@ class Checkout extends React.Component {
     });
   }
   componentWillUnmount() {
+
   }
   formatPrice = value => {
     if (value) {
@@ -106,8 +107,9 @@ class Checkout extends React.Component {
 
   handleActiveStep = index => {
     let { currentUser } = this.state;
-    if (currentUser == null || currentUser.id == null) {
-      window.location.href = ConstantList.ROOT_PATH + "/authentication/login";
+    if (!currentUser || currentUser.id == null) {
+      toast.warning("Vui lòng đăng nhập vào hệ thống để tạo đơn hàng.")
+      history.push(ConstantList.ROOT_PATH + "/authentication/login")
     }
     this.setState({ activeStep: index })
   }
@@ -133,14 +135,14 @@ class Checkout extends React.Component {
           if (JSON.parse(window.localStorage.getItem("saleOrder")) != null) {
             window.localStorage.clear();
           }
-          window.location.href = ConstantList.ROOT_PATH + "/myorder";
+          history.push(ConstantList.ROOT_PATH + "/myorder")
         } else {
           toast.error("Có lỗi xảy ra khi đặt hàng, vui lòng đăng nhập để thử lại");
-          window.location.href = ConstantList.ROOT_PATH + "/authentication/login";
+          history.push(ConstantList.ROOT_PATH + "/authentication/login")
         }
       }).catch(err => {
         toast.error("Có lỗi xảy ra khi đặt hàng, vui lòng đăng nhập để thử lại");
-        window.location.href = ConstantList.ROOT_PATH + "/authentication/login";
+        history.push(ConstantList.ROOT_PATH + "/authentication/login")
       })
     }
   }
@@ -154,11 +156,13 @@ class Checkout extends React.Component {
     if (sanPham != null && sanPham.id != null && soLuong > 0 && size != null && size.id != null) {
       //kiểm tra số lượng order có còn đủ trong KHO không?
       getNumberOfProductBySize(sanPham.id, size.id).then(res => {
-        if (res.data != null) {
-          this.setState({ numberOfProduct: res.data })
+        if (res && res.data) {
+          this.setState({ numberOfProduct: res.data});
         }
-      }).catch(err => { toast.error("Có lỗi xảy ra vui lòng thử lại") });
-      if (this.state.numberOfProduct >= soLuong) {
+      })
+      let {numberOfProduct} = this.state;
+      
+      if (soLuong <= numberOfProduct ) {
         let { saleOrder } = this.state;
         if (saleOrder != null && saleOrder.sanPhamDonHang != null && saleOrder.sanPhamDonHang.length > 0) {
           for (var i = 0; i < saleOrder.sanPhamDonHang.length; i++) {
@@ -190,7 +194,7 @@ class Checkout extends React.Component {
         window.localStorage.setItem("saleOrder", JSON.stringify(saleOrder));
         this.setState({ saleOrder: JSON.parse(window.localStorage.getItem("saleOrder")) });
       }else{
-        toast.warning("Bạn đã đặt hết số lượng sản phẩm này trong kho");
+        toast.warning("Số lượng sản phẩm bạn đặt đã vượt quá số lượng cửa hàng hiện có!");
         return false; 
       }
     }
