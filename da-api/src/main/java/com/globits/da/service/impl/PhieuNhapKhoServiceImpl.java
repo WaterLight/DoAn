@@ -104,20 +104,15 @@ public class PhieuNhapKhoServiceImpl extends GenericServiceImpl<PhieuNhapKho, UU
 					if (sanPhamPhieuNhap == null) {
 						sanPhamPhieuNhap = new SanPhamPhieuNhap();
 					}
-					if (size != null && sanPhamPhieuNhaplDto.getSanPham() != null
-							&& sanPhamPhieuNhaplDto.getSize() != null) {
-						sanPhamPhieuNhap
-								.setSanPham(sanPhamRepository.getOne(sanPhamPhieuNhaplDto.getSanPham().getId()));
+					if (size != null && sanPhamPhieuNhaplDto.getSanPham() != null && sanPhamPhieuNhaplDto.getSize() != null) {
+						sanPhamPhieuNhap.setSanPham(sanPhamRepository.getOne(sanPhamPhieuNhaplDto.getSanPham().getId()));
 						if (kho != null && kho.getId() != null) {
-							List<SanPhamKho> listData = sanPhamKhoRepository.getListSanPhamKho(
-									sanPhamPhieuNhaplDto.getSanPham().getId(), kho.getId(),
-									sanPhamPhieuNhaplDto.getSize().getId());
+							List<SanPhamKho> listData = sanPhamKhoRepository.getListSanPhamKho(sanPhamPhieuNhaplDto.getSanPham().getId(), kho.getId(),sanPhamPhieuNhaplDto.getSize().getId());
 							if (listData != null && listData.size() > 0) {
 								sanPhamKho = listData.get(0);
 								if (sanPhamKho != null) {
 									if (sanPhamKho.getSoLuong() != null) {
-										sanPhamKho.setSoLuong(
-												sanPhamPhieuNhaplDto.getSoLuong() + sanPhamKho.getSoLuong());
+										sanPhamKho.setSoLuong(sanPhamPhieuNhaplDto.getSoLuong() + sanPhamKho.getSoLuong());
 									} else {
 										sanPhamKho.setSoLuong(sanPhamPhieuNhaplDto.getSoLuong());
 									}
@@ -125,8 +120,7 @@ public class PhieuNhapKhoServiceImpl extends GenericServiceImpl<PhieuNhapKho, UU
 							}
 							if (sanPhamKho == null) {
 								sanPhamKho = new SanPhamKho();
-								sanPhamKho.setSanPham(
-										sanPhamRepository.getOne(sanPhamPhieuNhaplDto.getSanPham().getId()));
+								sanPhamKho.setSanPham(sanPhamRepository.getOne(sanPhamPhieuNhaplDto.getSanPham().getId()));
 								sanPhamKho.setKho(kho);
 								sanPhamKho.setSize(size);
 								sanPhamKho.setSoLuong(sanPhamPhieuNhaplDto.getSoLuong());
@@ -282,16 +276,13 @@ public class PhieuNhapKhoServiceImpl extends GenericServiceImpl<PhieuNhapKho, UU
 		if (listSPPN != null && listSPPN.size() > 0) {
 			for (SanPhamPhieuNhapKhoDto spDto : listSPPN) {
 				BaoCaoDto bc = new BaoCaoDto();
-				if (spDto.getSanPham() == null || spDto.getSanPham().getId() == null || spDto.getKho() == null) {
-					continue;
-				}
 				bc.setSanPhamId(spDto.getSanPham().getId());
 				bc.setTenSP(spDto.getSanPham().getTenSP());
 				bc.setMaSP(spDto.getSanPham().getMaSP());
 				bc.setKhoId(spDto.getKho().getId());
 				bc.setTenKho(spDto.getKho().getTenKho());
 				bc.setTongTienNhap(0.0);
-				if (spDto.getGia() != null) {
+				if(spDto.getGia() != null) {
 					bc.setTongTienNhap(spDto.getGia());
 				}
 				bc.setSoLuong(0);
@@ -304,9 +295,6 @@ public class PhieuNhapKhoServiceImpl extends GenericServiceImpl<PhieuNhapKho, UU
 				} else {
 					Boolean check = false;
 					for (BaoCaoDto bcDto : result) {
-						if (bcDto.getSanPhamId() == null || bc.getSanPhamId() == null) {
-							continue;
-						}
 						if (bc.getSanPhamId().equals(bcDto.getSanPhamId()) && bc.getKhoId().equals(bcDto.getKhoId())) {
 							bcDto.setSoLuong(bcDto.getSoLuong() + bc.getSoLuong());
 							bcDto.setTongTienNhap(bcDto.getTongTienNhap() + bc.getTongTienNhap());
@@ -354,12 +342,15 @@ public class PhieuNhapKhoServiceImpl extends GenericServiceImpl<PhieuNhapKho, UU
 				} else {
 					Boolean check = false;
 					for (BaoCaoDto bcDto : baoCaoTon) {
-						if (bc.getSanPhamId().equals(bcDto.getSanPhamId()) && bc.getKhoId().equals(bcDto.getKhoId())) {
-							bcDto.setSoLuong(bcDto.getSoLuong() + bc.getSoLuong());
-							check = true;
-							break;
-						} else {
-							check = false;
+//						if(bcDto.getKhoId() != null && bc.getSanPhamId() != null && bcDto.getSanPhamId() != null && bc.getKhoId() != null) {
+						if(bcDto.getKhoId() != null && bc.getKhoId() != null) {
+							if (bc.getSanPhamId().equals(bcDto.getSanPhamId()) && bc.getKhoId().equals(bcDto.getKhoId())) {
+								bcDto.setSoLuong(bcDto.getSoLuong() + bc.getSoLuong());
+								check = true;
+								break;
+							} else {
+								check = false;
+							}
 						}
 					}
 					if (!check) {

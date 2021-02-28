@@ -432,7 +432,7 @@ class PhieuXuatKho extends React.Component {
 
         <Grid container spacing={2} justify="space-between">
           <Grid item md={3} xs={12}>
-            <Button
+            {/* <Button
               className="mb-16 mr-16 align-bottom"
               variant="contained"
               color="primary"
@@ -444,7 +444,7 @@ class PhieuXuatKho extends React.Component {
               }}
             >
               {t("general.add")}
-            </Button>
+            </Button> */}
             <Button
               className="mb-16 mr-36 align-bottom"
               variant="contained"

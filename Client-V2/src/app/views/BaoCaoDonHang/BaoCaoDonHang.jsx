@@ -588,7 +588,7 @@ class BaoCaoDonHang extends React.Component {
               }}
             /> */}
             <TableCustom title={t("general.list")} data={itemList} t={t} />
-            <TablePagination
+            {/* <TablePagination
               align="left"
               className="px-16"
               rowsPerPageOptions={[1, 2, 3, 5, 10, 25, 50, 100]}
@@ -610,7 +610,7 @@ class BaoCaoDonHang extends React.Component {
               }}
               onChangePage={this.handleChangePage}
               onChangeRowsPerPage={this.setRowsPerPage}
-            />
+            /> */}
           </Grid>
         </Grid>
       </div>

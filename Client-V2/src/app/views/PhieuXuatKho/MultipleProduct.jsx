@@ -228,25 +228,25 @@ class MultipleProduct extends React.Component {
     const { t, i18n, handleClose, handleSelect, open } = this.props;
     let { keyword } = this.state;
     let columns = [
-      // {
+      {
         // title: (
         //   <Checkbox
         //     checked={this.selectedAllCheck()}
         //     onChange={this.handleSelectAll}
         //   />
         // ),
-      //   field: "custom",
-      //   align: "left",
-      //   width: "150",
-      //   render: (rowData) => (
-      //     <Checkbox
-      //       checked={this.state.selectedItemList.some(
-      //         (selected) => selected.sanPham.id === rowData.sanPham.id
-      //       )}
-      //       onChange={() => this.handleCheckboxChange(rowData)}
-      //     />
-      //   ),
-      // },
+        field: "custom",
+        align: "left",
+        width: "150",
+        render: (rowData) => (
+          <Checkbox
+            checked={this.state.selectedItemList.some(
+              (selected) => selected.sanPham.id === rowData.sanPham.id
+            )}
+            onChange={() => this.handleCheckboxChange(rowData)}
+          />
+        ),
+      },
       { title: t("general.name"), field: "sanPham.tenSP", width: "150" },
       {
         title: t("general.code"),

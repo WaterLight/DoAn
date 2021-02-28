@@ -262,15 +262,18 @@ public class PhieuXuatKhoServiceImpl extends GenericServiceImpl<PhieuXuatKho, UU
 		}
 		if (listSPPN != null && listSPPN.size() > 0) {
 			for (SanPhamPhieuXuatDto spDto : listSPPN) {
-				if(spDto.getPhieu().getKho() == null || spDto.getPhieu().getKho().getId() == null || spDto.getSanPham() == null) {
-					continue;
-				}
 				BaoCaoDto bc = new BaoCaoDto();
 				bc.setSanPhamId(spDto.getSanPham().getId());
 				bc.setTenSP(spDto.getSanPham().getTenSP());
 				bc.setMaSP(spDto.getSanPham().getMaSP());
-				bc.setKhoId(spDto.getPhieu().getKho().getId());
-				bc.setTenKho(spDto.getPhieu().getKho().getTenKho());
+				if(spDto.getPhieu().getKho() != null && spDto.getPhieu().getKho().getId() != null) {
+					bc.setKhoId(spDto.getPhieu().getKho().getId());
+				}
+				
+				if(spDto.getPhieu().getKho() != null && spDto.getPhieu().getKho().getId() != null) {
+					bc.setTenKho(spDto.getPhieu().getKho().getTenKho());
+				}
+				
 				bc.setSoLuong(0);
 				if (spDto.getSoLuong() != null) {
 					bc.setSoLuong(spDto.getSoLuong());

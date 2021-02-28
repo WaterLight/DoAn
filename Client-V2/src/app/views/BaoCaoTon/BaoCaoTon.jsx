@@ -10,6 +10,7 @@ import {
   Input,
   InputAdornment,
 } from "@material-ui/core";
+import TableCustom from "./TableCustom";
 import MaterialTable, {
   MTableToolbar,
   Chip,
@@ -520,75 +521,7 @@ class BaoCaoTon extends React.Component {
                 />
               )}
             </div>
-            <MaterialTable
-              title={t("general.list")}
-              data={itemList}
-              columns={columns}
-              //parentChildData={(row, rows) => rows.find(a => a.id === row.parentId)}
-              // parentChildData={(row, rows) => {
-              //   var list = rows.find((a) => a.id === row.parentId);
-              //   return list;
-              // }}
-              localization={{
-                body: {
-                  emptyDataSourceMessage: `${t(
-                    "general.emptyDataMessageTable"
-                  )}`,
-                },
-                toolbar: {
-                  // nRowsSelected: '${t('general.selects')}',
-                  nRowsSelected: `${t("general.selects")}`,
-                },
-              }}
-              options={{
-                selection: false,
-                actionsColumnIndex: -1,
-                paging: false,
-                search: false,
-                rowStyle: (rowData) => ({
-                  backgroundColor:
-                    rowData.tableData.id % 2 === 1 ? "#EEE" : "#FFF",
-                }),
-                maxBodyHeight: "450px",
-                minBodyHeight: "370px",
-                headerStyle: {
-                  backgroundColor: "#358600",
-                  color: "#fff",
-                },
-                padding: "dense",
-                toolbar: false,
-              }}
-              components={{
-                Toolbar: (props) => <MTableToolbar {...props} />,
-              }}
-              onSelectionChange={(rows) => {
-                this.data = rows;
-                // this.setState({selectedItems:rows});
-              }}
-            />
-            <TablePagination
-              align="left"
-              className="px-16"
-              rowsPerPageOptions={[1, 2, 3, 5, 10, 25, 50, 100]}
-              component="div"
-              labelRowsPerPage={t("general.rows_per_page")}
-              labelDisplayedRows={({ from, to, count }) =>
-                `${from}-${to} ${t("general.of")} ${
-                  count !== -1 ? count : `more than ${to}`
-                }`
-              }
-              count={totalElements}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              backIconButtonProps={{
-                "aria-label": "Previous Page",
-              }}
-              nextIconButtonProps={{
-                "aria-label": "Next Page",
-              }}
-              onChangePage={this.handleChangePage}
-              onChangeRowsPerPage={this.setRowsPerPage}
-            />
+            <TableCustom title={t("general.list")} data={itemList} t={t} />
           </Grid>
         </Grid>
       </div>
