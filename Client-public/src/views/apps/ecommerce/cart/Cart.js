@@ -1,5 +1,4 @@
 import React from "react"
-import { toast, ToastContainer } from "react-toastify"
 import {
   Card,
   CardBody,
@@ -32,6 +31,7 @@ import Wizard from "../../../../components/@vuexy/wizard/WizardComponent"
 import { AvInput, AvGroup, AvFeedback } from "availity-reactstrap-validation"
 import ConstantList from "../../../../configs/appConfig";
 import "../../../../assets/scss/pages/app-ecommerce-shop.scss"
+import { toast, ToastContainer } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import "../../../../assets/scss/plugins/extensions/toastr.scss"
 import imageDefault from "../../../../assets/img/pages/eCommerce/nike7.jfif"
@@ -106,10 +106,14 @@ class Checkout extends React.Component {
   }
 
   handleActiveStep = index => {
-    let { currentUser } = this.state;
+    let { currentUser, saleOrder } = this.state;
     if (!currentUser || currentUser.id == null) {
       toast.warning("Vui lòng đăng nhập vào hệ thống để tạo đơn hàng.")
       history.push(ConstantList.ROOT_PATH + "/authentication/login")
+    }
+    if(!saleOrder || !saleOrder.sanPhamDonHang){
+      toast.info("Đơn hàng của bạn đang trống, vui lòng lựa chọn sản phẩm trước.");
+      history.push(ConstantList.ROOT_PATH + "/ecommerce/shop")
     }
     this.setState({ activeStep: index })
   }
