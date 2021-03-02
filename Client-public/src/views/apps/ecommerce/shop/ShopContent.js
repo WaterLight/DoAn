@@ -32,7 +32,9 @@ import Radio from "../../../../components/@vuexy/radio/RadioVuexy"
 import { history } from "../../../../history";
 import DetailPage from "./Detail";
 import Pagination from '@material-ui/lab/Pagination';
-toast.configure();
+toast.configure({ autoClose: 2000,
+  draggable: false,
+  limit: 3,});
 
 class ShopContent extends React.Component {
   constructor() {
@@ -61,6 +63,7 @@ class ShopContent extends React.Component {
   }
 
   handleAddToCart = product => {
+    debugger
     if (product && product.id) {
       let { productSize, saleOrder, numberOfProduct } = this.state;
       let sanPhamDonHangDto = {};
@@ -76,13 +79,13 @@ class ShopContent extends React.Component {
       if (productSize != null && product.id == productSize.product.id && productSize.size != null) {
         //kiểm tra số lượng trong kho còn không
         if(numberOfProduct <= 0){
-          toast.warning("Số lượng sản phẩm " + product.tenSP + " trong kho tạm thời đã hết. Vui lòng lựa chọn size khác!");
+          alert("Số lượng sản phẩm " + product.tenSP + " trong kho tạm thời đã hết. Vui lòng lựa chọn size khác!");
           return false;
         }else{
           sanPhamDonHangDto.size = productSize.size;
         }
       } else {
-        toast.warning("Bạn chưa chọn size cho sản phẩm " + product.tenSP + ".");
+        alert("Bạn chưa chọn size cho sản phẩm " + product.tenSP + ".");
         return false;
       }
       saleOrder.sanPhamDonHang.push(sanPhamDonHangDto);
@@ -95,7 +98,7 @@ class ShopContent extends React.Component {
       }
       saleOrder.thanhTien = saleOrder.tongGia;
       this.setState({ inCart: product.id });
-      toast.info("Thêm thành công " + product.tenSP + " vào giỏ hàng của bạn!");
+      alert("Thêm thành công " + product.tenSP + " vào giỏ hàng của bạn!");
       window.localStorage.setItem("saleOrder", JSON.stringify(saleOrder));
     }
   }
@@ -148,7 +151,7 @@ class ShopContent extends React.Component {
       searchObject.pageSize = dto.pageSize;
       searchByPage(searchObject).then(res => {
         this.setState({ data: [...res.data.content], totalElements: res.data.totalElements, totalPages:res.data.totalPages})
-      }).catch(err => { toast.error("Có lỗi xảy ra khi tải danh sách sản phẩm") });
+      }).catch(err => { alert("Có lỗi xảy ra khi tải danh sách sản phẩm") });
     }
   }
   getProductDetail = (productId) => {
@@ -191,7 +194,7 @@ class ShopContent extends React.Component {
         if (res.data != null) {
           this.setState({ numberOfProduct: res.data, productSelected: i })
         }
-      }).catch(err => { toast.error("Có lỗi xảy ra vui lòng thử lại") });
+      }).catch(err => { alert("Có lỗi xảy ra vui lòng thử lại") });
     }
   }
   render() {

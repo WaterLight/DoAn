@@ -130,7 +130,7 @@ class DetailPage extends React.Component {
         if (res.data != null) {
           this.setState({ numberOfProduct: res.data })
         }
-      }).catch(err => { toast.error("Có lỗi xảy ra vui lòng thử lại") });
+      }).catch(err => { alert("Có lỗi xảy ra vui lòng thử lại") });
     }
   }
   addToOrder = product => {
@@ -149,7 +149,7 @@ class DetailPage extends React.Component {
       if (productSize != null && product.id == productSize.product.id && productSize.size != null) {
         sanPhamDonHangDto.size = productSize.size;
       } else {
-        toast.warning("Bạn chưa chọn size cho sản phẩm " + product.tenSP + ".");
+        alert("Bạn chưa chọn size cho sản phẩm " + product.tenSP + ".");
         return false;
       }
       saleOrder.sanPhamDonHang.push(sanPhamDonHangDto);
@@ -161,7 +161,7 @@ class DetailPage extends React.Component {
         saleOrder.tongGia += product.giaBanHienThoi;
       }
       saleOrder.thanhTien = saleOrder.tongGia;
-      toast.info("Thêm thành công " + product.tenSP + " vào giỏ hàng của bạn!");
+      alert("Thêm thành công " + product.tenSP + " vào giỏ hàng của bạn!");
       window.localStorage.setItem("saleOrder", JSON.stringify(saleOrder));
     }
   }

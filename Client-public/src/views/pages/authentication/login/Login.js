@@ -63,11 +63,11 @@ class Login extends React.Component {
   }
   async loginWithUserNameAndPassword() {
     if (!this.state.username || this.state.username == "") {
-      toast.warning("Vui lòng nhập tên đăng nhập!");
+      alert("Vui lòng nhập tên đăng nhập!");
       return;
     }
     else if (!this.state.password || this.state.password == "") {
-      toast.warning("Vui lòng nhập mật khẩu!");
+      alert("Vui lòng nhập mật khẩu!");
       return;
     }
     else {

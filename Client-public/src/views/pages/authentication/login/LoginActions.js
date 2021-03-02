@@ -18,7 +18,7 @@ export function loginWithEmailAndPassword({ username, password }) {
   })
   .catch(error => {
     console.log(error);
-    toast.error('Tên tài khoản hoặc mật khẩu không đúng. Vui lòng thử lại, hoặc liên hệ HotLine: 0983227930 để được hỗ trợ.');
+    alert('Tên tài khoản hoặc mật khẩu không đúng. Vui lòng thử lại, hoặc liên hệ HotLine: 0983227930 để được hỗ trợ.');
     return false;
   })
 }

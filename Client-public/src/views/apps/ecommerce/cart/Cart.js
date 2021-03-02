@@ -40,7 +40,11 @@ import axios from "axios";
 import { getListEvent } from "../../../pages/EventService"
 import { getNumberOfProductBySize } from "../shop/ShopService"
 import { history } from "../../../../history"
-toast.configure();
+toast.configure({
+  autoClose: 2000,
+  draggable: false,
+  limit: 3,
+});
 
 class Checkout extends React.Component {
   state = {
@@ -108,11 +112,11 @@ class Checkout extends React.Component {
   handleActiveStep = index => {
     let { currentUser, saleOrder } = this.state;
     if (!currentUser || currentUser.id == null) {
-      toast.warning("Vui lòng đăng nhập vào hệ thống để tạo đơn hàng.")
+      alert("Vui lòng đăng nhập vào hệ thống để tạo đơn hàng.")
       history.push(ConstantList.ROOT_PATH + "/authentication/login")
     }
     if(!saleOrder || !saleOrder.sanPhamDonHang){
-      toast.info("Đơn hàng của bạn đang trống, vui lòng lựa chọn sản phẩm trước.");
+      alert("Đơn hàng của bạn đang trống, vui lòng lựa chọn sản phẩm trước.");
       history.push(ConstantList.ROOT_PATH + "/ecommerce/shop")
     }
     this.setState({ activeStep: index })
@@ -134,25 +138,25 @@ class Checkout extends React.Component {
       }
       saveOrder(saleOrder).then((res) => {
         if (res.status == 200) {
-          toast.info("Chúc mừng bạn đã đặt hàng thành công");
+          alert("Chúc mừng bạn đã đặt hàng thành công");
           //clear đơn hàng
           if (JSON.parse(window.localStorage.getItem("saleOrder")) != null) {
             window.localStorage.clear();
           }
           history.push(ConstantList.ROOT_PATH + "/myorder")
         } else {
-          toast.error("Có lỗi xảy ra khi đặt hàng, vui lòng đăng nhập để thử lại");
+          alert("Có lỗi xảy ra khi đặt hàng, vui lòng đăng nhập để thử lại");
           history.push(ConstantList.ROOT_PATH + "/authentication/login")
         }
       }).catch(err => {
-        toast.error("Có lỗi xảy ra khi đặt hàng, vui lòng đăng nhập để thử lại");
+        alert("Có lỗi xảy ra khi đặt hàng, vui lòng đăng nhập để thử lại");
         history.push(ConstantList.ROOT_PATH + "/authentication/login")
       })
     }
   }
 
   onValidationError = errors => {
-    toast.error("Please Enter Valid Details", {
+    alert("Please Enter Valid Details", {
       position: toast.POSITION.BOTTOM_RIGHT
     })
   }
@@ -198,7 +202,7 @@ class Checkout extends React.Component {
         window.localStorage.setItem("saleOrder", JSON.stringify(saleOrder));
         this.setState({ saleOrder: JSON.parse(window.localStorage.getItem("saleOrder")) });
       }else{
-        toast.warning("Số lượng sản phẩm bạn đặt đã vượt quá số lượng cửa hàng hiện có!");
+        alert("Số lượng sản phẩm bạn đặt đã vượt quá số lượng cửa hàng hiện có!");
         return false; 
       }
     }

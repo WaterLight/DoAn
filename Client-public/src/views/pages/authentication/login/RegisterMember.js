@@ -20,7 +20,6 @@ import ConstantsList from '../../../../configs/appConfig';
 import axios from "axios";
 import { registerMember } from "./LoginActions";
 import ConstantList from "../../../../configs/appConfig";
-
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 toast.configure({
@@ -74,36 +73,36 @@ class RegisterMember extends React.Component {
   }
   async registerMember() {
     if (!this.state.displayName || this.state.displayName == "") {
-      toast.warning("Vui lòng nhập họ và tên!");
+      alert("Vui lòng nhập họ và tên!");
       return;
     }
     else if (!this.state.phoneNumber || this.state.phoneNumber == "") {
-      toast.warning("Vui lòng nhập số điện thoại liên hệ!");
+      alert("Vui lòng nhập số điện thoại liên hệ!");
       return;
     }
     else if (!this.state.userName || this.state.userName == "") {
-      toast.warning("Vui lòng nhập tên đăng nhập!");
+      alert("Vui lòng nhập tên đăng nhập!");
       return;
     }
     else if (!this.state.password || this.state.password == "") {
-      toast.warning("Vui lòng nhập mật khẩu!");
+      alert("Vui lòng nhập mật khẩu!");
       return;
     }
     else if (!this.state.confirmPassword || this.state.confirmPassword == "") {
-      toast.warning("Vui lòng nhập mật khẩu xác nhận!");
+      alert("Vui lòng nhập mật khẩu xác nhận!");
       return;
     }
     else if (!this.state.address || this.state.address == "") {
-      toast.warning("Vui lòng nhập điạ chỉ!");
+      alert("Vui lòng nhập điạ chỉ!");
       return;
     }
     if(this.state.password !== this.state.confirmPassword){
-      toast.warning("Mật khẩu xác nhận và mật khẩu không trùng khớp");
+      alert("Mật khẩu xác nhận và mật khẩu không trùng khớp");
       return;
     }
     if(this.state.phoneNumber != null){
       if(!this.isVietnamesePhoneNumber(this.state.phoneNumber)){
-        toast.warning("Số điện thoại không đúng, vui lòng kiểm tra lại.");
+        alert("Số điện thoại không đúng, vui lòng kiểm tra lại.");
         return;
       }else {
         registerMember({ ...this.state });
